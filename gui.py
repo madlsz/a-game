@@ -5,15 +5,16 @@ pygame.init()
 
 GAME_WIDTH = 500*0.8
 GAME_HEIGHT = 1000*0.8
-TILE_HEIGHT = GAME_HEIGHT/20
-TILE_WIDTH = GAME_WIDTH/10
 
 FPS = 30
 
 class Tile():
-    def __init__(self, screen, x, y, width, height, color = None):
+    pk = 0
+    def __init__(self, screen, x, y, color = None):
+        self.pk = Tile.pk
+        Tile.pk += 1
         self.screen = screen
-        self.rect = pygame.Rect(x,y,width,height)
+        self.rect = pygame.Rect(x,y,screen.get_width()/10,screen.get_height()/20)
         if color is None:
             self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         else:
@@ -64,33 +65,30 @@ clock = pygame.time.Clock()
 start_time_movement = pygame.time.get_ticks()
 start_time_gravity = pygame.time.get_ticks()
 
-moving_tiles = [Tile(screen,0,0,TILE_WIDTH,TILE_HEIGHT)]
+moving_tiles = [Tile(screen,0,0),Tile(screen,screen.get_width()/10,0)]
 static_tiles = []
-
-# Run until the user asks to quit
+elapsed_time_timeout = 600
 running = True
 while running:
     clock.tick(FPS)
-    # Did the user click the window close button?
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # keys = pygame.key.get_pressed()
+    keys = pygame.key.get_pressed()
+
     elapsed_time = pygame.time.get_ticks() - start_time_gravity
-    if elapsed_time >= 650:
+    if elapsed_time >= elapsed_time_timeout:
         start_time_gravity = pygame.time.get_ticks()
-        # update_gravity()
-        # doesnt work for now, it has to be done by editing the elapsed time value and not by speed
-        # if keys[pygame.K_DOWN]:
-        #     test_tile.move_y(test_tile.height*2)
-        # else:
+        if keys[pygame.K_DOWN]:
+            elapsed_time_timeout = 100
+        else:
+            elapsed_time_timeout = 600
         for tile in moving_tiles:
             tile.move_y(tile.height)
 
     elapsed_time = pygame.time.get_ticks() - start_time_movement
     if elapsed_time >= 30:
-        keys = pygame.key.get_pressed()
         start_time_movement = pygame.time.get_ticks()
         if keys[pygame.K_RIGHT]:
             for tile in moving_tiles:
@@ -99,34 +97,33 @@ while running:
             for tile in moving_tiles:
                 tile.move_x(-tile.width)
 
+        at_bottom = False
+        for tile in moving_tiles:
+            if tile.y + tile.height >= screen.get_height():
+                at_bottom = True
+                break
+            else:
+                for static_tile in static_tiles:
+                    if tile.y + tile.height >= static_tile.y and tile.x >= static_tile.x and tile.x + tile.width <= static_tile.x+static_tile.width:
+                        at_bottom = True
+                        break
+                if at_bottom:
+                    break
+        if at_bottom:
+            for tile in moving_tiles:
+                static_tiles.append(tile)
+            moving_tiles = [Tile(screen,0,0,),Tile(screen,screen.get_width()/10,0,)]
+
+    # drawing section
+            
     # Fill the background with white
     screen.fill((50, 50, 50))
     
-    at_bottom = False
-    for tile in moving_tiles:
-        if tile.y + tile.height >= screen.get_height():
-            at_bottom = True
-            break
-        else:
-            for static_tile in static_tiles:
-                if tile.y + tile.height >= static_tile.y and tile.x >= static_tile.x and tile.x + tile.width <= static_tile.x+static_tile.width:
-                    at_bottom = True
-                    break
-            if at_bottom:
-                break
-    if at_bottom:
-        for tile in moving_tiles:
-            static_tiles.append(tile)
-        moving_tiles = [Tile(screen, 0,0,TILE_WIDTH,TILE_HEIGHT)]
-
     for tile in moving_tiles:
         tile.draw()
     for tile in static_tiles:
         tile.draw()
             
-    # Flip the display
-    # pygame.display.flip()
     pygame.display.update()
 
-# Done! Time to quit.
 pygame.quit()
