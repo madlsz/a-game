@@ -1,5 +1,6 @@
 import pygame
 import random
+import tetrominos
 
 pygame.init()
 
@@ -7,6 +8,21 @@ GAME_WIDTH = 500*0.8
 GAME_HEIGHT = 1000*0.8
 
 FPS = 30
+
+class Entity():
+    def __init__(self,screen, tetromino):
+        self.screen = screen
+        self.tiles = [Tile(screen, 0,0,tetromino.color), Tile(screen, screen.get_width()/10,0,tetromino.color)]
+        self.tetromino = tetromino
+
+    def move_x(self, x):
+        for tile in self.tiles:
+            if not (tile.x + tile.width + x <= self.screen.get_width() and tile.x + x >= 0):
+                return
+        for tile in self.tiles:
+            tile.move_x(x)
+
+
 
 class Tile():
     pk = 0
@@ -65,7 +81,7 @@ clock = pygame.time.Clock()
 start_time_movement = pygame.time.get_ticks()
 start_time_gravity = pygame.time.get_ticks()
 
-moving_tiles = [Tile(screen,0,0),Tile(screen,screen.get_width()/10,0)]
+moving_tiles = [Entity(screen, tetrominos.create_instance("O"))]
 static_tiles = []
 elapsed_time_timeout = 600
 running = True
@@ -84,45 +100,52 @@ while running:
             elapsed_time_timeout = 100
         else:
             elapsed_time_timeout = 600
-        for tile in moving_tiles:
-            tile.move_y(tile.height)
+        for entity in moving_tiles:
+            for tile in entity.tiles:
+                tile.move_y(tile.height)
 
     elapsed_time = pygame.time.get_ticks() - start_time_movement
     if elapsed_time >= 30:
         start_time_movement = pygame.time.get_ticks()
         if keys[pygame.K_RIGHT]:
-            for tile in moving_tiles:
-                tile.move_x(tile.width)
+            for entity in moving_tiles:
+                entity.move_x(entity.tiles[0].width)
         if keys[pygame.K_LEFT]:
-            for tile in moving_tiles:
-                tile.move_x(-tile.width)
+            for entity in moving_tiles:
+                entity.move_x(-entity.tiles[0].width)
 
         at_bottom = False
-        for tile in moving_tiles:
-            if tile.y + tile.height >= screen.get_height():
-                at_bottom = True
-                break
-            else:
-                for static_tile in static_tiles:
-                    if tile.y + tile.height >= static_tile.y and tile.x >= static_tile.x and tile.x + tile.width <= static_tile.x+static_tile.width:
-                        at_bottom = True
-                        break
-                if at_bottom:
+        for entity in moving_tiles:
+            for tile in entity.tiles:
+                if tile.y + tile.height >= screen.get_height():
+                    at_bottom = True
                     break
+                else:
+                    for static_entity in static_tiles:
+                        for static_tile in static_entity.tiles:
+                            if tile.y + tile.height >= static_tile.y and tile.x >= static_tile.x and tile.x + tile.width <= static_tile.x+static_tile.width:
+                                at_bottom = True
+                                break
+                    if at_bottom:
+                        break
+            if at_bottom:
+                break
         if at_bottom:
-            for tile in moving_tiles:
-                static_tiles.append(tile)
-            moving_tiles = [Tile(screen,0,0,),Tile(screen,screen.get_width()/10,0,)]
+            for entity in moving_tiles:
+                static_tiles.append(entity)
+            moving_tiles = [Entity(screen, tetrominos.create_instance("O"))]
 
     # drawing section
             
     # Fill the background with white
     screen.fill((50, 50, 50))
     
-    for tile in moving_tiles:
-        tile.draw()
-    for tile in static_tiles:
-        tile.draw()
+    for entity in moving_tiles:
+        for tile in entity.tiles:
+            tile.draw()
+    for entity in static_tiles:
+        for tile in entity.tiles:
+            tile.draw()
             
     pygame.display.update()
 
