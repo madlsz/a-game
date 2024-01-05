@@ -107,6 +107,13 @@ while running:
         if tile.y + tile.height >= screen.get_height():
             at_bottom = True
             break
+        else:
+            for static_tile in static_tiles:
+                if tile.y + tile.height >= static_tile.y and tile.x >= static_tile.x and tile.x + tile.width <= static_tile.x+static_tile.width:
+                    at_bottom = True
+                    break
+            if at_bottom:
+                break
     if at_bottom:
         for tile in moving_tiles:
             static_tiles.append(tile)
