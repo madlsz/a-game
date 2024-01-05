@@ -22,12 +22,6 @@ class Base:
     def move_down(self):
         self.cords[1] += 1
 
-    # def rotate_clockwise(self):
-    #     self.mask = np.rot90(self.mask, k=-1)
-
-    # def rotate_counterclockwise(self):
-    #     self.mask = np.rot90(self.mask, k=1)
-
 
 class I(Base):
     def __init__(self, x = 0, y = 0):

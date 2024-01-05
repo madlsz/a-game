@@ -1,4 +1,6 @@
 import pygame
+import random
+
 pygame.init()
 
 GAME_WIDTH = 500*0.8
@@ -9,24 +11,27 @@ TILE_WIDTH = GAME_WIDTH/10
 FPS = 30
 
 class Tile():
-    def __init__(self, x, y, width, height):
+    def __init__(self, screen, x, y, width, height, color = None):
+        self.screen = screen
         self.rect = pygame.Rect(x,y,width,height)
-        self.color = (200,88,50)
-        self.y_speed = 2
+        if color is None:
+            self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        else:
+            self.color = color
     
     def draw(self):
-        pygame.draw.rect(screen, self.color, self.rect)
+        pygame.draw.rect(self.screen, self.color, self.rect)
         
     def move(self, x, y):
         self.rect.x += x
         self.rect.y += y
 
     def move_x(self, x):
-        if self.rect.x + self.rect.width + x <= GAME_WIDTH and self.rect.x + x >= 0:
+        if self.rect.x + self.rect.width + x <= self.screen.get_width() and self.rect.x + x >= 0:
             self.rect.x += x
 
     def move_y(self, y):
-        if self.rect.y + self.rect.height + y <= GAME_HEIGHT and self.rect.y + y >= 0:
+        if self.rect.y + self.rect.height + y <= self.screen.get_height() and self.rect.y + y >= 0:
             self.rect.y += y
 
     @property
@@ -37,9 +42,9 @@ class Tile():
     def y(self):
         return self.rect.y
     
-    @y.setter
-    def y(self, new_y):
-        self.rect.y = new_y
+    # @y.setter
+    # def y(self, new_y):
+    #     self.rect.y = new_y
     
     @property
     def width(self):
@@ -49,13 +54,8 @@ class Tile():
     def height(self):
         return self.rect.height
     
-    def at_bottom(self):
-        return False
-
-test_tile = Tile(0,0,TILE_WIDTH,TILE_HEIGHT)
-
-moving_tiles = []
-static_tiles = []
+    # def at_bottom(self):
+    #     return False
 
 
 # Set up the drawing window
@@ -63,6 +63,9 @@ screen = pygame.display.set_mode([GAME_WIDTH, GAME_HEIGHT])
 clock = pygame.time.Clock()
 start_time_movement = pygame.time.get_ticks()
 start_time_gravity = pygame.time.get_ticks()
+
+moving_tiles = [Tile(screen,0,0,TILE_WIDTH,TILE_HEIGHT)]
+static_tiles = []
 
 # Run until the user asks to quit
 running = True
@@ -75,31 +78,45 @@ while running:
 
     # keys = pygame.key.get_pressed()
     elapsed_time = pygame.time.get_ticks() - start_time_gravity
-    if elapsed_time >= 800:
+    if elapsed_time >= 650:
         start_time_gravity = pygame.time.get_ticks()
         # update_gravity()
         # doesnt work for now, it has to be done by editing the elapsed time value and not by speed
         # if keys[pygame.K_DOWN]:
         #     test_tile.move_y(test_tile.height*2)
         # else:
-        test_tile.move_y(test_tile.height)
+        for tile in moving_tiles:
+            tile.move_y(tile.height)
 
-    keys = pygame.key.get_pressed()
     elapsed_time = pygame.time.get_ticks() - start_time_movement
     if elapsed_time >= 30:
+        keys = pygame.key.get_pressed()
         start_time_movement = pygame.time.get_ticks()
         if keys[pygame.K_RIGHT]:
-            test_tile.move_x(test_tile.width)
+            for tile in moving_tiles:
+                tile.move_x(tile.width)
         if keys[pygame.K_LEFT]:
-            test_tile.move_x(-test_tile.width)
+            for tile in moving_tiles:
+                tile.move_x(-tile.width)
 
     # Fill the background with white
     screen.fill((50, 50, 50))
+    
+    at_bottom = False
+    for tile in moving_tiles:
+        if tile.y + tile.height >= screen.get_height():
+            at_bottom = True
+            break
+    if at_bottom:
+        for tile in moving_tiles:
+            static_tiles.append(tile)
+        moving_tiles = [Tile(screen, 0,0,TILE_WIDTH,TILE_HEIGHT)]
 
-    test_tile.draw()
-    # test_tile.move_y(test_tile.y_speed)
-    if test_tile.y + test_tile.width >= GAME_HEIGHT:
-        test_tile.y = 0
+    for tile in moving_tiles:
+        tile.draw()
+    for tile in static_tiles:
+        tile.draw()
+            
     # Flip the display
     # pygame.display.flip()
     pygame.display.update()
