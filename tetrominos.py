@@ -2,9 +2,10 @@ import numpy as np
 
 
 class Base:
-    def __init__(self, mask, cords):
-        self.mask = np.array(mask, dtype=str)
+    def __init__(self, mask, cords, color):
+        self.mask = np.array(mask, dtype=int)
         self.cords = cords
+        self.color = color
 
     def __str__(self):
         return np.array_str(self.mask)
@@ -19,7 +20,7 @@ class Base:
         self.cords[0] += 1
 
     def move_down(self):
-        self.cords[1] -= 1
+        self.cords[1] += 1
 
     # def rotate_clockwise(self):
     #     self.mask = np.rot90(self.mask, k=-1)
@@ -30,43 +31,43 @@ class Base:
 
 class I(Base):
     def __init__(self, x = 0, y = 0):
-        super().__init__([["I", "I", "I", "I"]], [x, y])
+        super().__init__([[1, 1, 1, 1]], [x, y], (55, 255, 255))
 
 
 class J(Base):
     def __init__(self, x = 0, y = 0):
-        super().__init__([["J", "0", "0"],
-                          ["J", "J", "J"]], [x, y])
+        super().__init__([[1, 0, 0],
+                          [1, 1, 1]], [x, y], (51, 51, 255))
 
 
 class L(Base):
     def __init__(self, x = 0, y = 0):
-        super().__init__([["0", "0", "L"],
-                          ["L", "L", "L"]], [x, y])
+        super().__init__([[0, 0, 1],
+                          [1, 1, 1]], [x, y], (255, 128, 0))
 
 
 class O(Base):
     def __init__(self, x = 0, y = 0):
-        super().__init__([["O", "O"],
-                          ["O", "O"]], [x, y])
+        super().__init__([[1, 1],
+                          [1, 1]], [x, y], (255, 255, 51))
 
 
 class S(Base):
     def __init__(self, x = 0, y = 0):
-        super().__init__([["0", "S", "S"],
-                          ["S", "S", "0"]], [x, y])
+        super().__init__([[0, 1, 1],
+                          [1, 1, 0]], [x, y], (0, 255, 0))
 
 
 class T(Base):
     def __init__(self, x = 0, y = 0):
-        super().__init__([["0", "T", "0"],
-                          ["T", "T", "T"]], [x, y])
+        super().__init__([[0, 1, 0],
+                          [1, 1, 1]], [x, y], (255, 0, 255))
 
 
 class Z(Base):
     def __init__(self, x = 0, y = 0):
-        super().__init__([["Z", "Z", "0"],
-                          ["0", "Z", "Z"]], [x, y])
+        super().__init__([[1, 1, 0],
+                          [0, 1, 1]], [x, y], (255, 51, 51))
 
 
 def create_instance(name, x=0, y=0):

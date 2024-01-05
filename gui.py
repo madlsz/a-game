@@ -61,8 +61,8 @@ static_tiles = []
 # Set up the drawing window
 screen = pygame.display.set_mode([GAME_WIDTH, GAME_HEIGHT])
 clock = pygame.time.Clock()
-start_time_horizontal = pygame.time.get_ticks()
-start_time_vertical = pygame.time.get_ticks()
+start_time_movement = pygame.time.get_ticks()
+start_time_gravity = pygame.time.get_ticks()
 
 # Run until the user asks to quit
 running = True
@@ -73,10 +73,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    keys = pygame.key.get_pressed()
-    elapsed_time = pygame.time.get_ticks() - start_time_vertical
+    # keys = pygame.key.get_pressed()
+    elapsed_time = pygame.time.get_ticks() - start_time_gravity
     if elapsed_time >= 800:
-        start_time_vertical = pygame.time.get_ticks()
+        start_time_gravity = pygame.time.get_ticks()
+        # update_gravity()
         # doesnt work for now, it has to be done by editing the elapsed time value and not by speed
         # if keys[pygame.K_DOWN]:
         #     test_tile.move_y(test_tile.height*2)
@@ -84,9 +85,9 @@ while running:
         test_tile.move_y(test_tile.height)
 
     keys = pygame.key.get_pressed()
-    elapsed_time = pygame.time.get_ticks() - start_time_horizontal
+    elapsed_time = pygame.time.get_ticks() - start_time_movement
     if elapsed_time >= 30:
-        start_time_horizontal = pygame.time.get_ticks()
+        start_time_movement = pygame.time.get_ticks()
         if keys[pygame.K_RIGHT]:
             test_tile.move_x(test_tile.width)
         if keys[pygame.K_LEFT]:
