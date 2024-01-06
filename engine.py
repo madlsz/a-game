@@ -24,7 +24,7 @@ class Engine:
 
 
     def start(self):
-        self.game.spawn_tetromino(tetrominos.create_instance("T"))
+        self.game.spawn_tetromino(tetrominos.create_instance("Z"))
 
         self.gravity_time = pygame.time.get_ticks()
         self.movement_time = pygame.time.get_ticks()
@@ -46,7 +46,7 @@ class Engine:
             elapsed_time = pygame.time.get_ticks() - self.gravity_time
             if elapsed_time >= self.gravity_time_timeout:
                 self.gravity_time = pygame.time.get_ticks()
-                self.game.clear_board()
+                self.game.clear_active()
                 self.game.move_tetromino_down()
 
             # horizontal movement
@@ -54,7 +54,7 @@ class Engine:
                 elapsed_time = pygame.time.get_ticks() - self.movement_time
                 if elapsed_time >= self.movement_time_timeout:
                     self.movement_time = pygame.time.get_ticks()
-                    self.game.clear_board()
+                    self.game.clear_active()
                     if keys[pygame.K_LEFT]:
                         self.game.move_tetromino_left()
                     elif keys[pygame.K_RIGHT]:
@@ -65,10 +65,10 @@ class Engine:
                 elapsed_time = pygame.time.get_ticks() - self.rotation_time
                 if elapsed_time >= self.rotation_time_timeout:
                     self.rotation_time = pygame.time.get_ticks()
-                    self.game.clear_board()
+                    self.game.clear_active()
                     self.game.rotate_tetromino()
 
 
-            self.gogh.draw(self.game.board)
+            self.gogh.draw(self.game.active, self.game.landed)
 
         pygame.quit()

@@ -1,5 +1,7 @@
 import pygame
 import numpy as np
+from collections import defaultdict
+
 
 class VanGogh():
     def __init__(self, screen, border_thickness = 1, border_color = (0, 0, 0), background_color = (66, 66, 66)):
@@ -7,15 +9,15 @@ class VanGogh():
         self.border_thickness = border_thickness
         self.border_color = border_color
         self.background_color = background_color
-        self.color_map = {
-            73: (55, 255, 255),
-            74: (51, 51, 255),
-            76: (255, 128, 0),
-            79: (255, 255, 51),
-            83: (0, 255, 0),
-            84: (255, 0, 255),
-            90: (255, 51, 51),
-        }
+
+        self.color_map = defaultdict(lambda : (255, 255, 255))
+        self.color_map[73] = (55, 255, 255)
+        self.color_map[74] = (51, 51, 255)
+        self.color_map[76] = (255, 128, 0)
+        self.color_map[79] = (255, 255, 51)
+        self.color_map[83] = (0, 255, 0)
+        self.color_map[84] = (255, 0, 255)
+        self.color_map[90] = (255, 51, 51)
 
     @property
     def width(self):
@@ -34,8 +36,9 @@ class VanGogh():
         return self.height // 20
     
 
-    def draw(self, board):
+    def draw(self, active, landed):
         self.screen.fill(self.background_color)
+        board = active + landed
         for (y, x), value in np.ndenumerate(board):
             if value != 0:
                 pygame.draw.rect(self.screen, self.border_color, pygame.Rect(x * self.tile_width, y * self.tile_height, self.tile_width, self.tile_height))
