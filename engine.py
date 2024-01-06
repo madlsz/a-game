@@ -1,5 +1,5 @@
 import pygame
-import numpy as np
+# import numpy as np
 
 from van_gogh import VanGogh
 from game import Game
