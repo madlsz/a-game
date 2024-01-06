@@ -1,8 +1,5 @@
 import numpy as np
-import pygame
-import random
 
-import tetrominos
 
 class Game:
     def __init__(self, width = 10, height = 20):
@@ -39,11 +36,13 @@ class Game:
         return False
 
     def move_tetromino_left(self):
-        self.current_tetromino.move_left()
+        if self.is_valid_placement(self.current_tetromino.mask, self.current_tetromino.x - 1, self.current_tetromino.y):
+            self.current_tetromino.move_left()
         self.place_tetromino()
 
     def move_tetromino_right(self):
-        self.current_tetromino.move_right()
+        if self.is_valid_placement(self.current_tetromino.mask, self.current_tetromino.x + 1, self.current_tetromino.y):
+            self.current_tetromino.move_right()
         self.place_tetromino()
 
     def rotate_tetromino(self):
@@ -51,26 +50,11 @@ class Game:
         self.place_tetromino()
 
     def move_tetromino_down(self):
-        self.current_tetromino.move_down()
+        if self.is_valid_placement(self.current_tetromino.mask, self.current_tetromino.x, self.current_tetromino.y + 1):
+            self.current_tetromino.move_down()
         self.place_tetromino()
 
     # def clear_lines(self):
     #     # Implement line clearing logic
     #     pass
-
-# game = Game()
-# tetromino_names = ["I", "J", "L", "O", "S", "T", "Z"]
-# random_tetromino = tetrominos.create_instance(random.choice(tetromino_names))
-# game.spawn_tetromino(tetrominos.create_instance("O"))
-
-# game.move_tetromino_right()
-# game.move_tetromino_right()
-# game.move_tetromino_down()
-# game.move_tetromino_down()
-# game.move_tetromino_down()
-# game.clear_board()
-# game.move_tetromino_down()
-# # game.rotate_tetromino()
-# # game.move_tetromino_down()
-
-# print(game)
+        

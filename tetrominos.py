@@ -1,8 +1,7 @@
 import numpy as np
 
-import tile
 
-class Base:
+class Base():
     def __init__(self, mask, cords, symbol):
         self.mask = np.array(mask, dtype=int)
         self.cords = cords
@@ -13,7 +12,7 @@ class Base:
         return np.array_str(self.mask)
 
     def rotate(self):
-        self.mask = np.rot90(self.mask, k=-1)
+        self.mask = np.rot90(self.mask, k=1)
 
     def move_left(self):
         self.cords[0] -= 1
@@ -24,29 +23,35 @@ class Base:
     def move_down(self):
         self.cords[1] += 1
 
-    # def move_x(self, x):
-    #     for tile in self.tiles:
-    #         if not (tile.x + tile.width + x <= self.screen.get_width() and tile.x + x >= 0):
-    #             return
-    #     for tile in self.tiles:
-    #         tile.move_x(x)
+    @property
+    def x(self):
+        return self.cords[0]
+    
+    @property
+    def y(self):
+        return self.cords[1]
 
 
 class I(Base):
     def __init__(self, x, y):
-        super().__init__([[73, 73, 73, 73]], [x, y], "I")
+        super().__init__([[0, 0, 0, 0],
+                          [73, 73, 73, 73],
+                          [0, 0, 0, 0],
+                          [0, 0, 0, 0]], [x, y], "I")
 
 
 class J(Base):
     def __init__(self, x, y):
         super().__init__([[74, 0, 0],
-                          [74, 74, 74]], [x, y], "J")
+                          [74, 74, 74],
+                          [0, 0, 0]], [x, y], "J")
 
 
 class L(Base):
     def __init__(self, x, y):
         super().__init__([[0, 0, 76],
-                          [76, 76, 76]], [x, y], "L")
+                          [76, 76, 76],
+                          [0, 0, 0]], [x, y], "L")
 
 
 class O(Base):
@@ -58,19 +63,22 @@ class O(Base):
 class S(Base):
     def __init__(self, x, y):
         super().__init__([[0, 83, 83],
-                          [83, 83, 0]], [x, y], "S")
+                          [83, 83, 0],
+                          [0, 0, 0]], [x, y], "S")
 
 
 class T(Base):
     def __init__(self, x, y):
         super().__init__([[0, 84, 0],
-                          [84, 84, 84]], [x, y], "T")
+                          [84, 84, 84],
+                          [0, 0, 0]], [x, y], "T")
 
 
 class Z(Base):
     def __init__(self, x, y):
         super().__init__([[90, 90, 0],
-                          [0, 90, 90]], [x, y], "Z")
+                          [0, 90, 90],
+                          [0, 0, 0]], [x, y], "Z")
 
 
 def create_instance(name, x = 0, y = 0):
