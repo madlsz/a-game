@@ -7,12 +7,18 @@ class Base():
         self.cords = cords
         self.symbol = symbol
         self.static = False
+        self.left = 0
+        self.right = 0
+        self.top = 0
+        self.bottom = 0
+        self.calculate_boundaries()
 
     def __str__(self):
         return np.array_str(self.mask)
 
     def rotate(self):
         self.mask = np.rot90(self.mask, k=1)
+        self.calculate_boundaries()
 
     def move_left(self):
         self.cords[0] -= 1
@@ -30,6 +36,20 @@ class Base():
     @property
     def y(self):
         return self.cords[1]
+    
+    @property
+    def width(self):
+        return self.right - self.left + 1
+
+    @property
+    def height(self):
+        return self.bottom - self.top + 1
+
+    def calculate_boundaries(self):
+        y_nonzero, x_nonzero = np.where(self.mask != 0)
+        self.top, self.bottom = np.min(y_nonzero), np.max(y_nonzero)
+        self.left, self.right = np.min(x_nonzero), np.max(x_nonzero)
+        print(f"top:{self.top} bottom:{self.bottom} left:{self.left} right:{self.right}")
 
 
 class I(Base):

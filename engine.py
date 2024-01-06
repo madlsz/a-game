@@ -3,7 +3,7 @@ import pygame
 
 from van_gogh import VanGogh
 from game import Game
-import tetrominos
+# import tetrominos
 
 
 class Engine:
@@ -24,7 +24,8 @@ class Engine:
 
 
     def start(self):
-        self.game.spawn_tetromino(tetrominos.create_instance("Z"))
+        # self.game.spawn_tetromino(tetrominos.create_instance("Z"))
+        self.game.spawn_tetromino("I")
 
         self.gravity_time = pygame.time.get_ticks()
         self.movement_time = pygame.time.get_ticks()
@@ -48,6 +49,10 @@ class Engine:
                 self.gravity_time = pygame.time.get_ticks()
                 self.game.clear_active()
                 self.game.move_tetromino_down()
+                # print(self.game)
+                print(self.game.current_tetromino.width)
+                print(self.game.current_tetromino.height)
+                print()
 
             # horizontal movement
             if keys[pygame.K_RIGHT] or keys[pygame.K_LEFT]:
