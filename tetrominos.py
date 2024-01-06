@@ -21,7 +21,8 @@ class Base():
         self.calculate_boundaries()
 
     def move_left(self):
-        self.cords[0] -= 1
+        if self.cords[0] > 0:
+            self.cords[0] -= 1
 
     def move_right(self):
         self.cords[0] += 1

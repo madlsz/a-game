@@ -9,7 +9,7 @@ class Game:
         self.height = height
         self.active = np.full((self.height, self.width), 0, dtype=int)
         self.landed = np.full((self.height, self.width), 0, dtype=int)
-        # self.landed[5,5] = 90
+        self.landed[5,5] = 90
 
     def clear_active(self):
         self.active = np.full((self.height, self.width), 0, dtype=int)
@@ -30,18 +30,10 @@ class Game:
 
         # Check if the Tetromino can be placed on the grid
         if self.is_valid_placement(x, y):
-            mask_height, mask_width = tetromino_mask.shape
-            active_height, active_width = self.active.shape
-
-            # Calculate the valid region to update
-            y_start, y_end = max(0, y), min(active_height, y + mask_height)
-            x_start, x_end = max(0, x), min(active_width, x + mask_width)
-
-            # Update the valid region with the tetromino_mask
-            self.active[y_start:y_end, x_start:x_end] += tetromino_mask[:y_end-y_start, :x_end-x_start]
+            self.active[y:y+self.current_tetromino.height,x:x+self.current_tetromino.width] += tetromino_mask[self.current_tetromino.top:self.current_tetromino.bottom+1,self.current_tetromino.left:self.current_tetromino.right+1]
 
     def is_valid_placement(self, x, y):
-        if x - self.current_tetromino.left >= 0 and x + self.current_tetromino.right < self.width:
+        if x  >= 0 - self.current_tetromino.left and x  < self.width-self.current_tetromino.right:
             if y + self.current_tetromino.top >= 0 and y + self.current_tetromino.bottom < self.height:
                 return True 
             
