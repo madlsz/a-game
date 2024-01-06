@@ -16,9 +16,6 @@ class Game:
     def __str__(self):
         return np.array_str(self.board)
 
-    # def start(self):
-
-
     def spawn_tetromino(self, tetromino):
         self.current_tetromino = tetromino
         self.place_tetromino()
@@ -57,23 +54,23 @@ class Game:
         self.current_tetromino.move_down()
         self.place_tetromino()
 
-    def clear_lines(self):
-        # Implement line clearing logic
-        pass
+    # def clear_lines(self):
+    #     # Implement line clearing logic
+    #     pass
 
-game = Game()
-tetromino_names = ["I", "J", "L", "O", "S", "T", "Z"]
-random_tetromino = tetrominos.create_instance(random.choice(tetromino_names))
-game.spawn_tetromino(tetrominos.create_instance("O"))
+# game = Game()
+# tetromino_names = ["I", "J", "L", "O", "S", "T", "Z"]
+# random_tetromino = tetrominos.create_instance(random.choice(tetromino_names))
+# game.spawn_tetromino(tetrominos.create_instance("O"))
 
-game.move_tetromino_right()
-game.move_tetromino_right()
-game.move_tetromino_down()
-game.move_tetromino_down()
-game.move_tetromino_down()
-game.clear_board()
-game.move_tetromino_down()
-# game.rotate_tetromino()
+# game.move_tetromino_right()
+# game.move_tetromino_right()
 # game.move_tetromino_down()
+# game.move_tetromino_down()
+# game.move_tetromino_down()
+# game.clear_board()
+# game.move_tetromino_down()
+# # game.rotate_tetromino()
+# # game.move_tetromino_down()
 
-print(game)
+# print(game)
