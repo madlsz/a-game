@@ -10,9 +10,9 @@ class Engine:
     def __init__(self, resolution: typing.Tuple[int, int] = (400, 800)) -> None:
         pygame.init()
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode(resolution, pygame.RESIZABLE)
+        self.game_screen = pygame.display.set_mode(resolution, pygame.RESIZABLE)
         pygame.display.set_caption("a Game")
-        self.gogh = VanGogh(self.screen)
+        self.gogh = VanGogh(self.game_screen)
         self.game = Game()
         self.fps = 30
         self.gravity_time = None
@@ -20,7 +20,7 @@ class Engine:
         self.movement_time = None
         self.movement_time_timeout = 50
         self.rotation_time = None
-        self.rotation_time_timeout = 75
+        self.rotation_time_timeout = 125
         self.running = True
         self.paused = False
         self.current_time = None
