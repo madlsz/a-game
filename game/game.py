@@ -1,6 +1,6 @@
 import numpy as np
 
-import tetrominos
+import game.tetrominos as tetrominos
 
 
 class Game:

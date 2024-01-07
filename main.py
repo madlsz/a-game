@@ -1,7 +1,7 @@
 #!./venv/bin/python
 
 
-from engine import Engine
+from game.engine import Engine
 
 
 def main():

@@ -3,8 +3,8 @@ import random
 import typing
 import json
 
-from van_gogh import VanGogh
-from game import Game
+from game.van_gogh import VanGogh
+from game.game import Game
 
 
 class Engine:
