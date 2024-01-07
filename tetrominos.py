@@ -2,15 +2,15 @@ import numpy as np
 
 
 class Base():
-    def __init__(self, mask, cords, symbol):
+    def __init__(self, mask, cords, pivot = (1, 1)):
         self.mask = np.array(mask, dtype=int)
         self.cords = cords
-        self.symbol = symbol
         self.static = False
         self.left = 0
         self.right = 0
         self.top = 0
         self.bottom = 0
+        self.pivot = pivot
         self.calculate_boundaries()
 
     def __str__(self):
@@ -51,54 +51,73 @@ class Base():
         self.left, self.right = np.min(x_nonzero), np.max(x_nonzero)
         # print(f"top:{self.top} bottom:{self.bottom} left:{self.left} right:{self.right}")
 
+    # distances from the pivot to each side
+    # the pivot will be externally treated as the 0,0 point,
+    # so we need distances to calculate collisions
+    @property
+    def left_distance(self):
+        return abs(self.left - self.pivot[0])
+
+    @property
+    def right_distance(self):
+        return abs(self.right - self.pivot[0])
+
+    @property
+    def top_distance(self):
+        return abs(self.top - self.pivot[1])
+
+    @property
+    def bottom_distance(self):
+        return abs(self.bottom - self.pivot[1])
+
 
 class I(Base):
     def __init__(self, x, y):
         super().__init__([[0, 0, 0, 0],
                           [73, 73, 73, 73],
                           [0, 0, 0, 0],
-                          [0, 0, 0, 0]], [x, y], "I")
+                          [0, 0, 0, 0]], [x, y])
 
 
 class J(Base):
     def __init__(self, x, y):
         super().__init__([[74, 0, 0],
                           [74, 74, 74],
-                          [0, 0, 0]], [x, y], "J")
+                          [0, 0, 0]], [x, y])
 
 
 class L(Base):
     def __init__(self, x, y):
         super().__init__([[0, 0, 76],
                           [76, 76, 76],
-                          [0, 0, 0]], [x, y], "L")
+                          [0, 0, 0]], [x, y])
 
 
 class O(Base):
     def __init__(self, x, y):
         super().__init__([[79, 79],
-                          [79, 79]], [x, y], "O")
+                          [79, 79]], [x, y])
 
 
 class S(Base):
     def __init__(self, x, y):
         super().__init__([[0, 83, 83],
                           [83, 83, 0],
-                          [0, 0, 0]], [x, y], "S")
+                          [0, 0, 0]], [x, y])
 
 
 class T(Base):
     def __init__(self, x, y):
         super().__init__([[0, 84, 0],
                           [84, 84, 84],
-                          [0, 0, 0]], [x, y], "T")
+                          [0, 0, 0]], [x, y])
 
 
 class Z(Base):
     def __init__(self, x, y):
         super().__init__([[90, 90, 0],
                           [0, 90, 90],
-                          [0, 0, 0]], [x, y], "Z")
+                          [0, 0, 0]], [x, y])
 
 
 def create_instance(name, x = 0, y = 0):

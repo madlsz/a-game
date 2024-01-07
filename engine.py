@@ -56,7 +56,7 @@ class Engine:
                     self.rotation_time = pygame.time.get_ticks()
 
     def start(self):
-        self.game.spawn_tetromino("i")
+        self.game.spawn_tetromino("t")
 
         self.gravity_time = pygame.time.get_ticks()
         self.movement_time = pygame.time.get_ticks()
