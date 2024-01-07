@@ -11,18 +11,23 @@ class Game:
         self.landed = np.full((self.height, self.width), 0, dtype=int)
         self.landed[5,5] = 90
 
+
     def clear_active(self):
         self.active = np.full((self.height, self.width), 0, dtype=int)
+
 
     def clear_landed(self):
         self.landed = np.full((self.height, self.width), 0, dtype=int)
 
+
     def __str__(self):
         return np.array_str(self.active + self.landed)
+
 
     def spawn_tetromino(self, type, x = 0, y = 0):
         self.current_tetromino = tetrominos.create_instance(type, x, y)
         self.place_tetromino()
+
 
     def place_tetromino(self):
         tetromino_mask = self.current_tetromino.mask
@@ -32,11 +37,13 @@ class Game:
         if self.is_valid_placement(x, y):
             print("valid placement")
             # Calculate the valid region to update
-            y_start, y_end = max(0, y), min(self.height, y + tetromino_mask.shape[0])
-            x_start, x_end = max(0, x), min(self.width, x + tetromino_mask.shape[1])
+            y_start, y_end = (max(0, y - self.current_tetromino.top_distance),
+                              min(self.height, y + self.current_tetromino.bottom_distance))
+            x_start, x_end = (max(0, x - self.current_tetromino.left_distance),
+                              min(self.width, x + self.current_tetromino.right_distance))
 
             # Update only the valid region with the tetromino_mask
-            self.active[y_start:y_end, x_start:x_end] += tetromino_mask[:y_end - y_start, :x_end - x_start]
+            self.active[y_start:y_end + 1, x_start:x_end +1] += tetromino_mask[:y_end - y_start + 1, :x_end - x_start + 1]
         else:
             print("invalid placement")
 
@@ -50,6 +57,7 @@ class Game:
         # print("invalid!")
         return False
 
+
     # after a successfull movement return True to reset the movement timeout
     def move_tetromino_left(self):
         if self.is_valid_placement(self.current_tetromino.x - 1, self.current_tetromino.y):
@@ -59,6 +67,7 @@ class Game:
             return True
         return False
 
+
     def move_tetromino_right(self):
         if self.is_valid_placement(self.current_tetromino.x + 1, self.current_tetromino.y):
             self.current_tetromino.move_right()
@@ -66,6 +75,7 @@ class Game:
             self.place_tetromino()
             return True
         return False
+
 
     def rotate_tetromino(self):
         self.current_tetromino.rotate()
@@ -77,6 +87,7 @@ class Game:
             self.current_tetromino.rotate(-1)
             return False
 
+
     def move_tetromino_down(self):
         if self.is_valid_placement(self.current_tetromino.x, self.current_tetromino.y + 1):
             self.current_tetromino.move_down()
@@ -84,6 +95,7 @@ class Game:
             self.place_tetromino()
             return True
         return False
+
 
     # def clear_lines(self):
     #     # Implement line clearing logic

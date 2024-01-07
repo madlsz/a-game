@@ -1,9 +1,7 @@
 import pygame
-# import numpy as np
 
 from van_gogh import VanGogh
 from game import Game
-# import tetrominos
 
 
 class Engine:
@@ -56,6 +54,7 @@ class Engine:
             if elapsed_time >= self.rotation_time_timeout:
                 if self.game.rotate_tetromino():
                     self.rotation_time = self.current_time
+
 
     def start(self):
         self.game.spawn_tetromino("t", 4, 4)

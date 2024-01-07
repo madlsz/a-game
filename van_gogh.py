@@ -18,17 +18,21 @@ class VanGogh():
         self.color_map[84] = (255, 0, 255)
         self.color_map[90] = (255, 51, 51)
 
+
     @property
     def width(self):
         return self.screen.get_width()
     
+
     @property
     def height(self):
         return self.screen.get_height()
     
+
     @property
     def tile_width(self):
         return self.width // 10
+
 
     @property
     def tile_height(self):
@@ -40,7 +44,11 @@ class VanGogh():
         board = active + landed
         for (y, x), value in np.ndenumerate(board):
             if value != 0:
-                pygame.draw.rect(self.screen, self.color_map[value], pygame.Rect(x * self.tile_width, y * self.tile_height, self.tile_width, self.tile_height))
+                pygame.draw.rect(
+                    self.screen, self.color_map[value],
+                    pygame.Rect(x * self.tile_width, y * self.tile_height,
+                                self.tile_width, self.tile_height)
+                                )
         for x in range(0, self.width, self.tile_width):
             pygame.draw.line(self.screen, self.border_color, (x, 0), (x, self.height))
         for y in range(0, self.height, self.tile_height):

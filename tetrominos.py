@@ -13,43 +13,54 @@ class Base():
         self.pivot = pivot
         self.calculate_boundaries()
 
+
     def __str__(self):
         return np.array_str(self.mask)
+
 
     def rotate(self, k = 1):
         self.mask = np.rot90(self.mask, k)
         self.calculate_boundaries()
 
+
     def move_left(self):
         self.cords[0] -= 1
+
 
     def move_right(self):
         self.cords[0] += 1
 
+
     def move_down(self):
         self.cords[1] += 1
+
 
     @property
     def x(self):
         return self.cords[0]
     
+
     @property
     def y(self):
         return self.cords[1]
     
+
     @property
     def width(self):
         return self.right - self.left + 1
 
+
     @property
     def height(self):
         return self.bottom - self.top + 1
+
 
     def calculate_boundaries(self):
         y_nonzero, x_nonzero = np.where(self.mask != 0)
         self.top, self.bottom = np.min(y_nonzero), np.max(y_nonzero)
         self.left, self.right = np.min(x_nonzero), np.max(x_nonzero)
         # print(f"top:{self.top} bottom:{self.bottom} left:{self.left} right:{self.right}")
+
 
     # distances from the pivot to each side
     # the pivot will be externally treated as the 0,0 point,
@@ -58,13 +69,16 @@ class Base():
     def left_distance(self):
         return abs(self.left - self.pivot[0])
 
+
     @property
     def right_distance(self):
         return abs(self.right - self.pivot[0])
 
+
     @property
     def top_distance(self):
         return abs(self.top - self.pivot[1])
+
 
     @property
     def bottom_distance(self):
