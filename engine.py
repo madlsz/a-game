@@ -1,4 +1,5 @@
 import pygame
+import random
 
 from van_gogh import VanGogh
 from game import Game
@@ -17,10 +18,11 @@ class Engine:
         self.movement_time = None
         self.movement_time_timeout = 50
         self.rotation_time = None
-        self.rotation_time_timeout = 50
+        self.rotation_time_timeout = 75
         self.running = True
         self.current_time = None
         self.pressed_keys = None
+        self.tetromino_types = ["j", "l", "s", "t", "z"]
 
 
     def gravity(self):
@@ -32,6 +34,9 @@ class Engine:
         if elapsed_time >= self.gravity_time_timeout:
             if self.game.move_tetromino_down():
                 self.gravity_time = self.current_time
+            else:
+                self.game.push_to_landed()
+                self.game.spawn_tetromino(random.choice(self.tetromino_types), 4, 1)
 
     
     def horizontal_movement(self):
@@ -41,11 +46,11 @@ class Engine:
                 if self.pressed_keys[pygame.K_LEFT]:
                     if self.game.move_tetromino_left():
                         self.movement_time = self.current_time
-                        print(f"x:{self.game.current_tetromino.x} y:{self.game.current_tetromino.y}")
+                        # print(f"x:{self.game.current_tetromino.x} y:{self.game.current_tetromino.y}")
                 elif self.pressed_keys[pygame.K_RIGHT]:
                     if self.game.move_tetromino_right():
                         self.movement_time = self.current_time
-                        print(f"x:{self.game.current_tetromino.x} y:{self.game.current_tetromino.y}")
+                        # print(f"x:{self.game.current_tetromino.x} y:{self.game.current_tetromino.y}")
     
 
     def rotations(self):
@@ -57,7 +62,7 @@ class Engine:
 
 
     def start(self):
-        self.game.spawn_tetromino("t", 4, 4)
+        self.game.spawn_tetromino(random.choice(self.tetromino_types), 4, 1)
 
         self.current_time = pygame.time.get_ticks()
         self.gravity_time = self.current_time
@@ -69,12 +74,14 @@ class Engine:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-            self.current_time = pygame.time.get_ticks()
-            self.pressed_keys = pygame.key.get_pressed()
-            self.gravity()
-            self.horizontal_movement()
-            self.rotations()
-            self.gogh.draw(self.game.active, self.game.landed)
-            print(self.game)
+
+            if self.game.current_tetromino:
+                self.current_time = pygame.time.get_ticks()
+                self.pressed_keys = pygame.key.get_pressed()
+            
+                self.gravity()
+                self.horizontal_movement()
+                self.rotations()
+                self.gogh.draw(self.game.active, self.game.landed)
 
         pygame.quit()

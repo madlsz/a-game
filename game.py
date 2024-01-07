@@ -9,7 +9,7 @@ class Game:
         self.height = height
         self.active = np.full((self.height, self.width), 0, dtype=int)
         self.landed = np.full((self.height, self.width), 0, dtype=int)
-        self.landed[8,5] = 90
+        self.score = 0
 
 
     def clear_active(self):
@@ -55,10 +55,7 @@ class Game:
     
 
     def check_for_overlaps(self):
-        for iy, ix in np.ndindex(self.active.shape):
-            if self.active[iy, ix] != 0 and self.landed[iy, ix] != 0:
-                return False
-        return True
+        return not np.any((self.active != 0) & (self.landed != 0))
 
     # after a successfull movement return True to reset the movement timeout
     def move_tetromino_left(self):
@@ -110,9 +107,20 @@ class Game:
                 self.current_tetromino.move_up()
                 self.place_tetromino()
         return False
+    
+    def push_to_landed(self):
+        self.landed += self.active
+        self.clear_active()
+        self.current_tetromino = None
+
+        self.clear_lines()
 
 
-    # def clear_lines(self):
-    #     # Implement line clearing logic
-    #     pass
+    def clear_lines(self):
+        for y in range(len(self.landed)):
+            if np.all(self.landed[y, :] != 0):
+                self.landed[1:y+1, :] = self.landed[0:y, :]
+                self.landed[0, :] = 0
+                self.score += 1
+        print(self.score)
         
