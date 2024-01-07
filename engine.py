@@ -35,7 +35,7 @@ class Engine:
         self.current_time = None
         self.pressed_keys = None
         self.tetromino_types = ["j", "l", "s", "t", "z", "o", "i"]
-        self.tetromino_counter = 0
+        self.tetromino_counter = len(self.tetromino_types)
         self.spawn_point = (self.config["spawn"]["x"], self.config["spawn"]["y"])
 
     def read_cfg(self) -> typing.Dict:
