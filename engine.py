@@ -22,6 +22,7 @@ class Engine:
         self.rotation_time = None
         self.rotation_time_timeout = 75
         self.running = True
+        self.paused = False
         self.current_time = None
         self.pressed_keys = None
         self.tetromino_types = ["j", "l", "s", "t", "z", "o", "i"]
@@ -81,13 +82,17 @@ class Engine:
                 if event.type == pygame.QUIT:
                     self.running = False
 
-            if self.game.current_tetromino:
-                self.current_time = pygame.time.get_ticks()
-                self.pressed_keys = pygame.key.get_pressed()
+            self.current_time = pygame.time.get_ticks()
+            self.pressed_keys = pygame.key.get_pressed()
 
-                self.gravity()
-                self.horizontal_movement()
-                self.rotations()
+            if self.pressed_keys[pygame.K_ESCAPE]:
+                self.paused = not self.paused
+
+            if not self.paused:
+                if self.game.current_tetromino:
+                    self.gravity()
+                    self.horizontal_movement()
+                    self.rotations()
                 self.gogh.draw(self.game.active, self.game.landed)
 
         pygame.quit()
