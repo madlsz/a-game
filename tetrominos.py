@@ -16,13 +16,12 @@ class Base():
     def __str__(self):
         return np.array_str(self.mask)
 
-    def rotate(self):
-        self.mask = np.rot90(self.mask, k=1)
+    def rotate(self, k = 1):
+        self.mask = np.rot90(self.mask, k)
         self.calculate_boundaries()
 
     def move_left(self):
-        if self.cords[0] > 0:
-            self.cords[0] -= 1
+        self.cords[0] -= 1
 
     def move_right(self):
         self.cords[0] += 1
@@ -50,7 +49,7 @@ class Base():
         y_nonzero, x_nonzero = np.where(self.mask != 0)
         self.top, self.bottom = np.min(y_nonzero), np.max(y_nonzero)
         self.left, self.right = np.min(x_nonzero), np.max(x_nonzero)
-        print(f"top:{self.top} bottom:{self.bottom} left:{self.left} right:{self.right}")
+        # print(f"top:{self.top} bottom:{self.bottom} left:{self.left} right:{self.right}")
 
 
 class I(Base):

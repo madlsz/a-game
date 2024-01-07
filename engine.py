@@ -30,37 +30,33 @@ class Engine:
             self.gravity_time_timeout = 600
         elapsed_time = pygame.time.get_ticks() - self.gravity_time
         if elapsed_time >= self.gravity_time_timeout:
-            self.gravity_time = pygame.time.get_ticks()
-            self.game.clear_active()
-            self.game.move_tetromino_down()
-            print(self.game)
-            print(f"width:{self.game.current_tetromino.width}, height:{self.game.current_tetromino.height}")
-            print(f"x:{self.game.current_tetromino.x}, y:{self.game.current_tetromino.y}")
+            if self.game.move_tetromino_down():
+                self.gravity_time = pygame.time.get_ticks()
 
     
     def horizontal_movement(self, keys):
         if keys[pygame.K_RIGHT] or keys[pygame.K_LEFT]:
             elapsed_time = pygame.time.get_ticks() - self.movement_time
             if elapsed_time >= self.movement_time_timeout:
-                self.movement_time = pygame.time.get_ticks()
-                self.game.clear_active()
                 if keys[pygame.K_LEFT]:
-                    self.game.move_tetromino_left()
+                    if self.game.move_tetromino_left():
+                        self.movement_time = pygame.time.get_ticks()
+                        print(f"x:{self.game.current_tetromino.x} y:{self.game.current_tetromino.y}")
                 elif keys[pygame.K_RIGHT]:
-                    self.game.move_tetromino_right()
-
+                    if self.game.move_tetromino_right():
+                        self.movement_time = pygame.time.get_ticks()
+                        print(f"x:{self.game.current_tetromino.x} y:{self.game.current_tetromino.y}")
     
+
     def rotations(self, keys):
         if keys[pygame.K_UP]:
             elapsed_time = pygame.time.get_ticks() - self.rotation_time
             if elapsed_time >= self.rotation_time_timeout:
-                self.rotation_time = pygame.time.get_ticks()
-                self.game.clear_active()
-                self.game.rotate_tetromino()
-
+                if self.game.rotate_tetromino():
+                    self.rotation_time = pygame.time.get_ticks()
 
     def start(self):
-        self.game.spawn_tetromino("I")
+        self.game.spawn_tetromino("i")
 
         self.gravity_time = pygame.time.get_ticks()
         self.movement_time = pygame.time.get_ticks()

@@ -4,9 +4,8 @@ from collections import defaultdict
 
 
 class VanGogh():
-    def __init__(self, screen, border_thickness = 1, border_color = (0, 0, 0), background_color = (66, 66, 66)):
+    def __init__(self, screen, border_color = (128, 128, 128), background_color = (0, 0, 0)):
         self.screen = screen
-        self.border_thickness = border_thickness
         self.border_color = border_color
         self.background_color = background_color
 
@@ -41,8 +40,11 @@ class VanGogh():
         board = active + landed
         for (y, x), value in np.ndenumerate(board):
             if value != 0:
-                pygame.draw.rect(self.screen, self.border_color, pygame.Rect(x * self.tile_width, y * self.tile_height, self.tile_width, self.tile_height))
-                pygame.draw.rect(self.screen, self.color_map[value], pygame.Rect(x * self.tile_width - self.border_thickness, y * self.tile_height - self.border_thickness, self.tile_width - self.border_thickness, self.tile_height - self.border_thickness))
+                pygame.draw.rect(self.screen, self.color_map[value], pygame.Rect(x * self.tile_width, y * self.tile_height, self.tile_width, self.tile_height))
+        for x in range(0, self.width, self.tile_width):
+            pygame.draw.line(self.screen, self.border_color, (x, 0), (x, self.height))
+        for y in range(0, self.height, self.tile_height):
+            pygame.draw.line(self.screen, self.border_color, (0, y), (self.width, y))
         pygame.display.update()
 
         
