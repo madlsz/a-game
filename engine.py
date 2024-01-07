@@ -16,14 +16,16 @@ class Engine:
         self.game = Game()
         self.fps = 30
         self.gravity_time = None
-        self.gravity_time_timeout = 600
+        self.gravity_time_timeout_default = 600
+        self.gravity_time_timeout_fast = 100
+        self.gravity_time_timeout = self.gravity_time_timeout_default
         self.movement_time = None
         self.movement_time_timeout = 50
         self.rotation_time = None
         self.rotation_time_timeout = 125
         self.pause_time = None
-        self.pause_time_timeout = 100
-        self.running = True
+        self.pause_time_timeout = 200
+        self.running = False
         self.paused = False
         self.current_time = None
         self.pressed_keys = None
@@ -40,9 +42,9 @@ class Engine:
 
     def gravity(self) -> None:
         if self.pressed_keys[pygame.K_DOWN]:
-            self.gravity_time_timeout = 100
+            self.gravity_time_timeout = self.gravity_time_timeout_fast
         else:
-            self.gravity_time_timeout = 600
+            self.gravity_time_timeout = self.gravity_time_timeout_default
         elapsed_time = self.current_time - self.gravity_time
         if elapsed_time >= self.gravity_time_timeout:
             self.gravity_time = self.current_time
@@ -75,17 +77,23 @@ class Engine:
             elapsed_time = self.current_time - self.pause_time
             if elapsed_time >= self.pause_time_timeout:
                 self.paused = not self.paused
+                if self.paused:
+                    print("Game paused")
+                else:
+                    print("Game unpaused")
                 self.pause_time = self.current_time
 
-    def start(self) -> None:
+    def prepare(self) -> None:
         self.game.spawn_tetromino(self.tetrominos_bag(), 4, 1)
-
         self.current_time = pygame.time.get_ticks()
         self.gravity_time = self.current_time
         self.movement_time = self.current_time
         self.rotation_time = self.current_time
         self.pause_time = self.current_time
+        self.running = True
 
+    def start(self) -> None:
+        self.prepare()
         while self.running:
             self.clock.tick(self.fps)
             for event in pygame.event.get():
