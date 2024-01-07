@@ -90,9 +90,9 @@ class Engine:
 
             if not self.paused:
                 if self.game.current_tetromino:
-                    self.gravity()
                     self.horizontal_movement()
                     self.rotations()
+                    self.gravity()
                 self.gogh.draw(self.game.active, self.game.landed)
 
         pygame.quit()

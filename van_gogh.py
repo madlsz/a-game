@@ -16,13 +16,13 @@ class VanGogh:
         self.background_color = background_color
 
         self.color_map = defaultdict(lambda: (255, 255, 255))
-        self.color_map[73] = (55, 255, 255)
-        self.color_map[74] = (51, 51, 255)
-        self.color_map[76] = (255, 128, 0)
-        self.color_map[79] = (255, 255, 51)
-        self.color_map[83] = (0, 255, 0)
-        self.color_map[84] = (255, 0, 255)
-        self.color_map[90] = (255, 51, 51)
+        self.color_map[73] = (49, 199, 239)
+        self.color_map[74] = (90, 101, 173)
+        self.color_map[76] = (239, 121, 33)
+        self.color_map[79] = (247, 211, 8)
+        self.color_map[83] = (66, 182, 66)
+        self.color_map[84] = (173, 77, 156)
+        self.color_map[90] = (239, 32, 41)
 
     @property
     def width(self) -> int:
