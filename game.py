@@ -50,19 +50,26 @@ class Game:
     def is_valid_placement(self, x, y):
         if x - self.current_tetromino.left_distance >= 0 and x + self.current_tetromino.right_distance < self.width:
             if y - self.current_tetromino.top_distance >= 0 and y + self.current_tetromino.bottom_distance < self.height:
-                for iy, ix in np.ndindex(self.active.shape):
-                    if self.active[iy, ix] != 0 and self.landed[iy, ix] != 0:
-                        return False
                 return True
         return False
+    
 
+    def check_for_overlaps(self):
+        for iy, ix in np.ndindex(self.active.shape):
+            if self.active[iy, ix] != 0 and self.landed[iy, ix] != 0:
+                return False
+        return True
 
     # after a successfull movement return True to reset the movement timeout
     def move_tetromino_left(self):
         if self.is_valid_placement(self.current_tetromino.x - 1, self.current_tetromino.y):
             self.current_tetromino.move_left()
             self.place_tetromino()
-            return True
+            if self.check_for_overlaps():
+                return True
+            else:
+                self.current_tetromino.move_right()
+                self.place_tetromino()
         return False
 
 
@@ -70,7 +77,11 @@ class Game:
         if self.is_valid_placement(self.current_tetromino.x + 1, self.current_tetromino.y):
             self.current_tetromino.move_right()
             self.place_tetromino()
-            return True
+            if self.check_for_overlaps():
+                return True
+            else:
+                self.current_tetromino.move_left()
+                self.place_tetromino()
         return False
 
 
@@ -78,7 +89,12 @@ class Game:
         self.current_tetromino.rotate()
         if self.is_valid_placement(self.current_tetromino.x, self.current_tetromino.y):
             self.place_tetromino()
-            return True
+            if self.check_for_overlaps():
+                return True
+            else:
+                self.current_tetromino.rotate(-1)
+                self.place_tetromino()
+                return False
         else:
             self.current_tetromino.rotate(-1)
             return False
@@ -88,7 +104,11 @@ class Game:
         if self.is_valid_placement(self.current_tetromino.x, self.current_tetromino.y + 1):
             self.current_tetromino.move_down()
             self.place_tetromino()
-            return True
+            if self.check_for_overlaps():
+                return True
+            else:
+                self.current_tetromino.move_up()
+                self.place_tetromino()
         return False
 
 
