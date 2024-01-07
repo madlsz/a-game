@@ -36,9 +36,11 @@ class Engine:
                 self.gravity_time = self.current_time
             else:
                 self.game.push_to_landed()
-                self.game.spawn_tetromino(random.choice(self.tetromino_types), 4, 1)
+                if not self.game.spawn_tetromino(random.choice(self.tetromino_types), 4, 1):
+                    self.running = False
+                    print("Game over!")
 
-    
+
     def horizontal_movement(self):
         if self.pressed_keys[pygame.K_RIGHT] or self.pressed_keys[pygame.K_LEFT]:
             elapsed_time = self.current_time - self.movement_time

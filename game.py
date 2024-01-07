@@ -25,8 +25,11 @@ class Game:
 
 
     def spawn_tetromino(self, type, x = 0, y = 0):
+        if self.landed[y, x] != 0:
+            return False
         self.current_tetromino = tetrominos.create_instance(type, x, y)
         self.place_tetromino()
+        return True
 
 
     def place_tetromino(self):
@@ -122,5 +125,5 @@ class Game:
                 self.landed[1:y+1, :] = self.landed[0:y, :]
                 self.landed[0, :] = 0
                 self.score += 1
-        print(self.score)
+                print(self.score)
         
