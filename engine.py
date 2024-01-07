@@ -9,7 +9,8 @@ class Engine:
     def __init__(self, resolution = (400, 800)):
         pygame.init()
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode(resolution)
+        self.screen = pygame.display.set_mode(resolution, pygame.RESIZABLE)
+        pygame.display.set_caption("a Game") 
         self.gogh = VanGogh(self.screen)
         self.game = Game()
         self.fps = 30
