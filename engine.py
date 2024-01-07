@@ -23,6 +23,16 @@ class Engine:
         self.current_time = None
         self.pressed_keys = None
         self.tetromino_types = ["j", "l", "s", "t", "z", "o", "i"]
+        self.tetromino_counter = 0
+
+
+    def tetrominos_bag(self):
+        if self.tetromino_counter == len(self.tetromino_types):
+            self.tetromino_counter = 0
+            random.shuffle(self.tetromino_types)
+        tetromino_type = self.tetromino_types[self.tetromino_counter]
+        self.tetromino_counter += 1
+        return tetromino_type
 
 
     def gravity(self):
@@ -36,7 +46,7 @@ class Engine:
                 self.gravity_time = self.current_time
             else:
                 self.game.push_to_landed()
-                if not self.game.spawn_tetromino(random.choice(self.tetromino_types), 4, 1):
+                if not self.game.spawn_tetromino(self.tetrominos_bag(), 4, 1):
                     self.running = False
                     print("Game over!")
 
@@ -62,7 +72,7 @@ class Engine:
 
 
     def start(self):
-        self.game.spawn_tetromino(random.choice(self.tetromino_types), 4, 1)
+        self.game.spawn_tetromino(self.tetrominos_bag(), 4, 1)
 
         self.current_time = pygame.time.get_ticks()
         self.gravity_time = self.current_time
