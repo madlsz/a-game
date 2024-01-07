@@ -33,6 +33,10 @@ class Base():
 
     def move_down(self):
         self.cords[1] += 1
+    
+    
+    def move_up(self):
+        self.cords[1] -= 1
 
 
     @property

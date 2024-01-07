@@ -9,7 +9,7 @@ class Game:
         self.height = height
         self.active = np.full((self.height, self.width), 0, dtype=int)
         self.landed = np.full((self.height, self.width), 0, dtype=int)
-        self.landed[5,5] = 90
+        self.landed[8,5] = 90
 
 
     def clear_active(self):
@@ -46,15 +46,13 @@ class Game:
             print("invalid placement")
 
 
-
-
     def is_valid_placement(self, x, y):
         if x - self.current_tetromino.left_distance >= 0 and x + self.current_tetromino.right_distance < self.width:
             if y - self.current_tetromino.top_distance >= 0 and y + self.current_tetromino.bottom_distance < self.height:
-                return True 
-            
-        # TODO: check with static tiles
-        # print("invalid!")
+                for iy, ix in np.ndindex(self.active.shape):
+                    if self.active[iy, ix] != 0 and self.landed[iy, ix] != 0:
+                        return False
+                return True
         return False
 
 
