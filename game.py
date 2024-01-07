@@ -30,17 +30,20 @@ class Game:
 
         # Check if the Tetromino can be placed on the grid
         if self.is_valid_placement(x, y):
+            print("valid placement")
             # Calculate the valid region to update
             y_start, y_end = max(0, y), min(self.height, y + tetromino_mask.shape[0])
             x_start, x_end = max(0, x), min(self.width, x + tetromino_mask.shape[1])
 
             # Update only the valid region with the tetromino_mask
             self.active[y_start:y_end, x_start:x_end] += tetromino_mask[:y_end - y_start, :x_end - x_start]
+        else:
+            print("invalid placement")
 
 
     def is_valid_placement(self, x, y):
-        if x +2 >= 0 and x  < self.width-self.current_tetromino.right:
-            if y + self.current_tetromino.top >= 0 and y + self.current_tetromino.bottom < self.height:
+        if x - self.current_tetromino.left_distance >= 0 and x + self.current_tetromino.right_distance < self.width:
+            if y - self.current_tetromino.top_distance >= 0 and y + self.current_tetromino.bottom_distance < self.height:
                 return True 
             
         # TODO: check with static tiles
