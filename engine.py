@@ -75,5 +75,6 @@ class Engine:
             self.horizontal_movement()
             self.rotations()
             self.gogh.draw(self.game.active, self.game.landed)
+            print(self.game)
 
         pygame.quit()

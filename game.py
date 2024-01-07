@@ -35,15 +35,16 @@ class Game:
 
         # Check if the Tetromino can be placed on the grid
         if self.is_valid_placement(x, y):
-            print("valid placement")
+            self.clear_active()
             # Adjust the tetromino_mask slice dimensions based on top, left, height, and width
             tetromino_slice = tetromino_mask[self.current_tetromino.top:self.current_tetromino.bottom+1,self.current_tetromino.left:self.current_tetromino.right+1]
 
             # Update the valid region with the adjusted tetromino_mask slice
-            self.active[y-self.current_tetromino.top_distance:y + self.current_tetromino.bottom_distance+1, x-self.current_tetromino.left_distance:x+self.current_tetromino.right_distance+1] += tetromino_slice
+            self.active[y-self.current_tetromino.top_distance:y + self.current_tetromino.bottom_distance+1, x-self.current_tetromino.left_distance:x+self.current_tetromino.right_distance+1] = tetromino_slice
+            return True
 
         else:
-            print("invalid placement")
+            return False
 
 
     def is_valid_placement(self, x, y):
@@ -60,7 +61,6 @@ class Game:
     def move_tetromino_left(self):
         if self.is_valid_placement(self.current_tetromino.x - 1, self.current_tetromino.y):
             self.current_tetromino.move_left()
-            self.clear_active()
             self.place_tetromino()
             return True
         return False
@@ -69,7 +69,6 @@ class Game:
     def move_tetromino_right(self):
         if self.is_valid_placement(self.current_tetromino.x + 1, self.current_tetromino.y):
             self.current_tetromino.move_right()
-            self.clear_active()
             self.place_tetromino()
             return True
         return False
@@ -78,7 +77,6 @@ class Game:
     def rotate_tetromino(self):
         self.current_tetromino.rotate()
         if self.is_valid_placement(self.current_tetromino.x, self.current_tetromino.y):
-            self.clear_active()
             self.place_tetromino()
             return True
         else:
@@ -89,7 +87,6 @@ class Game:
     def move_tetromino_down(self):
         if self.is_valid_placement(self.current_tetromino.x, self.current_tetromino.y + 1):
             self.current_tetromino.move_down()
-            self.clear_active()
             self.place_tetromino()
             return True
         return False
