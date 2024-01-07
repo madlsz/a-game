@@ -1,20 +1,25 @@
 import pygame
 import numpy as np
 from collections import defaultdict
-import typing
+import json
 
 
 class VanGogh:
     def __init__(
         self,
         game_screen: pygame.Surface,
-        border_color: typing.Tuple[int, int, int] = (128, 128, 128),
-        background_color: typing.Tuple[int, int, int] = (0, 0, 0),
     ) -> None:
         self.game_screen = game_screen
-        self.border_color = border_color
-        self.background_color = background_color
+        self.border_color = None
+        self.background_color = None
+        self.color_map = None
+        try:
+            self.read_cfg()
+        except:
+            print("[gogh] using default config")
+            self.default_config()
 
+    def default_config(self):
         self.color_map = defaultdict(lambda: (255, 255, 255))
         self.color_map[73] = (49, 199, 239)
         self.color_map[74] = (90, 101, 173)
@@ -23,6 +28,17 @@ class VanGogh:
         self.color_map[83] = (66, 182, 66)
         self.color_map[84] = (173, 77, 156)
         self.color_map[90] = (239, 32, 41)
+        self.border_color = (128, 128, 128)
+        self.background_color = (0, 0, 0)
+
+    def read_cfg(self) -> None:
+        with open("./cfg/gogh.json") as f:
+            config = json.load(f)
+        self.color_map = defaultdict(lambda: config["default_tile_color"])
+        for tile in config["tiles_colors"]:
+            self.color_map[int(tile)] = config["tiles_colors"][tile]
+        self.border_color = config["border_color"]
+        self.background_color = config["background_color"]
 
     @property
     def width(self) -> int:
