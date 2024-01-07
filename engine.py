@@ -1,16 +1,17 @@
 import pygame
 import random
+import typing
 
 from van_gogh import VanGogh
 from game import Game
 
 
 class Engine:
-    def __init__(self, resolution = (400, 800)):
+    def __init__(self, resolution: typing.Tuple[int, int] = (400, 800)) -> None:
         pygame.init()
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode(resolution, pygame.RESIZABLE)
-        pygame.display.set_caption("a Game") 
+        pygame.display.set_caption("a Game")
         self.gogh = VanGogh(self.screen)
         self.game = Game()
         self.fps = 30
@@ -26,8 +27,7 @@ class Engine:
         self.tetromino_types = ["j", "l", "s", "t", "z", "o", "i"]
         self.tetromino_counter = 0
 
-
-    def tetrominos_bag(self):
+    def tetrominos_bag(self) -> str:
         if self.tetromino_counter == len(self.tetromino_types):
             self.tetromino_counter = 0
             random.shuffle(self.tetromino_types)
@@ -35,24 +35,21 @@ class Engine:
         self.tetromino_counter += 1
         return tetromino_type
 
-
-    def gravity(self):
+    def gravity(self) -> None:
         if self.pressed_keys[pygame.K_DOWN]:
             self.gravity_time_timeout = 100
         else:
             self.gravity_time_timeout = 600
         elapsed_time = self.current_time - self.gravity_time
         if elapsed_time >= self.gravity_time_timeout:
-            if self.game.move_tetromino_down():
-                self.gravity_time = self.current_time
-            else:
+            self.gravity_time = self.current_time
+            if not self.game.move_tetromino_down():
                 self.game.push_to_landed()
                 if not self.game.spawn_tetromino(self.tetrominos_bag(), 4, 1):
                     self.running = False
                     print("Game over!")
 
-
-    def horizontal_movement(self):
+    def horizontal_movement(self) -> None:
         if self.pressed_keys[pygame.K_RIGHT] or self.pressed_keys[pygame.K_LEFT]:
             elapsed_time = self.current_time - self.movement_time
             if elapsed_time >= self.movement_time_timeout:
@@ -62,17 +59,15 @@ class Engine:
                 elif self.pressed_keys[pygame.K_RIGHT]:
                     if self.game.move_tetromino_right():
                         self.movement_time = self.current_time
-    
 
-    def rotations(self):
+    def rotations(self) -> None:
         if self.pressed_keys[pygame.K_UP]:
             elapsed_time = self.current_time - self.rotation_time
             if elapsed_time >= self.rotation_time_timeout:
                 if self.game.rotate_tetromino():
                     self.rotation_time = self.current_time
 
-
-    def start(self):
+    def start(self) -> None:
         self.game.spawn_tetromino(self.tetrominos_bag(), 4, 1)
 
         self.current_time = pygame.time.get_ticks()
@@ -89,7 +84,7 @@ class Engine:
             if self.game.current_tetromino:
                 self.current_time = pygame.time.get_ticks()
                 self.pressed_keys = pygame.key.get_pressed()
-            
+
                 self.gravity()
                 self.horizontal_movement()
                 self.rotations()

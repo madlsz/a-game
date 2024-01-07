@@ -1,8 +1,14 @@
 import numpy as np
+import typing
 
 
-class Base():
-    def __init__(self, mask, cords, pivot = (1, 1)):
+class Base:
+    def __init__(
+        self,
+        mask: typing.List[typing.List[int]],
+        cords: typing.Tuple[int, int],
+        pivot: typing.Tuple[int, int] = (1, 1),
+    ) -> None:
         self.mask = np.array(mask, dtype=int)
         self.cords = cords
         self.static = False
@@ -13,139 +19,112 @@ class Base():
         self.pivot = pivot
         self.calculate_boundaries()
 
-
-    def __str__(self):
+    def __str__(self) -> str:
         return np.array_str(self.mask)
 
-
-    def rotate(self, k = 1):
+    def rotate(self, k: int = 1) -> None:
         self.mask = np.rot90(self.mask, k)
         self.calculate_boundaries()
 
-
-    def move_left(self):
+    def move_left(self) -> None:
         self.cords[0] -= 1
 
-
-    def move_right(self):
+    def move_right(self) -> None:
         self.cords[0] += 1
 
-
-    def move_down(self):
+    def move_down(self) -> None:
         self.cords[1] += 1
-    
 
-    def move_up(self):
+    def move_up(self) -> None:
         self.cords[1] -= 1
 
-
     @property
-    def x(self):
+    def x(self) -> int:
         return self.cords[0]
-    
 
     @property
-    def y(self):
+    def y(self) -> int:
         return self.cords[1]
-    
 
     @property
-    def width(self):
+    def width(self) -> int:
         return self.right - self.left + 1
 
-
     @property
-    def height(self):
+    def height(self) -> int:
         return self.bottom - self.top + 1
 
-
-    def calculate_boundaries(self):
+    def calculate_boundaries(self) -> None:
         y_nonzero, x_nonzero = np.where(self.mask != 0)
         self.top, self.bottom = np.min(y_nonzero), np.max(y_nonzero)
         self.left, self.right = np.min(x_nonzero), np.max(x_nonzero)
         # print(f"top:{self.top} bottom:{self.bottom} left:{self.left} right:{self.right}")
 
-
     # distances from the pivot to each side
     # the pivot will be externally treated as the 0,0 point,
     # so we need distances to calculate collisions
     @property
-    def left_distance(self):
+    def left_distance(self) -> int:
         return abs(self.left - self.pivot[0])
 
-
     @property
-    def right_distance(self):
+    def right_distance(self) -> int:
         return abs(self.right - self.pivot[0])
 
-
     @property
-    def top_distance(self):
+    def top_distance(self) -> int:
         return abs(self.top - self.pivot[1])
 
-
     @property
-    def bottom_distance(self):
+    def bottom_distance(self) -> int:
         return abs(self.bottom - self.pivot[1])
 
 
 class I(Base):
-    def __init__(self, x, y):
-        super().__init__([[0, 0, 0, 0],
-                          [73, 73, 73, 73],
-                          [0, 0, 0, 0],
-                          [0, 0, 0, 0]], [x, y - 1])
-    
-    def rotate(self, k = 1):
+    def __init__(self, x: int, y: int) -> None:
+        super().__init__(
+            [[0, 0, 0, 0], [73, 73, 73, 73], [0, 0, 0, 0], [0, 0, 0, 0]], [x, y - 1]
+        )
+
+    def rotate(self, k: int = 1):
         self.mask = self.mask.T
         self.calculate_boundaries()
 
 
 class J(Base):
-    def __init__(self, x, y):
-        super().__init__([[74, 0, 0],
-                          [74, 74, 74],
-                          [0, 0, 0]], [x, y])
+    def __init__(self, x: int, y: int) -> None:
+        super().__init__([[74, 0, 0], [74, 74, 74], [0, 0, 0]], [x, y])
 
 
 class L(Base):
-    def __init__(self, x, y):
-        super().__init__([[0, 0, 76],
-                          [76, 76, 76],
-                          [0, 0, 0]], [x, y])
+    def __init__(self, x: int, y: int) -> None:
+        super().__init__([[0, 0, 76], [76, 76, 76], [0, 0, 0]], [x, y])
 
 
 class O(Base):
-    def __init__(self, x, y):
-        super().__init__([[79, 79],
-                          [79, 79]], [x, y])
-        
-    def rotate(self, k = 1):
+    def __init__(self, x: int, y: int) -> None:
+        super().__init__([[79, 79], [79, 79]], [x, y])
+
+    def rotate(self, k: int = 1) -> None:
         pass
 
 
 class S(Base):
-    def __init__(self, x, y):
-        super().__init__([[0, 83, 83],
-                          [83, 83, 0],
-                          [0, 0, 0]], [x, y])
+    def __init__(self, x: int, y: int) -> None:
+        super().__init__([[0, 83, 83], [83, 83, 0], [0, 0, 0]], [x, y])
 
 
 class T(Base):
-    def __init__(self, x, y):
-        super().__init__([[0, 84, 0],
-                          [84, 84, 84],
-                          [0, 0, 0]], [x, y])
+    def __init__(self, x: int, y: int) -> None:
+        super().__init__([[0, 84, 0], [84, 84, 84], [0, 0, 0]], [x, y])
 
 
 class Z(Base):
-    def __init__(self, x, y):
-        super().__init__([[90, 90, 0],
-                          [0, 90, 90],
-                          [0, 0, 0]], [x, y])
+    def __init__(self, x: int, y: int) -> None:
+        super().__init__([[90, 90, 0], [0, 90, 90], [0, 0, 0]], [x, y])
 
 
-def create_instance(name, x = 0, y = 0):
+def create_instance(name, x: int = 0, y: int = 0) -> typing.Union[I, J, L, O, S, T, Z]:
     name_upper = name.upper()
     if name_upper == "I":
         return I(x, y)
