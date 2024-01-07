@@ -22,10 +22,11 @@ class Engine:
         self.rotation_time_timeout = 50
         self.running = True
         self.current_time = None
+        self.pressed_keys = None
 
 
-    def gravity(self, keys):
-        if keys[pygame.K_DOWN]:
+    def gravity(self):
+        if self.pressed_keys[pygame.K_DOWN]:
             self.gravity_time_timeout = 100
         else:
             self.gravity_time_timeout = 600
@@ -35,22 +36,22 @@ class Engine:
                 self.gravity_time = self.current_time
 
     
-    def horizontal_movement(self, keys):
-        if keys[pygame.K_RIGHT] or keys[pygame.K_LEFT]:
+    def horizontal_movement(self):
+        if self.pressed_keys[pygame.K_RIGHT] or self.pressed_keys[pygame.K_LEFT]:
             elapsed_time = self.current_time - self.movement_time
             if elapsed_time >= self.movement_time_timeout:
-                if keys[pygame.K_LEFT]:
+                if self.pressed_keys[pygame.K_LEFT]:
                     if self.game.move_tetromino_left():
                         self.movement_time = self.current_time
                         print(f"x:{self.game.current_tetromino.x} y:{self.game.current_tetromino.y}")
-                elif keys[pygame.K_RIGHT]:
+                elif self.pressed_keys[pygame.K_RIGHT]:
                     if self.game.move_tetromino_right():
                         self.movement_time = self.current_time
                         print(f"x:{self.game.current_tetromino.x} y:{self.game.current_tetromino.y}")
     
 
-    def rotations(self, keys):
-        if keys[pygame.K_UP]:
+    def rotations(self):
+        if self.pressed_keys[pygame.K_UP]:
             elapsed_time = self.current_time - self.rotation_time
             if elapsed_time >= self.rotation_time_timeout:
                 if self.game.rotate_tetromino():
@@ -70,10 +71,10 @@ class Engine:
                 if event.type == pygame.QUIT:
                     self.running = False
             self.current_time = pygame.time.get_ticks()
-            keys = pygame.key.get_pressed()
-            self.gravity(keys)
-            self.horizontal_movement(keys)
-            self.rotations(keys)
+            self.pressed_keys = pygame.key.get_pressed()
+            self.gravity()
+            self.horizontal_movement()
+            self.rotations()
             self.gogh.draw(self.game.active, self.game.landed)
 
         pygame.quit()
