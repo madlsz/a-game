@@ -6,10 +6,10 @@ from game import Game
 
 
 class Engine:
-    def __init__(self):
+    def __init__(self, resolution = (400, 800)):
         pygame.init()
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((400, 800))
+        self.screen = pygame.display.set_mode(resolution)
         self.gogh = VanGogh(self.screen)
         self.game = Game()
         self.fps = 30

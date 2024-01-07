@@ -5,7 +5,7 @@ from engine import Engine
 
 
 def main():
-    engine = Engine()
+    engine = Engine((320, 640))
     engine.start()
 
 
