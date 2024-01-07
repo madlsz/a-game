@@ -21,6 +21,8 @@ class Engine:
         self.movement_time_timeout = 50
         self.rotation_time = None
         self.rotation_time_timeout = 125
+        self.pause_time = None
+        self.pause_time_timeout = 100
         self.running = True
         self.paused = False
         self.current_time = None
@@ -68,6 +70,13 @@ class Engine:
                 if self.game.rotate_tetromino():
                     self.rotation_time = self.current_time
 
+    def pause(self) -> None:
+        if self.pressed_keys[pygame.K_ESCAPE]:
+            elapsed_time = self.current_time - self.pause_time
+            if elapsed_time >= self.pause_time_timeout:
+                self.paused = not self.paused
+                self.pause_time = self.current_time
+
     def start(self) -> None:
         self.game.spawn_tetromino(self.tetrominos_bag(), 4, 1)
 
@@ -75,6 +84,7 @@ class Engine:
         self.gravity_time = self.current_time
         self.movement_time = self.current_time
         self.rotation_time = self.current_time
+        self.pause_time = self.current_time
 
         while self.running:
             self.clock.tick(self.fps)
@@ -84,10 +94,7 @@ class Engine:
 
             self.current_time = pygame.time.get_ticks()
             self.pressed_keys = pygame.key.get_pressed()
-
-            if self.pressed_keys[pygame.K_ESCAPE]:
-                self.paused = not self.paused
-
+            self.pause()
             if not self.paused:
                 if self.game.current_tetromino:
                     self.horizontal_movement()
