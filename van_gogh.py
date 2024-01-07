@@ -13,23 +13,7 @@ class VanGogh:
         self.border_color = None
         self.background_color = None
         self.color_map = None
-        try:
-            self.read_cfg()
-        except:
-            print("[gogh] using default config")
-            self.default_config()
-
-    def default_config(self):
-        self.color_map = defaultdict(lambda: (255, 255, 255))
-        self.color_map[73] = (49, 199, 239)
-        self.color_map[74] = (90, 101, 173)
-        self.color_map[76] = (239, 121, 33)
-        self.color_map[79] = (247, 211, 8)
-        self.color_map[83] = (66, 182, 66)
-        self.color_map[84] = (173, 77, 156)
-        self.color_map[90] = (239, 32, 41)
-        self.border_color = (128, 128, 128)
-        self.background_color = (0, 0, 0)
+        self.read_cfg()
 
     def read_cfg(self) -> None:
         with open("./cfg/gogh.json") as f:

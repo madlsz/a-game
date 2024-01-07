@@ -1,36 +1,47 @@
 import pygame
 import random
 import typing
+import json
 
 from van_gogh import VanGogh
 from game import Game
 
 
 class Engine:
-    def __init__(self, resolution: typing.Tuple[int, int] = (400, 800)) -> None:
+    def __init__(self) -> None:
+        self.config = self.read_cfg()
         pygame.init()
         self.clock = pygame.time.Clock()
-        self.game_screen = pygame.display.set_mode(resolution, pygame.RESIZABLE)
-        pygame.display.set_caption("a Game")
+        self.game_screen = pygame.display.set_mode(
+            (self.config["resolution"]["width"], self.config["resolution"]["height"]),
+            pygame.RESIZABLE,
+        )
+        pygame.display.set_caption(self.config["window_caption"])
         self.gogh = VanGogh(self.game_screen)
         self.game = Game()
-        self.fps = 30
+        self.fps = self.config["fps"]
         self.gravity_time = None
-        self.gravity_time_timeout_default = 600
-        self.gravity_time_timeout_fast = 100
+        self.gravity_time_timeout_default = self.config["gravity_timeout"]["standard"]
+        self.gravity_time_timeout_fast = self.config["gravity_timeout"]["fast"]
         self.gravity_time_timeout = self.gravity_time_timeout_default
         self.movement_time = None
-        self.movement_time_timeout = 50
+        self.movement_time_timeout = self.config["movement_timeout"]
         self.rotation_time = None
-        self.rotation_time_timeout = 125
+        self.rotation_time_timeout = self.config["rotation_timeout"]
         self.pause_time = None
-        self.pause_time_timeout = 200
+        self.pause_time_timeout = self.config["pause_timeout"]
         self.running = False
         self.paused = False
         self.current_time = None
         self.pressed_keys = None
         self.tetromino_types = ["j", "l", "s", "t", "z", "o", "i"]
         self.tetromino_counter = 0
+        self.spawn_point = (self.config["spawn"]["x"], self.config["spawn"]["y"])
+
+    def read_cfg(self) -> typing.Dict:
+        with open("./cfg/game.json") as f:
+            config = json.load(f)
+        return config
 
     def tetrominos_bag(self) -> str:
         if self.tetromino_counter == len(self.tetromino_types):
@@ -50,7 +61,9 @@ class Engine:
             self.gravity_time = self.current_time
             if not self.game.move_tetromino_down():
                 self.game.push_to_landed()
-                if not self.game.spawn_tetromino(self.tetrominos_bag(), 4, 1):
+                if not self.game.spawn_tetromino(
+                    self.tetrominos_bag(), self.spawn_point[0], self.spawn_point[1]
+                ):
                     self.running = False
                     print("Game over!")
 
@@ -84,7 +97,9 @@ class Engine:
                 self.pause_time = self.current_time
 
     def prepare(self) -> None:
-        self.game.spawn_tetromino(self.tetrominos_bag(), 4, 1)
+        self.game.spawn_tetromino(
+            self.tetrominos_bag(), self.spawn_point[0], self.spawn_point[1]
+        )
         self.current_time = pygame.time.get_ticks()
         self.gravity_time = self.current_time
         self.movement_time = self.current_time
