@@ -36,16 +36,16 @@ class Game:
         # Check if the Tetromino can be placed on the grid
         if self.is_valid_placement(x, y):
             print("valid placement")
-            # Calculate the valid region to update
-            y_start, y_end = (max(0, y - self.current_tetromino.top_distance),
-                              min(self.height, y + self.current_tetromino.bottom_distance))
-            x_start, x_end = (max(0, x - self.current_tetromino.left_distance),
-                              min(self.width, x + self.current_tetromino.right_distance))
+            # Adjust the tetromino_mask slice dimensions based on top, left, height, and width
+            tetromino_slice = tetromino_mask[self.current_tetromino.top:self.current_tetromino.bottom+1,self.current_tetromino.left:self.current_tetromino.right+1]
 
-            # Update only the valid region with the tetromino_mask
-            self.active[y_start:y_end + 1, x_start:x_end +1] += tetromino_mask[:y_end - y_start + 1, :x_end - x_start + 1]
+            # Update the valid region with the adjusted tetromino_mask slice
+            self.active[y-self.current_tetromino.top_distance:y + self.current_tetromino.bottom_distance+1, x-self.current_tetromino.left_distance:x+self.current_tetromino.right_distance+1] += tetromino_slice
+
         else:
             print("invalid placement")
+
+
 
 
     def is_valid_placement(self, x, y):
