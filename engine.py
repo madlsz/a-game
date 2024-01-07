@@ -22,7 +22,8 @@ class Engine:
         self.running = True
         self.current_time = None
         self.pressed_keys = None
-        self.tetromino_types = ["j", "l", "s", "t", "z"]
+        self.tetromino_types = ["j", "l", "s", "t", "z", "o", "i"]
+        self.tetromino_types = ["o", "i"]
 
 
     def gravity(self):

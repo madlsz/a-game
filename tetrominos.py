@@ -34,7 +34,7 @@ class Base():
     def move_down(self):
         self.cords[1] += 1
     
-    
+
     def move_up(self):
         self.cords[1] -= 1
 
@@ -95,6 +95,11 @@ class I(Base):
                           [73, 73, 73, 73],
                           [0, 0, 0, 0],
                           [0, 0, 0, 0]], [x, y])
+    
+    def rotate(self, k = 1):
+        self.rotation = not self.rotation
+        self.mask = self.mask.T
+        self.calculate_boundaries()
 
 
 class J(Base):
@@ -115,6 +120,9 @@ class O(Base):
     def __init__(self, x, y):
         super().__init__([[79, 79],
                           [79, 79]], [x, y])
+        
+    def rotate(self, k = 1):
+        pass
 
 
 class S(Base):
