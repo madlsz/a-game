@@ -94,10 +94,9 @@ class I(Base):
         super().__init__([[0, 0, 0, 0],
                           [73, 73, 73, 73],
                           [0, 0, 0, 0],
-                          [0, 0, 0, 0]], [x, y])
+                          [0, 0, 0, 0]], [x, y - 1])
     
     def rotate(self, k = 1):
-        self.rotation = not self.rotation
         self.mask = self.mask.T
         self.calculate_boundaries()
 

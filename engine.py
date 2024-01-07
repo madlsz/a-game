@@ -23,7 +23,6 @@ class Engine:
         self.current_time = None
         self.pressed_keys = None
         self.tetromino_types = ["j", "l", "s", "t", "z", "o", "i"]
-        self.tetromino_types = ["o", "i"]
 
 
     def gravity(self):
@@ -47,11 +46,9 @@ class Engine:
                 if self.pressed_keys[pygame.K_LEFT]:
                     if self.game.move_tetromino_left():
                         self.movement_time = self.current_time
-                        # print(f"x:{self.game.current_tetromino.x} y:{self.game.current_tetromino.y}")
                 elif self.pressed_keys[pygame.K_RIGHT]:
                     if self.game.move_tetromino_right():
                         self.movement_time = self.current_time
-                        # print(f"x:{self.game.current_tetromino.x} y:{self.game.current_tetromino.y}")
     
 
     def rotations(self):
