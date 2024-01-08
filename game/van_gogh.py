@@ -16,13 +16,11 @@ class VanGogh:
 
         if self.config["auto_resolution"]:
             height = pygame.display.Info().current_h
-            self.config["resolution"]["height"] = height * 0.8
-            self.config["resolution"]["height"] = (
-                round(self.config["resolution"]["height"] / 10) * 10
-            )
+            self.config["resolution"]["height"] = int(height * 0.8) // 20 * 20
             self.config["resolution"]["width"] = (
                 self.config["resolution"]["height"] * 0.5
             )
+        print(self.config["resolution"]["height"])
 
         self.game_screen = pygame.Surface(
             (self.config["resolution"]["width"], self.config["resolution"]["height"])
