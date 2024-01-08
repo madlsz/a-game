@@ -1,8 +1,4 @@
 {
-    "resolution": {
-        "width": 320,
-        "height": 640
-    },
     "window_caption": "a Game",
     "tps": 30,
     "gravity_timeout": {

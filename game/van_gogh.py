@@ -2,47 +2,34 @@ import pygame
 import numpy as np
 from collections import defaultdict
 import json
+import typing
 
 
 class VanGogh:
-    def __init__(
-        self,
-        main_screen: pygame.Surface,
-        game_screen: pygame.Surface,
-        preview_screen: pygame.Surface
-    ) -> None:
-        self.main_screen = main_screen
-        self.game_screen = game_screen
-        self.preview_screen = preview_screen
-        self.border_color = None
-        self.background_color = None
-        self.color_map = None
-        self.read_cfg()
+    def __init__(self) -> None:
+        self.config = self.read_cfg()
+        self.color_map = defaultdict(lambda: self.config["default_tile_color"])
+        for tile in self.config["tiles_colors"]:
+            self.color_map[int(tile)] = self.config["tiles_colors"][tile]
+        self.border_color = self.config["border_color"]
+        self.background_color = self.config["background_color"]
 
-    def read_cfg(self) -> None:
+        self.game_screen = pygame.Surface((self.config["resolution"]["width"], self.config["resolution"]["height"]))
+        self.preview_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
+        self.main_screen = pygame.display.set_mode((self.game_screen.get_width() + self.preview_screen.get_width(), self.config["resolution"]["height"]), pygame.RESIZABLE)
+
+    def read_cfg(self) -> typing.Dict:
         with open("./cfg/gogh.json") as f:
             config = json.load(f)
-        self.color_map = defaultdict(lambda: config["default_tile_color"])
-        for tile in config["tiles_colors"]:
-            self.color_map[int(tile)] = config["tiles_colors"][tile]
-        self.border_color = config["border_color"]
-        self.background_color = config["background_color"]
-
-    @property
-    def width(self) -> int:
-        return self.game_screen.get_width()
-
-    @property
-    def height(self) -> int:
-        return self.game_screen.get_height()
+        return config
 
     @property
     def tile_width(self) -> int:
-        return self.width // 10
+        return self.game_screen.get_width() // 10
 
     @property
     def tile_height(self) -> int:
-        return self.height // 20
+        return self.game_screen.get_height() // 20
 
     def draw_game(self, active: np.ndarray, landed: np.ndarray) -> None:
         """
@@ -62,13 +49,13 @@ class VanGogh:
                         self.tile_height,
                     ),
                 )
-        for x in range(0, self.width, self.tile_width):
+        for x in range(0, self.game_screen.get_width(), self.tile_width):
             pygame.draw.line(
-                self.game_screen, self.border_color, (x, 0), (x, self.height)
+                self.game_screen, self.border_color, (x, 0), (x, self.game_screen.get_height())
             )
-        for y in range(0, self.height, self.tile_height):
+        for y in range(0, self.game_screen.get_height(), self.tile_height):
             pygame.draw.line(
-                self.game_screen, self.border_color, (0, y), (self.width, y)
+                self.game_screen, self.border_color, (0, y), (self.game_screen.get_width(), y)
             )
         self.main_screen.blit(self.game_screen, (0,0))
         pygame.display.update()
@@ -90,5 +77,13 @@ class VanGogh:
                         self.tile_height,
                     ),
                 )
-        self.main_screen.blit(self.preview_screen, (self.width, 0))
-        pass
+        # for x in range(0, self.preview_screen.get_width(), self.tile_width):
+        #     pygame.draw.line(
+        #         self.preview_screen, self.border_color, (x, 0), (x, self.preview_screen.get_height())
+        #     )
+        # for y in range(0, self.preview_screen.get_height(), self.tile_height):
+        #     pygame.draw.line(
+        #         self.preview_screen, self.border_color, (0, y), (self.preview_screen.get_width(), y)
+        #     )
+        self.main_screen.blit(self.preview_screen, (self.game_screen.get_width(), 0))
+        pygame.display.update()

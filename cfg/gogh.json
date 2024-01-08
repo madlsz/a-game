@@ -50,5 +50,9 @@
         0,
         0,
         0
-    ]
+    ],
+    "resolution": {
+        "width": 320,
+        "height": 640
+    }
 }

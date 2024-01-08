@@ -13,11 +13,7 @@ class Engine:
         self.config = self.read_cfg()
         pygame.init()
         self.clock = pygame.time.Clock()
-        self.main_screen = pygame.display.set_mode((700, self.config["resolution"]["height"]), pygame.RESIZABLE)
-        self.preview_surface = pygame.Surface((100, 100))
-        self.game_surface = pygame.Surface((self.config["resolution"]["width"], self.config["resolution"]["height"]))
-        pygame.display.set_caption(self.config["window_caption"])
-        self.gogh = VanGogh(self.main_screen, self.game_surface, self.preview_surface)
+        self.gogh = VanGogh()
         self.game = Game()
         self.tps = self.config["tps"]
         self.gravity_time = None
