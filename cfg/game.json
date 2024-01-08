@@ -4,7 +4,7 @@
         "height": 640
     },
     "window_caption": "a Game",
-    "fps": 30,
+    "tps": 30,
     "gravity_timeout": {
         "standard": 600,
         "fast": 100

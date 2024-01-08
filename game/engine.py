@@ -19,7 +19,7 @@ class Engine:
         pygame.display.set_caption(self.config["window_caption"])
         self.gogh = VanGogh(self.game_screen)
         self.game = Game()
-        self.fps = self.config["fps"]
+        self.tps = self.config["tps"]
         self.gravity_time = None
         self.gravity_time_timeout_default = self.config["gravity_timeout"]["standard"]
         self.gravity_time_timeout_fast = self.config["gravity_timeout"]["fast"]
@@ -114,7 +114,7 @@ class Engine:
     def start(self) -> None:
         self.prepare()
         while self.running:
-            self.clock.tick(self.fps)
+            self.clock.tick(self.tps)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
