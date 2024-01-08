@@ -16,7 +16,7 @@ class VanGogh:
 
         if self.config["auto_resolution"]:
             height = pygame.display.Info().current_h
-            self.config["resolution"]["height"] = int(height * 0.8) // 5 * 5
+            self.config["resolution"]["height"] = int(height * 0.8) // 20 * 20
             self.config["resolution"]["width"] = (
                 self.config["resolution"]["height"] * 0.5
             )
