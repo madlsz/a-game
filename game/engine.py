@@ -17,9 +17,8 @@ class Engine:
         self.game = Game()
         self.tps = self.config["tps"]
         self.gravity_time = None
-        self.gravity_time_timeout_default = self.config["gravity_timeout"]["standard"]
-        self.gravity_time_timeout_fast = self.config["gravity_timeout"]["fast"]
-        self.gravity_time_timeout = self.gravity_time_timeout_default
+        # self.gravity_time_timeout_default = self.config["gravity_timeout"]["standard"]
+        self.ticks_per_row = self.config["ticks_per_row"]
         self.movement_time = None
         self.movement_time_timeout = self.config["movement_timeout"]
         self.rotation_time = None
@@ -35,8 +34,16 @@ class Engine:
         self.spawn_point = (self.config["spawn"]["x"], self.config["spawn"]["y"])
         self.new_state = False
 
+    @property
+    def gravity_time_timeout_standard(self) -> int:
+        return round(self.ticks_per_row[str(self.game.level)] * 1000 / self.tps)
+
+    @property
+    def gravity_time_timeout_fast(self) -> int:
+        return round(self.ticks_per_row["29"] * 1000 / self.tps)
+
     def read_cfg(self) -> typing.Dict:
-        with open("./cfg/game.json") as f:
+        with open("./cfg/engine.json") as f:
             config = json.load(f)
         return config
 
@@ -54,16 +61,17 @@ class Engine:
         return tetromino_type
 
     def gravity(self) -> None:
-        if self.pressed_keys[pygame.K_DOWN]:
-            self.gravity_time_timeout = self.gravity_time_timeout_fast
-        else:
-            self.gravity_time_timeout = self.gravity_time_timeout_default
         elapsed_time = self.current_time - self.gravity_time
-        if elapsed_time >= self.gravity_time_timeout:
+        if elapsed_time >= (
+            self.gravity_time_timeout_fast
+            if self.pressed_keys[pygame.K_DOWN]
+            else self.gravity_time_timeout_standard
+        ):
             self.new_state = True
             self.gravity_time = self.current_time
             if not self.game.move_tetromino_down():
                 self.game.push_to_landed()
+                # TODO: refresh the level display
                 if not self.game.spawn_tetromino(
                     self.tetrominos_bag(), self.spawn_point[0], self.spawn_point[1]
                 ):

@@ -4,12 +4,17 @@ import game.tetrominos as tetrominos
 
 
 class Game:
-    def __init__(self, width: int = 10, height: int = 20) -> None:
-        self.width = width
-        self.height = height
+    def __init__(self) -> None:
+        self.width = 10
+        self.height = 20
         self.active = np.full((self.height, self.width), 0, dtype=int)
         self.landed = np.full((self.height, self.width), 0, dtype=int)
         self.score = 0
+        self.cleared_lines = 0
+
+    @property
+    def level(self):
+        return min(self.cleared_lines // 10, 29)
 
     def clear_active(self) -> None:
         self.active = np.full((self.height, self.width), 0, dtype=int)
@@ -139,6 +144,7 @@ class Game:
                 self.landed[1 : y + 1, :] = self.landed[0:y, :]
                 self.landed[0, :] = 0
                 cleared_at_once += 1
+                self.cleared_lines += 1
         if cleared_at_once > -1:
             self.score += 2**cleared_at_once
             print(self.score)
