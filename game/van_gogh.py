@@ -34,8 +34,7 @@ class VanGogh:
             (
                 self.game_screen.get_width() + self.preview_screen.get_width(),
                 self.config["resolution"]["height"],
-            ),
-            pygame.RESIZABLE,
+            )
         )
 
     def read_cfg(self) -> typing.Dict:
