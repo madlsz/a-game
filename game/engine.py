@@ -37,6 +37,7 @@ class Engine:
         self.tetromino_types = ["j", "l", "s", "t", "z", "o", "i"]
         self.tetromino_counter = len(self.tetromino_types)
         self.spawn_point = (self.config["spawn"]["x"], self.config["spawn"]["y"])
+        self.new_state = True
 
     def read_cfg(self) -> typing.Dict:
         with open("./cfg/game.json") as f:
@@ -58,6 +59,7 @@ class Engine:
             self.gravity_time_timeout = self.gravity_time_timeout_default
         elapsed_time = self.current_time - self.gravity_time
         if elapsed_time >= self.gravity_time_timeout:
+            self.new_state = True
             self.gravity_time = self.current_time
             if not self.game.move_tetromino_down():
                 self.game.push_to_landed()
@@ -71,6 +73,7 @@ class Engine:
         if self.pressed_keys[pygame.K_RIGHT] or self.pressed_keys[pygame.K_LEFT]:
             elapsed_time = self.current_time - self.movement_time
             if elapsed_time >= self.movement_time_timeout:
+                self.new_state = True
                 if self.pressed_keys[pygame.K_LEFT]:
                     if self.game.move_tetromino_left():
                         self.movement_time = self.current_time
@@ -82,6 +85,7 @@ class Engine:
         if self.pressed_keys[pygame.K_UP]:
             elapsed_time = self.current_time - self.rotation_time
             if elapsed_time >= self.rotation_time_timeout:
+                self.new_state = True
                 if self.game.rotate_tetromino():
                     self.rotation_time = self.current_time
 
@@ -123,6 +127,8 @@ class Engine:
                     self.horizontal_movement()
                     self.rotations()
                     self.gravity()
-                self.gogh.draw(self.game.active, self.game.landed)
+                if self.new_state:
+                    self.gogh.draw(self.game.active, self.game.landed)
+                    self.new_state = False
 
         pygame.quit()
