@@ -71,7 +71,8 @@ class Engine:
             self.gravity_time = self.current_time
             if not self.game.move_tetromino_down():
                 self.game.push_to_landed()
-                # TODO: refresh the level display
+                self.gogh.draw_level(self.game.level)
+                self.gogh.draw_score(self.game.score)
                 if not self.game.spawn_tetromino(
                     self.tetrominos_bag(), self.spawn_point[0], self.spawn_point[1]
                 ):
@@ -125,6 +126,8 @@ class Engine:
         self.prepare()
         self.new_state = True
         self.running = True
+        self.gogh.draw_level(self.game.level)
+        self.gogh.draw_score(self.game.score)
         while self.running:
             self.clock.tick(self.tps)
             for event in pygame.event.get():

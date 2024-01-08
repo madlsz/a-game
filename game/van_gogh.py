@@ -7,6 +7,7 @@ import typing
 
 class VanGogh:
     def __init__(self) -> None:
+        # pygame.font.init()
         self.config = self.read_cfg()
         self.color_map = defaultdict(lambda: self.config["default_tile_color"])
         for tile in self.config["tiles_colors"]:
@@ -27,6 +28,8 @@ class VanGogh:
         self.preview_screen = pygame.Surface(
             (self.tile_width * 4, self.tile_height * 3)
         )
+        self.score_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
+        self.level_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
         self.main_screen = pygame.display.set_mode(
             (
                 self.game_screen.get_width() + self.preview_screen.get_width(),
@@ -34,6 +37,7 @@ class VanGogh:
             )
         )
         pygame.display.set_caption(self.config["window_caption"])
+        self.font = pygame.font.Font("freesansbold.ttf", 32)
 
     def read_cfg(self) -> typing.Dict:
         with open("./cfg/gogh.json") as f:
@@ -86,7 +90,7 @@ class VanGogh:
             0, 0, self.game_screen.get_width(), self.game_screen.get_height()
         )
 
-    def draw_preview(self, mask):
+    def draw_preview(self, mask: np.ndarray) -> None:
         """
         Draws the preview of the next tetromino
         """
@@ -124,4 +128,37 @@ class VanGogh:
             0,
             self.preview_screen.get_width(),
             self.preview_screen.get_height(),
+        )
+
+    def draw_level(self, level: int) -> None:
+        text = self.font.render(f"level {level}", True, (255, 255, 255))
+        self.level_screen.fill(self.background_color)
+        self.level_screen.blit(text, (0, 0))
+        self.main_screen.blit(
+            self.level_screen,
+            (self.game_screen.get_width(), self.preview_screen.get_height()),
+        )
+        pygame.display.update(
+            self.game_screen.get_width(),
+            self.preview_screen.get_height(),
+            self.level_screen.get_width(),
+            self.level_screen.get_height(),
+        )
+
+    def draw_score(self, score: int) -> None:
+        text = self.font.render(f"score {score}", True, (255, 255, 255))
+        self.score_screen.fill(self.background_color)
+        self.score_screen.blit(text, (0, 0))
+        self.main_screen.blit(
+            self.score_screen,
+            (
+                self.game_screen.get_width(),
+                self.preview_screen.get_height() + self.level_screen.get_height(),
+            ),
+        )
+        pygame.display.update(
+            self.game_screen.get_width(),
+            self.preview_screen.get_height() + self.level_screen.get_height(),
+            self.level_screen.get_width(),
+            self.level_screen.get_height(),
         )
