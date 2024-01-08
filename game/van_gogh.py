@@ -20,7 +20,6 @@ class VanGogh:
             self.config["resolution"]["width"] = (
                 self.config["resolution"]["height"] * 0.5
             )
-        print(self.config["resolution"]["height"])
 
         self.game_screen = pygame.Surface(
             (self.config["resolution"]["width"], self.config["resolution"]["height"])
