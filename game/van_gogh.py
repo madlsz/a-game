@@ -58,7 +58,7 @@ class VanGogh:
                 self.game_screen, self.border_color, (0, y), (self.game_screen.get_width(), y)
             )
         self.main_screen.blit(self.game_screen, (0,0))
-        pygame.display.update()
+        pygame.display.update(0,0,self.game_screen.get_width(),self.game_screen.get_height())
 
     def draw_preview(self, mask):
         """
@@ -86,4 +86,4 @@ class VanGogh:
         #         self.preview_screen, self.border_color, (0, y), (self.preview_screen.get_width(), y)
         #     )
         self.main_screen.blit(self.preview_screen, (self.game_screen.get_width(), 0))
-        pygame.display.update()
+        pygame.display.update(self.game_screen.get_width(), 0, self.preview_screen.get_width(),self.preview_screen.get_height())
