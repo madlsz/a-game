@@ -14,9 +14,29 @@ class VanGogh:
         self.border_color = self.config["border_color"]
         self.background_color = self.config["background_color"]
 
-        self.game_screen = pygame.Surface((self.config["resolution"]["width"], self.config["resolution"]["height"]))
-        self.preview_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
-        self.main_screen = pygame.display.set_mode((self.game_screen.get_width() + self.preview_screen.get_width(), self.config["resolution"]["height"]), pygame.RESIZABLE)
+        if self.config["auto_resolution"]:
+            height = pygame.display.Info().current_h
+            self.config["resolution"]["height"] = height * 0.8
+            self.config["resolution"]["height"] = (
+                round(self.config["resolution"]["height"] / 10) * 10
+            )
+            self.config["resolution"]["width"] = (
+                self.config["resolution"]["height"] * 0.5
+            )
+
+        self.game_screen = pygame.Surface(
+            (self.config["resolution"]["width"], self.config["resolution"]["height"])
+        )
+        self.preview_screen = pygame.Surface(
+            (self.tile_width * 4, self.tile_height * 3)
+        )
+        self.main_screen = pygame.display.set_mode(
+            (
+                self.game_screen.get_width() + self.preview_screen.get_width(),
+                self.config["resolution"]["height"],
+            ),
+            pygame.RESIZABLE,
+        )
 
     def read_cfg(self) -> typing.Dict:
         with open("./cfg/gogh.json") as f:
@@ -52,14 +72,22 @@ class VanGogh:
         if self.config["grid"]["game"]:
             for x in range(0, self.game_screen.get_width(), self.tile_width):
                 pygame.draw.line(
-                    self.game_screen, self.border_color, (x, 0), (x, self.game_screen.get_height())
+                    self.game_screen,
+                    self.border_color,
+                    (x, 0),
+                    (x, self.game_screen.get_height()),
                 )
             for y in range(0, self.game_screen.get_height(), self.tile_height):
                 pygame.draw.line(
-                    self.game_screen, self.border_color, (0, y), (self.game_screen.get_width(), y)
+                    self.game_screen,
+                    self.border_color,
+                    (0, y),
+                    (self.game_screen.get_width(), y),
                 )
-        self.main_screen.blit(self.game_screen, (0,0))
-        pygame.display.update(0,0,self.game_screen.get_width(),self.game_screen.get_height())
+        self.main_screen.blit(self.game_screen, (0, 0))
+        pygame.display.update(
+            0, 0, self.game_screen.get_width(), self.game_screen.get_height()
+        )
 
     def draw_preview(self, mask):
         """
@@ -81,11 +109,22 @@ class VanGogh:
         if self.config["grid"]["preview"]:
             for x in range(0, self.preview_screen.get_width(), self.tile_width):
                 pygame.draw.line(
-                    self.preview_screen, self.border_color, (x, 0), (x, self.preview_screen.get_height())
+                    self.preview_screen,
+                    self.border_color,
+                    (x, 0),
+                    (x, self.preview_screen.get_height()),
                 )
             for y in range(0, self.preview_screen.get_height(), self.tile_height):
                 pygame.draw.line(
-                    self.preview_screen, self.border_color, (0, y), (self.preview_screen.get_width(), y)
+                    self.preview_screen,
+                    self.border_color,
+                    (0, y),
+                    (self.preview_screen.get_width(), y),
                 )
         self.main_screen.blit(self.preview_screen, (self.game_screen.get_width(), 0))
-        pygame.display.update(self.game_screen.get_width(), 0, self.preview_screen.get_width(),self.preview_screen.get_height())
+        pygame.display.update(
+            self.game_screen.get_width(),
+            0,
+            self.preview_screen.get_width(),
+            self.preview_screen.get_height(),
+        )

@@ -51,6 +51,7 @@
         0,
         0
     ],
+    "auto_resolution": true,
     "resolution": {
         "width": 320,
         "height": 640
