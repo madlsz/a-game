@@ -33,7 +33,7 @@ class Engine:
         self.tetromino_types = ["j", "l", "s", "t", "z", "o", "i"]
         self.tetromino_counter = 0
         self.spawn_point = (self.config["spawn"]["x"], self.config["spawn"]["y"])
-        self.new_state = True
+        self.new_state = False
 
     def read_cfg(self) -> typing.Dict:
         with open("./cfg/game.json") as f:
@@ -108,10 +108,11 @@ class Engine:
         self.movement_time = self.current_time
         self.rotation_time = self.current_time
         self.pause_time = self.current_time
-        self.running = True
 
     def start(self) -> None:
         self.prepare()
+        self.new_state = True
+        self.running = True
         while self.running:
             self.clock.tick(self.tps)
             for event in pygame.event.get():
