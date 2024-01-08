@@ -73,20 +73,21 @@ class Engine:
         if self.pressed_keys[pygame.K_RIGHT] or self.pressed_keys[pygame.K_LEFT]:
             elapsed_time = self.current_time - self.movement_time
             if elapsed_time >= self.movement_time_timeout:
-                self.new_state = True
                 if self.pressed_keys[pygame.K_LEFT]:
                     if self.game.move_tetromino_left():
+                        self.new_state = True
                         self.movement_time = self.current_time
                 elif self.pressed_keys[pygame.K_RIGHT]:
                     if self.game.move_tetromino_right():
+                        self.new_state = True
                         self.movement_time = self.current_time
 
     def rotations(self) -> None:
         if self.pressed_keys[pygame.K_UP]:
             elapsed_time = self.current_time - self.rotation_time
             if elapsed_time >= self.rotation_time_timeout:
-                self.new_state = True
                 if self.game.rotate_tetromino():
+                    self.new_state = True
                     self.rotation_time = self.current_time
 
     def pause(self) -> None:
