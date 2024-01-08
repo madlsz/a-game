@@ -33,6 +33,7 @@ class VanGogh:
                 self.config["resolution"]["height"],
             )
         )
+        pygame.display.set_caption(self.config["window_caption"])
 
     def read_cfg(self) -> typing.Dict:
         with open("./cfg/gogh.json") as f:
