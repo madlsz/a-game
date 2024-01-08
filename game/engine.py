@@ -5,6 +5,7 @@ import json
 
 from game.van_gogh import VanGogh
 from game.game import Game
+from game import tetrominos
 
 
 class Engine:
@@ -12,12 +13,11 @@ class Engine:
         self.config = self.read_cfg()
         pygame.init()
         self.clock = pygame.time.Clock()
-        self.game_screen = pygame.display.set_mode(
-            (self.config["resolution"]["width"], self.config["resolution"]["height"]),
-            pygame.RESIZABLE,
-        )
+        self.main_screen = pygame.display.set_mode((700, self.config["resolution"]["height"]), pygame.RESIZABLE)
+        self.preview_surface = pygame.Surface((100, 100))
+        self.game_surface = pygame.Surface((self.config["resolution"]["width"], self.config["resolution"]["height"]))
         pygame.display.set_caption(self.config["window_caption"])
-        self.gogh = VanGogh(self.game_screen)
+        self.gogh = VanGogh(self.main_screen, self.game_surface, self.preview_surface)
         self.game = Game()
         self.tps = self.config["tps"]
         self.gravity_time = None
@@ -35,7 +35,7 @@ class Engine:
         self.current_time = None
         self.pressed_keys = None
         self.tetromino_types = ["j", "l", "s", "t", "z", "o", "i"]
-        self.tetromino_counter = len(self.tetromino_types)
+        self.tetromino_counter = 0
         self.spawn_point = (self.config["spawn"]["x"], self.config["spawn"]["y"])
         self.new_state = True
 
@@ -45,11 +45,12 @@ class Engine:
         return config
 
     def tetrominos_bag(self) -> str:
+        tetromino_type = self.tetromino_types[self.tetromino_counter]
+        self.tetromino_counter += 1
         if self.tetromino_counter == len(self.tetromino_types):
             self.tetromino_counter = 0
             random.shuffle(self.tetromino_types)
-        tetromino_type = self.tetromino_types[self.tetromino_counter]
-        self.tetromino_counter += 1
+        self.gogh.draw_preview(tetrominos.create_instance(self.tetromino_types[self.tetromino_counter]).mask)
         return tetromino_type
 
     def gravity(self) -> None:
@@ -102,6 +103,7 @@ class Engine:
                 self.pause_time = self.current_time
 
     def prepare(self) -> None:
+        random.shuffle(self.tetromino_types)
         self.game.spawn_tetromino(
             self.tetrominos_bag(), self.spawn_point[0], self.spawn_point[1]
         )
@@ -129,7 +131,7 @@ class Engine:
                     self.rotations()
                     self.gravity()
                 if self.new_state:
-                    self.gogh.draw(self.game.active, self.game.landed)
+                    self.gogh.draw_game(self.game.active, self.game.landed)
                     self.new_state = False
 
         pygame.quit()
