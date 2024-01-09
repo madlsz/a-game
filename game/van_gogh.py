@@ -38,8 +38,14 @@ class VanGogh:
             )
         )
         pygame.display.set_caption(self.config["window_caption"])
-        self.font = pygame.font.Font(
+        self.font_large = pygame.font.Font(
             self.config["font"]["large"]["font"], self.config["font"]["large"]["size"]
+        )
+        self.font_normal = pygame.font.Font(
+            self.config["font"]["normal"]["font"], self.config["font"]["normal"]["size"]
+        )
+        self.font_small = pygame.font.Font(
+            self.config["font"]["small"]["font"], self.config["font"]["small"]["size"]
         )
 
     def read_cfg(self) -> typing.Dict:
@@ -152,13 +158,15 @@ class VanGogh:
         )
 
     def draw_level(self, level: int) -> None:
-        text = self.font.render(f"level {level}", True, (255, 255, 255))
+        text_caption = self.font_normal.render("level:", True, (255, 255, 255))
+        text_level = self.font_large.render(str(level), True, (255, 255, 255))
         self.level_screen.fill(self.background_color)
+        self.level_screen.blit(text_caption, (0, 0))
         self.level_screen.blit(
-            text,
+            text_level,
             (
-                (self.level_screen.get_width() - text.get_width()) // 2,
-                (self.level_screen.get_height() - text.get_height()) // 2,
+                (self.level_screen.get_width() - text_level.get_width()) // 2,
+                (self.level_screen.get_height() - text_level.get_height()) // 2,
             ),
         )
         self.main_screen.blit(
@@ -173,13 +181,15 @@ class VanGogh:
         )
 
     def draw_score(self, score: int) -> None:
-        text = self.font.render(f"score {score}", True, (255, 255, 255))
+        text_caption = self.font_normal.render("score:", True, (255, 255, 255))
+        text_score = self.font_large.render(str(score), True, (255, 255, 255))
         self.score_screen.fill(self.background_color)
+        self.score_screen.blit(text_caption, (0, 0))
         self.score_screen.blit(
-            text,
+            text_score,
             (
-                (self.score_screen.get_width() - text.get_width()) // 2,
-                (self.score_screen.get_height() - text.get_height()) // 2,
+                (self.score_screen.get_width() - text_score.get_width()) // 2,
+                (self.score_screen.get_height() - text_score.get_height()) // 2,
             ),
         )
         self.main_screen.blit(
