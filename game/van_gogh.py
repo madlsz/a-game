@@ -28,7 +28,7 @@ class VanGogh:
             (self.config["resolution"]["width"], self.config["resolution"]["height"])
         )
         self.preview_screen = pygame.Surface(
-            (self.tile_width * 4, self.tile_height * 3)
+            (self.tile_width * 4, self.tile_height * 4)
         )
         self.score_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
         self.level_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
@@ -116,6 +116,7 @@ class VanGogh:
             left_padding = self.tile_width
         else:
             left_padding = 0
+        top_padding = self.tile_height // 2
         for (y, x), value in np.ndenumerate(tetromino.mask):
             if value != 0:
                 pygame.draw.rect(
@@ -123,7 +124,7 @@ class VanGogh:
                     self.color_map[value],
                     pygame.Rect(
                         x * self.tile_width + left_padding,
-                        y * self.tile_height,
+                        y * self.tile_height + top_padding,
                         self.tile_width,
                         self.tile_height,
                     ),
