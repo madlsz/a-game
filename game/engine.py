@@ -98,16 +98,13 @@ class Engine:
                     self.new_state = True
                     self.rotation_time = self.current_time
 
-    def pause(self) -> None:
+    def pause(self) -> bool:
         if self.pressed_keys[pygame.K_ESCAPE]:
             elapsed_time = self.current_time - self.pause_time
             if elapsed_time >= self.pause_time_timeout:
                 self.paused = not self.paused
-                if self.paused:
-                    print("Game paused")
-                else:
-                    print("Game unpaused")
                 self.pause_time = self.current_time
+        return self.paused
 
     def prepare(self) -> None:
         random.shuffle(self.tetromino_types)
@@ -134,8 +131,7 @@ class Engine:
 
             self.current_time = pygame.time.get_ticks()
             self.pressed_keys = pygame.key.get_pressed()
-            self.pause()
-            if not self.paused:
+            if not self.pause():
                 if self.game.current_tetromino:
                     self.horizontal_movement()
                     self.rotations()
