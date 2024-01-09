@@ -60,5 +60,9 @@
         "game": true,
         "preview": false
     },
-    "window_caption": "a Game"
+    "window_caption": "a Game",
+    "font": {
+        "font": "freesansbold.ttf",
+        "size": 32
+    }
 }

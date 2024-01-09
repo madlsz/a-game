@@ -37,7 +37,9 @@ class VanGogh:
             )
         )
         pygame.display.set_caption(self.config["window_caption"])
-        self.font = pygame.font.Font("freesansbold.ttf", 32)
+        self.font = pygame.font.Font(
+            self.config["font"]["font"], self.config["font"]["size"]
+        )
 
     def read_cfg(self) -> typing.Dict:
         with open("./cfg/gogh.json") as f:
