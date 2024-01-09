@@ -135,7 +135,13 @@ class VanGogh:
     def draw_level(self, level: int) -> None:
         text = self.font.render(f"level {level}", True, (255, 255, 255))
         self.level_screen.fill(self.background_color)
-        self.level_screen.blit(text, (0, 0))
+        self.level_screen.blit(
+            text,
+            (
+                (self.level_screen.get_width() - text.get_width()) // 2,
+                (self.level_screen.get_height() - text.get_height()) // 2,
+            ),
+        )
         self.main_screen.blit(
             self.level_screen,
             (self.game_screen.get_width(), self.preview_screen.get_height()),
@@ -150,7 +156,13 @@ class VanGogh:
     def draw_score(self, score: int) -> None:
         text = self.font.render(f"score {score}", True, (255, 255, 255))
         self.score_screen.fill(self.background_color)
-        self.score_screen.blit(text, (0, 0))
+        self.score_screen.blit(
+            text,
+            (
+                (self.score_screen.get_width() - text.get_width()) // 2,
+                (self.score_screen.get_height() - text.get_height()) // 2,
+            ),
+        )
         self.main_screen.blit(
             self.score_screen,
             (
