@@ -54,9 +54,7 @@ class Engine:
             self.tetromino_counter = 0
             random.shuffle(self.tetromino_types)
         self.gogh.draw_preview(
-            tetrominos.create_instance(
-                self.tetromino_types[self.tetromino_counter]
-            ).mask
+            tetrominos.create_instance(self.tetromino_types[self.tetromino_counter])
         )
         return tetromino_type
 

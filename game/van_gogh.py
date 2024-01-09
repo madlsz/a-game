@@ -4,6 +4,8 @@ from collections import defaultdict
 import json
 import typing
 
+from game import tetrominos
+
 
 class VanGogh:
     def __init__(self) -> None:
@@ -92,18 +94,35 @@ class VanGogh:
             0, 0, self.game_screen.get_width(), self.game_screen.get_height()
         )
 
-    def draw_preview(self, mask: np.ndarray) -> None:
+    def draw_preview(
+        self,
+        tetromino: typing.Union[
+            tetrominos.I,
+            tetrominos.J,
+            tetrominos.L,
+            tetrominos.O,
+            tetrominos.S,
+            tetrominos.T,
+            tetrominos.Z,
+        ],
+    ) -> None:
         """
         Draws the preview of the next tetromino
         """
         self.preview_screen.fill(self.background_color)
-        for (y, x), value in np.ndenumerate(mask):
+        if tetromino.mask.shape[0] == 3:
+            left_padding = self.tile_width // 2
+        elif tetromino.mask.shape[0] == 2:
+            left_padding = self.tile_width
+        else:
+            left_padding = 0
+        for (y, x), value in np.ndenumerate(tetromino.mask):
             if value != 0:
                 pygame.draw.rect(
                     self.preview_screen,
                     self.color_map[value],
                     pygame.Rect(
-                        x * self.tile_width,
+                        x * self.tile_width + left_padding,
                         y * self.tile_height,
                         self.tile_width,
                         self.tile_height,
