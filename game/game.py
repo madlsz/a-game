@@ -138,13 +138,22 @@ class Game:
         self.clear_lines()
 
     def clear_lines(self) -> None:
-        cleared_at_once = -1
+        cleared_at_once = 0
         for y in range(len(self.landed)):
             if np.all(self.landed[y, :] != 0):
                 self.landed[1 : y + 1, :] = self.landed[0:y, :]
                 self.landed[0, :] = 0
                 cleared_at_once += 1
                 self.cleared_lines += 1
-        if cleared_at_once > -1:
-            self.score += 2**cleared_at_once
-            print(self.score)
+        if cleared_at_once > 0:
+            self.add_score(cleared_at_once)
+
+    def add_score(self, cleared_at_once: int) -> None:
+        if cleared_at_once == 1:
+            self.score += 40 * (self.level + 1)
+        elif cleared_at_once == 2:
+            self.score += 100 * (self.level + 1)
+        elif cleared_at_once == 3:
+            self.score += 300 * (self.level + 1)
+        else:
+            self.score += 1200 * (self.level + 1)
