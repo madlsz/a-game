@@ -41,16 +41,28 @@
         255,
         255
     ],
-    "border_color": [
-        128,
-        128,
-        128
-    ],
-    "background_color": [
-        0,
-        0,
-        0
-    ],
+    "background_color": {
+        "game": [
+            0,
+            0,
+            0
+        ],
+        "preview": [
+            0,
+            0,
+            0
+        ],
+        "score": [
+            0,
+            0,
+            0
+        ],
+        "level": [
+            0,
+            0,
+            0
+        ]
+    },
     "auto_resolution": true,
     "resolution": {
         "width": 320,
@@ -58,11 +70,41 @@
     },
     "grid": {
         "game": true,
-        "preview": false
+        "preview": false,
+        "color": [
+            128,
+            128,
+            128
+        ]
     },
     "window_caption": "a Game",
     "font": {
-        "font": "freesansbold.ttf",
-        "size": 32
+        "small": {
+            "font": "freesansbold.ttf",
+            "size": 8,
+            "color": [
+                255,
+                255,
+                255
+            ]
+        },
+        "normal": {
+            "font": "freesansbold.ttf",
+            "size": 16,
+            "color": [
+                255,
+                255,
+                255
+            ]
+        },
+        "large": {
+            "font": "freesansbold.ttf",
+            "size": 32,
+            "color": [
+                255,
+                255,
+                255
+            ]
+        }
     }
 }

@@ -58,7 +58,6 @@ class Base:
         y_nonzero, x_nonzero = np.where(self.mask != 0)
         self.top, self.bottom = np.min(y_nonzero), np.max(y_nonzero)
         self.left, self.right = np.min(x_nonzero), np.max(x_nonzero)
-        # print(f"top:{self.top} bottom:{self.bottom} left:{self.left} right:{self.right}")
 
     # distances from the pivot to each side
     # the pivot will be externally treated as the 0,0 point,

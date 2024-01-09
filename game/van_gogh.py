@@ -9,13 +9,12 @@ from game import tetrominos
 
 class VanGogh:
     def __init__(self) -> None:
-        # pygame.font.init()
         self.config = self.read_cfg()
         self.color_map = defaultdict(lambda: self.config["default_tile_color"])
         for tile in self.config["tiles_colors"]:
             self.color_map[int(tile)] = self.config["tiles_colors"][tile]
-        self.border_color = self.config["border_color"]
-        self.background_color = self.config["background_color"]
+        self.border_color = self.config["grid"]["color"]
+        self.background_color = self.config["background_color"]["game"]
 
         if self.config["auto_resolution"]:
             height = pygame.display.Info().current_h
@@ -40,7 +39,7 @@ class VanGogh:
         )
         pygame.display.set_caption(self.config["window_caption"])
         self.font = pygame.font.Font(
-            self.config["font"]["font"], self.config["font"]["size"]
+            self.config["font"]["large"]["font"], self.config["font"]["large"]["size"]
         )
 
     def read_cfg(self) -> typing.Dict:
