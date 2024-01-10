@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 import pygame
 import typing
 import json
@@ -8,41 +7,18 @@ from game.button import Button
 from game.logic import Game
 from game.van_gogh import VanGogh
 from game import tetrominos
-
-
-class SceneBase(ABC):
-    def __init__(self):
-        self.next = self
-
-    @abstractmethod
-    # This method will receive all the events that happened since the last frame.
-    def process_input(self, events, keys_pressed):
-        pass
-
-    @abstractmethod
-    # Put your game logic in here for the scene
-    def update(self):
-        pass
-
-    @abstractmethod
-    # Put your render code here. It will receive the main screen Surface as input.
-    def render(self, screen):
-        pass
-
-    def switch_to_scene(self, next_scene):
-        self.next = next_scene
-
-    def terminate(self):
-        self.switch_to_scene(None)
+from game.scenes import SceneBase
 
 
 class SceneMenu(SceneBase):
     def __init__(self, screen):
         super().__init__()
         self.screen = screen
-        self.buttons = []
-        self.buttons.append(Button(100, 50, "play", self.switch_to_game))
-        self.buttons.append(Button(100, 50, "quit", self.terminate))
+        self.buttons = [
+            Button(100, 50, "play", self.switch_to_game),
+            Button(100, 50, "help", print, "help"),
+            Button(100, 50, "quit", self.terminate),
+        ]
         self.new_state = True
 
     def process_input(self, events, keys_pressed):
