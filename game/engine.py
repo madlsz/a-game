@@ -2,6 +2,7 @@ import pygame
 import typing
 import json
 import random
+import webbrowser
 
 from game.button import Button
 from game.logic import Game
@@ -15,9 +16,16 @@ class SceneMenu(SceneBase):
         super().__init__()
         self.screen = screen
         self.buttons = [
-            Button(100, 50, "play", self.switch_to_game),
-            Button(100, 50, "help", print, "help"),
-            Button(100, 50, "quit", self.terminate),
+            Button(200, 50, "Play", self.switch_to_game),
+            Button(200, 50, "Leaderboard", print, "leaderboard"),
+            Button(
+                200,
+                50,
+                "Github page",
+                webbrowser.open,
+                "https://github.com/madlsz/a-game",
+            ),
+            Button(200, 50, "Quit", self.terminate),
         ]
         self.new_state = True
 
@@ -39,7 +47,7 @@ class SceneMenu(SceneBase):
     def render(self):
         if self.new_state:
             self.new_state = False
-            self.screen.fill((0, 0, 255))
+            self.screen.fill((0, 99, 99))
             for i, button in enumerate(self.buttons):
                 button.x = (self.screen.get_width() - button.width) // 2
                 button.y = 100 * (i + 2)

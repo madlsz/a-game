@@ -13,13 +13,13 @@ class Button:
         font: str = "freesansbold.ttf",
         font_size: int = 20,
         font_color: typing.Tuple[int, int, int] = (255, 255, 255),
-        background_color: typing.Tuple[int, int, int] = None,
+        background_color: typing.Tuple[int, int, int, int] = (0, 0, 0, 100),
     ) -> None:
         self.x = None
         self.y = None
         self.width = width
         self.height = height
-        self.surf = pygame.Surface((self.width, self.height))
+        self.surf = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.font = pygame.font.Font(font, font_size)
         self.caption = self.font.render(caption, True, font_color)
         self.on_click = on_click
@@ -37,8 +37,8 @@ class Button:
 
     @property
     def surface(self) -> pygame.Surface:
-        if self.background_color:
-            self.surf.fill(self.background_color)
+        # if self.background_color:
+        self.surf.fill(self.background_color)
         self.surf.blit(
             self.caption,
             (
