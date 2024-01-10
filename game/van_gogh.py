@@ -8,35 +8,27 @@ from game import tetrominos
 
 
 class VanGogh:
-    def __init__(self) -> None:
+    def __init__(self, screen: pygame.Surface) -> None:
+        self.main_screen = screen
         self.config = self.read_cfg()
+        self.main_screen.fill(self.config["background_color"]["game"])
+        pygame.display.update()
         self.color_map = defaultdict(lambda: self.config["default_tile_color"])
         for tile in self.config["tiles_colors"]:
             self.color_map[int(tile)] = self.config["tiles_colors"][tile]
         self.border_color = self.config["grid"]["color"]
         self.background_color = self.config["background_color"]["game"]
 
-        if self.config["auto_resolution"]:
-            height = pygame.display.Info().current_h
-            self.config["resolution"]["height"] = int(height * 0.8) // 20 * 20
-            self.config["resolution"]["width"] = (
-                self.config["resolution"]["height"] * 0.5
-            )
-
         self.game_screen = pygame.Surface(
-            (self.config["resolution"]["width"], self.config["resolution"]["height"])
+            (screen.get_width() // 14 * 10, screen.get_height())
         )
+
         self.preview_screen = pygame.Surface(
             (self.tile_width * 4, self.tile_height * 4)
         )
         self.score_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
         self.level_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
-        self.main_screen = pygame.display.set_mode(
-            (
-                self.game_screen.get_width() + self.preview_screen.get_width(),
-                self.config["resolution"]["height"],
-            )
-        )
+
         pygame.display.set_caption(self.config["window_caption"])
         self.font_large = pygame.font.Font(
             self.config["font"]["large"]["font"], self.config["font"]["large"]["size"]
@@ -65,6 +57,8 @@ class VanGogh:
         """
         Draws the game (board)
         """
+        # self.main_screen.fill((0, 0, 0))
+        # pygame.display.update()
         self.game_screen.fill(self.background_color)
         board = active + landed
         for (y, x), value in np.ndenumerate(board):

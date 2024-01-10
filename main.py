@@ -1,12 +1,11 @@
 #!./venv/bin/python
 
 
-from game.engine import Engine
+from game import engine
 
 
 def main():
-    engine = Engine()
-    engine.start()
+    engine.run()
 
 
 if __name__ == "__main__":
