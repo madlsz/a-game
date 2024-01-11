@@ -177,6 +177,7 @@ class SceneGame(SceneBase):
 
     @property
     def gravity_time_timeout_fast(self) -> int:
+        return round(self.config["ticks_per_row"]["29"] * 1000 / self.config["tps"])
         if not self.landed:
             return round(self.config["ticks_per_row"]["29"] * 1000 / self.config["tps"])
         else:
@@ -209,6 +210,7 @@ class SceneGame(SceneBase):
                     self.new_preview = True
                     self.new_level = True
                     self.new_score = True
+                    pygame.time.delay(500)
                     if not self.game.spawn_tetromino(
                         self.draw_tetromino(),
                         self.config["spawn"]["x"],
@@ -216,6 +218,8 @@ class SceneGame(SceneBase):
                     ):
                         self.new_state = False
                         self.switch_to_scene(SceneMenu(self.screen))
+            else:
+                self.landed = False
 
     def horizontal_movement(self) -> None:
         if self.keys_pressed[pygame.K_RIGHT] or self.keys_pressed[pygame.K_LEFT]:
