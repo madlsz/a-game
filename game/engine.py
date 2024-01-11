@@ -223,6 +223,8 @@ class SceneGame(SceneBase):
                     ):
                         self.new_state = False
                         self.switch_to_scene(SceneMenu(self.screen))
+                    else:
+                        self.new_state = True
             else:
                 self.landed = False
 
