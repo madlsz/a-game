@@ -146,7 +146,13 @@ class SceneGame(SceneBase):
         self.new_preview = True
         self.new_level = True
         self.new_score = True
-        self.game.spawn_tetromino(self.draw_tetromino())
+        self.game.spawn_tetromino(
+            self.draw_tetromino(),
+            self.config["spawn"]["x"],
+            self.config["spawn"]["y"],
+        )
+        self.landed = False
+        self.landed_timeout = 800
 
     def read_cfg(self) -> typing.Dict:
         with open("./cfg/engine.json") as f:
@@ -155,15 +161,21 @@ class SceneGame(SceneBase):
 
     @property
     def gravity_time_timeout_standard(self) -> int:
-        return round(
-            self.config["ticks_per_row"][str(self.game.level)]
-            * 1000
-            / self.config["tps"]
-        )
+        if not self.landed:
+            return round(
+                self.config["ticks_per_row"][str(self.game.level)]
+                * 1000
+                / self.config["tps"]
+            )
+        else:
+            return self.landed_timeout
 
     @property
     def gravity_time_timeout_fast(self) -> int:
-        return round(self.config["ticks_per_row"]["29"] * 1000 / self.config["tps"])
+        if not self.landed:
+            return round(self.config["ticks_per_row"]["29"] * 1000 / self.config["tps"])
+        else:
+            return self.landed_timeout
 
     def draw_tetromino(self) -> str:
         tetromino_type = self.config["tetromino_types"][self.tetromino_counter]
@@ -183,17 +195,21 @@ class SceneGame(SceneBase):
             self.new_state = True
             self.gravity_time = self.current_time
             if not self.game.move_tetromino_down():
-                self.game.push_to_landed()
-                self.new_preview = True
-                self.new_level = True
-                self.new_score = True
-                if not self.game.spawn_tetromino(
-                    self.draw_tetromino(),
-                    self.config["spawn"]["x"],
-                    self.config["spawn"]["y"],
-                ):
-                    self.new_state = False
-                    self.switch_to_scene(SceneMenu(self.screen))
+                if not self.landed:
+                    self.landed = True
+                else:
+                    self.landed = False
+                    self.game.push_to_landed()
+                    self.new_preview = True
+                    self.new_level = True
+                    self.new_score = True
+                    if not self.game.spawn_tetromino(
+                        self.draw_tetromino(),
+                        self.config["spawn"]["x"],
+                        self.config["spawn"]["y"],
+                    ):
+                        self.new_state = False
+                        self.switch_to_scene(SceneMenu(self.screen))
 
     def horizontal_movement(self) -> None:
         if self.keys_pressed[pygame.K_RIGHT] or self.keys_pressed[pygame.K_LEFT]:
