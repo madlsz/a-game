@@ -24,6 +24,9 @@ class VanGogh:
             (screen.get_width() // 14 * 10, screen.get_height())
         )
 
+        self.tile_height = self.game_screen.get_height() // 20
+        self.tile_width = self.game_screen.get_width() // 10
+
         self.preview_screen = pygame.Surface(
             (self.tile_width * 4, self.tile_height * 4)
         )
@@ -58,13 +61,27 @@ class VanGogh:
             config = json.load(f)
         return config
 
-    @property
-    def tile_width(self) -> int:
-        return self.game_screen.get_width() // 10
+    # @property
+    # def tile_width(self) -> int:
+    #     return self.game_screen.get_width() // 10
 
-    @property
-    def tile_height(self) -> int:
-        return self.game_screen.get_height() // 20
+    # @property
+    # def tile_height(self) -> int:
+    #     return self.game_screen.get_height() // 20
+
+    def draw_pause(self):
+        text = self.font_large.render("GAME PAUSED", True, (255, 255, 255))
+        self.game_screen.blit(
+            text,
+            (
+                (self.game_screen.get_width() - text.get_width()) // 2,
+                (self.game_screen.get_height() - text.get_height()) // 2,
+            ),
+        )
+        self.main_screen.blit(self.game_screen, (0, 0))
+        pygame.display.update(
+            0, 0, self.game_screen.get_width(), self.game_screen.get_height()
+        )
 
     def draw_buttons(self, buttons: typing.List[Button]) -> None:
         self.button_screen.fill(self.config["background_color"]["buttons"])

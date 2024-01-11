@@ -158,7 +158,10 @@ class SceneGame(SceneBase):
         self.buttons = [
             Button(
                 150, 50, "Menu", self.switch_to_menu, background_color=(50, 50, 50, 255)
-            )
+            ),
+            Button(
+                150, 50, "Pause", self.toggle_pause, background_color=(50, 50, 50, 255)
+            ),
         ]
 
     def read_cfg(self) -> typing.Dict:
@@ -254,9 +257,16 @@ class SceneGame(SceneBase):
         if self.keys_pressed[pygame.K_ESCAPE]:
             elapsed_time = self.current_time - self.pause_time
             if elapsed_time >= self.config["pause_timeout"]:
-                self.paused = not self.paused
+                self.toggle_pause()
                 self.pause_time = self.current_time
         return self.paused
+
+    def toggle_pause(self):
+        self.paused = not self.paused
+        if self.paused:
+            self.gogh.draw_pause()
+        else:
+            self.gogh.draw_game(self.game.active, self.game.landed)
 
     def process_input(self, events, keys_pressed):
         for event in events:
@@ -295,12 +305,6 @@ class SceneGame(SceneBase):
         if self.new_buttons:
             self.new_buttons = False
             self.gogh.draw_buttons(self.buttons)
-
-        # TODO: make gogh render buttons on a dedicated surface (pass button object to gogh)
-        # self.buttons[0].x = 0
-        # self.buttons[0].y = 0
-        # self.screen.blit(self.buttons[0].surface, (0, 0))
-        # pygame.display.update()
 
 
 def run():
