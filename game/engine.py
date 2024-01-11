@@ -149,6 +149,7 @@ class SceneGame(SceneBase):
         self.new_level = True
         self.new_score = True
         self.new_buttons = True
+        self.are = 100
         self.game.spawn_tetromino(
             self.draw_tetromino(),
             self.config["spawn"]["x"],
@@ -206,7 +207,7 @@ class SceneGame(SceneBase):
                 self.new_preview = True
                 self.new_level = True
                 self.new_score = True
-                pygame.time.wait(500)
+                pygame.time.wait(self.are)
                 if not self.game.spawn_tetromino(
                     self.draw_tetromino(),
                     self.config["spawn"]["x"],

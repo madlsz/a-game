@@ -53,7 +53,7 @@ class VanGogh:
         self.old_board = None
 
         # TODO: move to cfg
-        self.animate_rows_speed = 100
+        self.animate_rows_speed = 66
         self.animate_rows = True
 
     def read_cfg(self) -> typing.Dict:
