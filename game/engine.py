@@ -128,7 +128,7 @@ class SceneLeaderboard(SceneBase):
 
 
 class SceneGame(SceneBase):
-    def __init__(self, screen: pygame.Surface):
+    def __init__(self, screen: pygame.Surface) -> None:
         super().__init__()
         self.config = self.read_cfg()
         self.tetromino_types = self.config["tetromino_types"]
@@ -154,8 +154,6 @@ class SceneGame(SceneBase):
             self.config["spawn"]["x"],
             self.config["spawn"]["y"],
         )
-        self.landed = False
-        self.landed_timeout = 800
         self.buttons = [
             Button(
                 150, 50, "Menu", self.switch_to_menu, background_color=(50, 50, 50, 255)
@@ -173,17 +171,14 @@ class SceneGame(SceneBase):
             config = json.load(f)
         return config
 
-    def switch_to_menu(self):
+    def switch_to_menu(self) -> None:
         self.switch_to_scene(SceneMenu(self.screen))
 
     @property
     def gravity_time_timeout_standard(self) -> int:
-        if not self.landed:
-            return round(
-                self.config["ticks_per_row"][str(self.game.level)] * self.tick_const
-            )
-        else:
-            return self.landed_timeout
+        return round(
+            self.config["ticks_per_row"][str(self.game.level)] * self.tick_const
+        )
 
     @property
     def gravity_time_timeout_fast(self) -> int:
@@ -207,27 +202,18 @@ class SceneGame(SceneBase):
             self.new_state = True
             self.gravity_time = self.current_time
             if not self.game.move_tetromino_down():
-                if not self.landed:
+                self.game.push_to_landed()
+                self.new_preview = True
+                self.new_level = True
+                self.new_score = True
+                pygame.time.wait(500)
+                if not self.game.spawn_tetromino(
+                    self.draw_tetromino(),
+                    self.config["spawn"]["x"],
+                    self.config["spawn"]["y"],
+                ):
                     self.new_state = False
-                    self.landed = True
-                else:
-                    self.landed = False
-                    self.game.push_to_landed()
-                    self.new_preview = True
-                    self.new_level = True
-                    self.new_score = True
-                    pygame.time.wait(500)
-                    if not self.game.spawn_tetromino(
-                        self.draw_tetromino(),
-                        self.config["spawn"]["x"],
-                        self.config["spawn"]["y"],
-                    ):
-                        self.new_state = False
-                        self.switch_to_scene(SceneMenu(self.screen))
-                    else:
-                        self.new_state = True
-            else:
-                self.landed = False
+                    self.switch_to_scene(SceneMenu(self.screen))
 
     def horizontal_movement(self) -> None:
         if self.keys_pressed[pygame.K_RIGHT] or self.keys_pressed[pygame.K_LEFT]:
@@ -247,13 +233,12 @@ class SceneGame(SceneBase):
             elapsed_time = self.current_time - self.rotation_time
             if elapsed_time >= self.config["rotation_timeout"]:
                 if self.keys_pressed[pygame.K_z]:
-                    if self.game.rotate_tetromino(False):
-                        self.new_state = True
-                        self.rotation_time = self.current_time
+                    clockwise = False
                 elif self.keys_pressed[pygame.K_x]:
-                    if self.game.rotate_tetromino(True):
-                        self.new_state = True
-                        self.rotation_time = self.current_time
+                    clockwise = True
+                if self.game.rotate_tetromino(clockwise):
+                    self.new_state = True
+                    self.rotation_time = self.current_time
 
     def pause(self) -> bool:
         if self.keys_pressed[pygame.K_p]:
@@ -263,14 +248,18 @@ class SceneGame(SceneBase):
                 self.pause_time = self.current_time
         return self.paused
 
-    def toggle_pause(self):
+    def toggle_pause(self) -> None:
         self.paused = not self.paused
         if self.paused:
             self.gogh.draw_pause()
         else:
             self.gogh.draw_game(self.game.active, self.game.landed)
 
-    def process_input(self, events, keys_pressed):
+    def process_input(
+        self,
+        events: typing.List[pygame.event.Event],
+        keys_pressed: pygame.key.ScancodeWrapper,
+    ) -> None:
         for event in events:
             if event.type == pygame.QUIT:
                 self.terminate()
@@ -279,7 +268,7 @@ class SceneGame(SceneBase):
                     button.click()
         self.keys_pressed = keys_pressed
 
-    def update(self):
+    def update(self) -> None:
         self.current_time = pygame.time.get_ticks()
         if not self.pause():
             if self.game.current_tetromino:
@@ -287,7 +276,7 @@ class SceneGame(SceneBase):
                 self.rotations()
                 self.gravity()
 
-    def render(self):
+    def render(self) -> None:
         if self.new_state:
             self.new_state = False
             self.gogh.draw_game(self.game.active, self.game.landed)
