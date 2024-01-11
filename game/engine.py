@@ -4,6 +4,7 @@ import json
 import random
 import webbrowser
 import collections
+import numpy as np
 
 from game.button import Button
 from game.logic import Game
@@ -177,13 +178,13 @@ class SceneGame(SceneBase):
 
     @property
     def gravity_time_timeout_standard(self) -> int:
-        return round(
+        return np.rint(
             self.config["ticks_per_row"][str(self.game.level)] * self.tick_const
         )
 
     @property
     def gravity_time_timeout_fast(self) -> int:
-        return round(self.config["ticks_per_row"]["29"] * self.tick_const)
+        return np.rint(self.config["ticks_per_row"]["29"] * self.tick_const)
 
     def draw_tetromino(self) -> str:
         tetromino_type = self.tetromino_types[self.tetromino_counter]
