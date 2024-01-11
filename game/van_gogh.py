@@ -29,7 +29,7 @@ class VanGogh:
         self.score_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
         self.level_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
 
-        pygame.display.set_caption(self.config["window_caption"])
+        # pygame.display.set_caption(self.config["window_caption"])
         self.font_large = pygame.font.Font(
             self.config["font"]["large"]["font"], self.config["font"]["large"]["size"]
         )

@@ -26,9 +26,9 @@ class Button:
         self.args = args
         self.background_color = background_color
 
-    def mouse_collision(self, pos: typing.Tuple[int, int]) -> bool:
+    def is_inside_point(self, pos: typing.Tuple[int, int]) -> bool:
         """
-        True if mouse pointer collides with the button
+        True if the given point is inside the Button
         """
         x, y = pos
         if self.x <= x < self.width + self.x and self.y <= y < self.height + self.y:
@@ -49,7 +49,7 @@ class Button:
         return self.surf
 
     def click(self) -> bool:
-        if self.mouse_collision(pygame.mouse.get_pos()) and callable(self.on_click):
+        if self.is_inside_point(pygame.mouse.get_pos()) and callable(self.on_click):
             self.on_click(*self.args)
             return True
         return False

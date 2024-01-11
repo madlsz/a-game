@@ -192,6 +192,7 @@ def run():
     width = int(7 * height // 10)
     screen = pygame.display.set_mode((width, height))
     clock = pygame.time.Clock()
+    pygame.display.set_caption("a Game")
     active_scene = SceneMenu(screen)
 
     while active_scene != None:
