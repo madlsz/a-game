@@ -201,6 +201,7 @@ class SceneGame(SceneBase):
             self.gravity_time = self.current_time
             if not self.game.move_tetromino_down():
                 if not self.landed:
+                    self.new_state = False
                     self.landed = True
                 else:
                     self.landed = False

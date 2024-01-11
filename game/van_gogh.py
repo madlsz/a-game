@@ -40,6 +40,12 @@ class VanGogh:
             self.config["font"]["small"]["font"], self.config["font"]["small"]["size"]
         )
 
+        self.old_board = None
+
+        # TODO: move to cfg
+        self.animate_rows_speed = 100
+        self.animate_rows = True
+
     def read_cfg(self) -> typing.Dict:
         with open("./cfg/gogh.json") as f:
             config = json.load(f)
@@ -53,14 +59,12 @@ class VanGogh:
     def tile_height(self) -> int:
         return self.game_screen.get_height() // 20
 
-    def draw_game(self, active: np.ndarray, landed: np.ndarray) -> None:
+    def draw_board(self, board: np.ndarray):
         """
-        Draws the game (board)
+        draws the board into self.game_screen
         """
-        # self.main_screen.fill((0, 0, 0))
-        # pygame.display.update()
+        # print(board)
         self.game_screen.fill(self.background_color)
-        board = active + landed
         for (y, x), value in np.ndenumerate(board):
             if value != 0:
                 pygame.draw.rect(
@@ -92,6 +96,36 @@ class VanGogh:
         pygame.display.update(
             0, 0, self.game_screen.get_width(), self.game_screen.get_height()
         )
+
+    def draw_game(self, active: np.ndarray, landed: np.ndarray) -> None:
+        """
+        Draws the game (board)
+        """
+        board = active + landed
+
+        if self.animate_rows:
+            # check for removed lines
+            if self.old_board is not None:
+                # missing lines
+                if np.sum(board) < np.sum(self.old_board):
+                    lines_to_remove = []
+                    for y in range(len(self.old_board)):
+                        if np.all(self.old_board[y, :] != 0):
+                            lines_to_remove.append(y)
+
+                    left = [i for i in range(4, -1, -1)]
+                    right = [i for i in range(5, 10)]
+                    for x in range(len(left)):
+                        for y in lines_to_remove:
+                            self.old_board[y, left[x]] = 0
+                            self.old_board[y, right[x]] = 0
+
+                        self.draw_board(self.old_board)
+                        pygame.time.wait(self.animate_rows_speed)
+
+            self.old_board = board.copy()
+
+        self.draw_board(board)
 
     def draw_preview(
         self,
