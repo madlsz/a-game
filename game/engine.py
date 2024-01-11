@@ -131,7 +131,8 @@ class SceneGame(SceneBase):
     def __init__(self, screen: pygame.Surface):
         super().__init__()
         self.config = self.read_cfg()
-        random.shuffle(self.config["tetromino_types"])
+        self.tetromino_types = self.config["tetromino_types"]
+        random.shuffle(self.tetromino_types)
         self.screen = screen
         self.game = Game()
         self.gogh = VanGogh(screen)
@@ -164,6 +165,9 @@ class SceneGame(SceneBase):
             ),
         ]
 
+        # used to calculate vertical speed (ms/row)
+        self.tick_const = 1000 / 60.0988
+
     def read_cfg(self) -> typing.Dict:
         with open("./cfg/engine.json") as f:
             config = json.load(f)
@@ -176,27 +180,21 @@ class SceneGame(SceneBase):
     def gravity_time_timeout_standard(self) -> int:
         if not self.landed:
             return round(
-                self.config["ticks_per_row"][str(self.game.level)]
-                * 1000
-                / self.config["tps"]
+                self.config["ticks_per_row"][str(self.game.level)] * self.tick_const
             )
         else:
             return self.landed_timeout
 
     @property
     def gravity_time_timeout_fast(self) -> int:
-        return round(self.config["ticks_per_row"]["29"] * 1000 / self.config["tps"])
-        if not self.landed:
-            return round(self.config["ticks_per_row"]["29"] * 1000 / self.config["tps"])
-        else:
-            return self.landed_timeout
+        return round(self.config["ticks_per_row"]["29"] * self.tick_const)
 
     def draw_tetromino(self) -> str:
-        tetromino_type = self.config["tetromino_types"][self.tetromino_counter]
+        tetromino_type = self.tetromino_types[self.tetromino_counter]
         self.tetromino_counter += 1
-        if self.tetromino_counter == len(self.config["tetromino_types"]):
+        if self.tetromino_counter == len(self.tetromino_types):
             self.tetromino_counter = 0
-            random.shuffle(self.config["tetromino_types"])
+            random.shuffle(self.tetromino_types)
         return tetromino_type
 
     def gravity(self) -> None:
@@ -235,7 +233,6 @@ class SceneGame(SceneBase):
         if self.keys_pressed[pygame.K_RIGHT] or self.keys_pressed[pygame.K_LEFT]:
             elapsed_time = self.current_time - self.movement_time
             if elapsed_time >= self.config["movement_timeout"]:
-                # self.new_state = True
                 if self.keys_pressed[pygame.K_LEFT]:
                     if self.game.move_tetromino_left():
                         self.new_state = True
@@ -292,9 +289,7 @@ class SceneGame(SceneBase):
         if self.new_preview:
             self.new_preview = False
             self.gogh.draw_preview(
-                tetrominos.create_instance(
-                    self.config["tetromino_types"][self.tetromino_counter]
-                )
+                tetrominos.create_instance(self.tetromino_types[self.tetromino_counter])
             )
         if self.new_level:
             self.new_level = False
