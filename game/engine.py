@@ -131,6 +131,7 @@ class SceneGame(SceneBase):
     def __init__(self, screen: pygame.Surface):
         super().__init__()
         self.config = self.read_cfg()
+        random.shuffle(self.config["tetromino_types"])
         self.screen = screen
         self.game = Game()
         self.gogh = VanGogh(screen)
