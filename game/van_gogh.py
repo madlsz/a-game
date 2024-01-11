@@ -5,6 +5,7 @@ import json
 import typing
 
 from game import tetrominos
+from game.button import Button
 
 
 class VanGogh:
@@ -28,6 +29,12 @@ class VanGogh:
         )
         self.score_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
         self.level_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
+        self.button_screen = pygame.Surface(
+            (
+                self.tile_width * 4,
+                screen.get_height() - self.tile_height * 10,
+            )
+        )
 
         # pygame.display.set_caption(self.config["window_caption"])
         self.font_large = pygame.font.Font(
@@ -58,6 +65,30 @@ class VanGogh:
     @property
     def tile_height(self) -> int:
         return self.game_screen.get_height() // 20
+
+    def draw_buttons(self, buttons: typing.List[Button]) -> None:
+        self.button_screen.fill(self.background_color)
+        for i, button in enumerate(buttons):
+            button.x = self.game_screen.get_width() + (
+                (self.button_screen.get_width() - button.width) // 2
+            )
+            button.y = self.tile_height * 10 + button.height * i
+            self.button_screen.blit(
+                button.surface,
+                (
+                    (self.button_screen.get_width() - button.width) // 2,
+                    button.height * i,
+                ),
+            )
+        self.main_screen.blit(
+            self.button_screen, (self.game_screen.get_width(), self.tile_height * 10)
+        )
+        pygame.display.update(
+            self.game_screen.get_width(),
+            self.tile_height * 10,
+            self.button_screen.get_width(),
+            self.button_screen.get_height(),
+        )
 
     def draw_board(self, board: np.ndarray):
         """
