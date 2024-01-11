@@ -154,11 +154,15 @@ class SceneGame(SceneBase):
         )
         self.landed = False
         self.landed_timeout = 800
+        self.buttons = [Button(150, 50, "Menu", self.switch_to_menu)]
 
     def read_cfg(self) -> typing.Dict:
         with open("./cfg/engine.json") as f:
             config = json.load(f)
         return config
+
+    def switch_to_menu(self):
+        self.switch_to_scene(SceneMenu(self.screen))
 
     @property
     def gravity_time_timeout_standard(self) -> int:
@@ -246,6 +250,9 @@ class SceneGame(SceneBase):
         for event in events:
             if event.type == pygame.QUIT:
                 self.terminate()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                for button in self.buttons:
+                    button.click()
         self.keys_pressed = keys_pressed
 
     def update(self):
@@ -273,6 +280,12 @@ class SceneGame(SceneBase):
         if self.new_score:
             self.new_score = False
             self.gogh.draw_score(self.game.score)
+        
+        # TODO: make gogh render buttons on a dedicated surface (pass button object to gogh)
+        self.buttons[0].x = 0
+        self.buttons[0].y = 0
+        self.screen.blit(self.buttons[0].surface, (0,0))
+        pygame.display.update()
 
 
 def run():
