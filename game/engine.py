@@ -220,7 +220,7 @@ class SceneGame(SceneBase):
         if self.keys_pressed[pygame.K_RIGHT] or self.keys_pressed[pygame.K_LEFT]:
             elapsed_time = self.current_time - self.movement_time
             if elapsed_time >= self.config["movement_timeout"]:
-                self.new_state = True
+                # self.new_state = True
                 if self.keys_pressed[pygame.K_LEFT]:
                     if self.game.move_tetromino_left():
                         self.new_state = True
@@ -280,11 +280,11 @@ class SceneGame(SceneBase):
         if self.new_score:
             self.new_score = False
             self.gogh.draw_score(self.game.score)
-        
+
         # TODO: make gogh render buttons on a dedicated surface (pass button object to gogh)
         self.buttons[0].x = 0
         self.buttons[0].y = 0
-        self.screen.blit(self.buttons[0].surface, (0,0))
+        self.screen.blit(self.buttons[0].surface, (0, 0))
         pygame.display.update()
 
 
