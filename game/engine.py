@@ -3,6 +3,7 @@ import typing
 import json
 import random
 import webbrowser
+import collections
 
 from game.button import Button
 from game.logic import Game
@@ -63,8 +64,36 @@ class SceneLeaderboard(SceneBase):
     def __init__(self, screen):
         super().__init__()
         self.screen = screen
-        self.buttons = [Button(200, 50, "return", self.switch_to_menu)]
+        self.buttons = [Button(200, 50, "return", self.switch_to_menu, id="return")]
         self.new_state = True
+        self.leaderboard = self.read_leaderboard()
+        self.leaderboard = collections.OrderedDict(
+            sorted(self.leaderboard.items(), key=lambda x: x[1], reverse=True)
+        )
+        self.buttons.append(
+            Button(
+                200,
+                50,
+                "Top scores:",
+                None,
+                background_color=(0, 0, 0, 0),
+            )
+        )
+        for i, key in enumerate(self.leaderboard):
+            self.buttons.append(
+                Button(
+                    200,
+                    50,
+                    f"{i+1}.{key} {self.leaderboard[key]}",
+                    None,
+                    background_color=(0, 0, 0, 0),
+                )
+            )
+
+    def read_leaderboard(self) -> typing.Dict:
+        with open("leaderboard.json") as f:
+            leaderboard = json.load(f)
+        return leaderboard
 
     def switch_to_menu(self):
         self.switch_to_scene(SceneMenu(self.screen))
@@ -86,11 +115,15 @@ class SceneLeaderboard(SceneBase):
             self.new_state = False
             self.screen.fill((0, 99, 99))
             for i, button in enumerate(self.buttons):
-                # button.x = (self.screen.get_width() - button.width) // 2
-                button.x = button.width * 0.05
-                button.y = self.screen.get_height() - button.height * 1.2
-                # button.y = 100 * (i + 2)
-                self.screen.blit(button.surface, (button.x, button.y))
+                if button.id == "return":
+                    button.x = button.width * 0.05
+                    button.y = self.screen.get_height() - button.height * 1.2
+                    # button.y = 100 * (i + 2)
+                    self.screen.blit(button.surface, (button.x, button.y))
+                else:
+                    button.x = (self.screen.get_width() - button.width) // 2
+                    button.y = 100 * (i + 1)
+                    self.screen.blit(button.surface, (button.x, button.y))
             pygame.display.update()
 
 

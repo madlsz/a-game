@@ -10,6 +10,7 @@ class Button:
         caption: str,
         on_click: typing.Callable,
         *args,
+        id=None,
         font: str = "freesansbold.ttf",
         font_size: int = 20,
         font_color: typing.Tuple[int, int, int] = (255, 255, 255),
@@ -25,6 +26,7 @@ class Button:
         self.on_click = on_click
         self.args = args
         self.background_color = background_color
+        self.id = id
 
     def is_inside_point(self, pos: typing.Tuple[int, int]) -> bool:
         """
