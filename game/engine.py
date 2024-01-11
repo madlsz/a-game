@@ -243,12 +243,17 @@ class SceneGame(SceneBase):
                         self.movement_time = self.current_time
 
     def rotations(self) -> None:
-        if self.keys_pressed[pygame.K_UP]:
+        if self.keys_pressed[pygame.K_z] or self.keys_pressed[pygame.K_x]:
             elapsed_time = self.current_time - self.rotation_time
             if elapsed_time >= self.config["rotation_timeout"]:
-                if self.game.rotate_tetromino():
-                    self.new_state = True
-                    self.rotation_time = self.current_time
+                if self.keys_pressed[pygame.K_z]:
+                    if self.game.rotate_tetromino(False):
+                        self.new_state = True
+                        self.rotation_time = self.current_time
+                elif self.keys_pressed[pygame.K_x]:
+                    if self.game.rotate_tetromino(True):
+                        self.new_state = True
+                        self.rotation_time = self.current_time
 
     def pause(self) -> bool:
         if self.keys_pressed[pygame.K_p]:

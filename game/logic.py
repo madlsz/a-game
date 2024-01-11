@@ -103,18 +103,18 @@ class Game:
                 self.place_tetromino()
         return False
 
-    def rotate_tetromino(self) -> bool:
-        self.current_tetromino.rotate()
+    def rotate_tetromino(self, clockwise: bool) -> bool:
+        self.current_tetromino.rotate(clockwise)
         if self.is_valid_placement(self.current_tetromino.x, self.current_tetromino.y):
             self.place_tetromino()
             if self.check_for_overlaps():
                 return True
             else:
-                self.current_tetromino.rotate(-1)
+                self.current_tetromino.rotate(not clockwise)
                 self.place_tetromino()
                 return False
         else:
-            self.current_tetromino.rotate(-1)
+            self.current_tetromino.rotate(not clockwise)
             return False
 
     def move_tetromino_down(self) -> bool:

@@ -22,7 +22,8 @@ class Base:
     def __str__(self) -> str:
         return np.array_str(self.mask)
 
-    def rotate(self, k: int = 1) -> None:
+    def rotate(self, clockwise: bool) -> None:
+        k = 1 if clockwise else -1
         self.mask = np.rot90(self.mask, k)
         self.calculate_boundaries()
 
@@ -85,7 +86,7 @@ class I(Base):
             [[0, 0, 0, 0], [73, 73, 73, 73], [0, 0, 0, 0], [0, 0, 0, 0]], [x, y - 1]
         )
 
-    def rotate(self, k: int = 1):
+    def rotate(self, clockwise: bool):
         self.mask = self.mask.T
         self.calculate_boundaries()
 
@@ -104,7 +105,7 @@ class O(Base):
     def __init__(self, x: int, y: int) -> None:
         super().__init__([[79, 79], [79, 79]], [x, y])
 
-    def rotate(self, k: int = 1) -> None:
+    def rotate(self, clockwise: bool) -> None:
         pass
 
 
