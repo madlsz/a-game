@@ -48,19 +48,24 @@
             0
         ],
         "preview": [
-            0,
-            0,
-            0
+            40,
+            40,
+            40
         ],
         "score": [
-            0,
-            0,
-            0
+            40,
+            40,
+            40
         ],
         "level": [
-            0,
-            0,
-            0
+            40,
+            40,
+            40
+        ],
+        "buttons": [
+            40,
+            40,
+            40
         ]
     },
     "auto_resolution": true,
@@ -69,7 +74,7 @@
         "height": 640
     },
     "grid": {
-        "game": true,
+        "game": false,
         "preview": false,
         "color": [
             128,

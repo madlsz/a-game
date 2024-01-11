@@ -67,7 +67,7 @@ class VanGogh:
         return self.game_screen.get_height() // 20
 
     def draw_buttons(self, buttons: typing.List[Button]) -> None:
-        self.button_screen.fill(self.background_color)
+        self.button_screen.fill(self.config["background_color"]["buttons"])
         for i, button in enumerate(buttons):
             button.x = self.game_screen.get_width() + (
                 (self.button_screen.get_width() - button.width) // 2
@@ -95,17 +95,27 @@ class VanGogh:
         draws the board into self.game_screen
         """
         # print(board)
-        self.game_screen.fill(self.background_color)
+        self.game_screen.fill(self.config["background_color"]["game"])
         for (y, x), value in np.ndenumerate(board):
             if value != 0:
                 pygame.draw.rect(
                     self.game_screen,
-                    self.color_map[value],
+                    self.config["background_color"]["game"],
                     pygame.Rect(
                         x * self.tile_width,
                         y * self.tile_height,
                         self.tile_width,
                         self.tile_height,
+                    ),
+                )
+                pygame.draw.rect(
+                    self.game_screen,
+                    self.color_map[value],
+                    pygame.Rect(
+                        x * self.tile_width + 2,
+                        y * self.tile_height + 2,
+                        self.tile_width - 4,
+                        self.tile_height - 4,
                     ),
                 )
         if self.config["grid"]["game"]:
@@ -173,7 +183,7 @@ class VanGogh:
         """
         Draws the preview of the next tetromino
         """
-        self.preview_screen.fill(self.background_color)
+        self.preview_screen.fill(self.config["background_color"]["preview"])
         if tetromino.mask.shape[0] == 3:
             left_padding = self.tile_width // 2
         elif tetromino.mask.shape[0] == 2:
@@ -185,12 +195,22 @@ class VanGogh:
             if value != 0:
                 pygame.draw.rect(
                     self.preview_screen,
-                    self.color_map[value],
+                    self.config["background_color"]["preview"],
                     pygame.Rect(
                         x * self.tile_width + left_padding,
                         y * self.tile_height + top_padding,
                         self.tile_width,
                         self.tile_height,
+                    ),
+                )
+                pygame.draw.rect(
+                    self.preview_screen,
+                    self.color_map[value],
+                    pygame.Rect(
+                        x * self.tile_width + 2 + left_padding,
+                        y * self.tile_height + 2 + top_padding,
+                        self.tile_width - 4,
+                        self.tile_height - 4,
                     ),
                 )
         if self.config["grid"]["preview"]:
@@ -219,8 +239,8 @@ class VanGogh:
     def draw_level(self, level: int) -> None:
         text_caption = self.font_normal.render("level:", True, (255, 255, 255))
         text_level = self.font_large.render(str(level), True, (255, 255, 255))
-        self.level_screen.fill(self.background_color)
-        self.level_screen.blit(text_caption, (0, 0))
+        self.level_screen.fill(self.config["background_color"]["level"])
+        self.level_screen.blit(text_caption, (7, 0))
         self.level_screen.blit(
             text_level,
             (
@@ -242,8 +262,8 @@ class VanGogh:
     def draw_score(self, score: int) -> None:
         text_caption = self.font_normal.render("score:", True, (255, 255, 255))
         text_score = self.font_large.render(str(score), True, (255, 255, 255))
-        self.score_screen.fill(self.background_color)
-        self.score_screen.blit(text_caption, (0, 0))
+        self.score_screen.fill(self.config["background_color"]["score"])
+        self.score_screen.blit(text_caption, (7, 0))
         self.score_screen.blit(
             text_score,
             (
