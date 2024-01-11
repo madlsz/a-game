@@ -254,7 +254,7 @@ class SceneGame(SceneBase):
                     self.rotation_time = self.current_time
 
     def pause(self) -> bool:
-        if self.keys_pressed[pygame.K_ESCAPE]:
+        if self.keys_pressed[pygame.K_p]:
             elapsed_time = self.current_time - self.pause_time
             if elapsed_time >= self.config["pause_timeout"]:
                 self.toggle_pause()
