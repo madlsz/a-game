@@ -26,7 +26,7 @@ class Game:
         return np.array_str(self.active + self.landed)
 
     def spawn_tetromino(self, type: str, x: int = 0, y: int = 0) -> bool:
-        if self.landed[y, x] != 0:
+        if np.any(self.landed[0, :] != 0):
             return False
         self.current_tetromino = tetrominos.create_instance(type, x, y)
         self.place_tetromino()
