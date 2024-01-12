@@ -152,8 +152,7 @@ class SceneGame(SceneBase):
     def __init__(self, screen: pygame.Surface) -> None:
         super().__init__()
         self.config = self.read_cfg()
-        self.tetromino_types = self.config["tetromino_types"]
-        random.shuffle(self.tetromino_types)
+        self.prepare_tetrominos()
         self.screen = screen
         self.game = Game()
         self.gogh = VanGogh(screen)
@@ -207,12 +206,28 @@ class SceneGame(SceneBase):
     def gravity_time_timeout_fast(self) -> int:
         return np.rint(self.config["ticks_per_row"]["29"] * self.tick_const)
 
+    def prepare_tetrominos(self) -> None:
+        """
+        Prepares the next "bag" of tetrominos,
+        Depends on the "random_pieces" flag in config file
+        Random pieces enabled means that the next piece is entirely random
+        Random pieces disabled means that pieces come in a shuffled collection
+        """
+        if not self.config["random_pieces"]:
+            self.tetromino_types = self.config["tetromino_types"]
+            random.shuffle(self.tetromino_types)
+        else:
+            self.tetromino_types = [
+                random.choice(self.config["tetromino_types"])
+                for _ in range(len(self.config["tetromino_types"]))
+            ]
+
     def draw_tetromino(self) -> str:
         tetromino_type = self.tetromino_types[self.tetromino_counter]
         self.tetromino_counter += 1
         if self.tetromino_counter == len(self.tetromino_types):
             self.tetromino_counter = 0
-            random.shuffle(self.tetromino_types)
+            self.prepare_tetrominos()
         return tetromino_type
 
     def gravity(self) -> None:
