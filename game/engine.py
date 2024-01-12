@@ -18,8 +18,15 @@ class SceneMenu(SceneBase):
         super().__init__()
         self.screen = screen
         self.buttons = [
-            Button(200, 50, "Play", self.switch_to_game),
-            Button(200, 50, "Leaderboard", self.swithc_to_leaderboard),
+            Button(
+                200, 50, "Play", lambda: self.switch_to_scene(SceneGame(self.screen))
+            ),
+            Button(
+                200,
+                50,
+                "Leaderboard",
+                lambda: self.switch_to_scene(SceneLeaderboard(self.screen)),
+            ),
             Button(
                 200,
                 50,
@@ -41,14 +48,6 @@ class SceneMenu(SceneBase):
 
     def update(self):
         pass
-
-    def switch_to_game(self):
-        self.switch_to_scene(SceneGame(self.screen))
-        self.new_state = False
-
-    def swithc_to_leaderboard(self):
-        self.switch_to_scene(SceneLeaderboard(self.screen))
-        self.new_state = False
 
     def render(self):
         if self.new_state:
@@ -83,7 +82,15 @@ class SceneLeaderboard(SceneBase):
     def __init__(self, screen):
         super().__init__()
         self.screen = screen
-        self.buttons = [Button(200, 50, "return", self.switch_to_menu, id="return")]
+        self.buttons = [
+            Button(
+                200,
+                50,
+                "return",
+                lambda: self.switch_to_scene(SceneMenu(self.screen)),
+                id="return",
+            )
+        ]
         self.new_state = True
         self.leaderboard = self.read_leaderboard()
         self.leaderboard = collections.OrderedDict(
@@ -114,10 +121,6 @@ class SceneLeaderboard(SceneBase):
             leaderboard = json.load(f)
         return leaderboard
 
-    def switch_to_menu(self):
-        self.switch_to_scene(SceneMenu(self.screen))
-        self.new_state = False
-
     def process_input(self, events, keys_pressed):
         for event in events:
             if event.type == pygame.QUIT:
@@ -137,7 +140,6 @@ class SceneLeaderboard(SceneBase):
                 if button.id == "return":
                     button.x = button.width * 0.05
                     button.y = self.screen.get_height() - button.height * 1.2
-                    # button.y = 100 * (i + 2)
                     self.screen.blit(button.surface, (button.x, button.y))
                 else:
                     button.x = (self.screen.get_width() - button.width) // 2
@@ -176,7 +178,11 @@ class SceneGame(SceneBase):
         )
         self.buttons = [
             Button(
-                150, 50, "Menu", self.switch_to_menu, background_color=(50, 50, 50, 255)
+                150,
+                50,
+                "Menu",
+                lambda: self.switch_to_scene(SceneMenu(self.screen)),
+                background_color=(50, 50, 50, 255),
             ),
             Button(
                 150, 50, "Pause", self.toggle_pause, background_color=(50, 50, 50, 255)
@@ -190,9 +196,6 @@ class SceneGame(SceneBase):
         with open("./cfg/engine.json") as f:
             config = json.load(f)
         return config
-
-    def switch_to_menu(self) -> None:
-        self.switch_to_scene(SceneMenu(self.screen))
 
     @property
     def gravity_time_timeout_standard(self) -> int:
@@ -318,8 +321,8 @@ class SceneGame(SceneBase):
 
 def run():
     pygame.init()
-    height = int(pygame.display.Info().current_h * 0.8) // 20 * 20
-    width = int(7 * height // 10)
+    height = np.rint(pygame.display.Info().current_h * 0.8) // 20 * 20
+    width = np.rint(7 * height // 10)
     screen = pygame.display.set_mode((width, height))
     clock = pygame.time.Clock()
     pygame.display.set_caption("a Game")
