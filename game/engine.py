@@ -61,6 +61,24 @@ class SceneMenu(SceneBase):
             pygame.display.update()
 
 
+class SceneEndgame(SceneBase):
+    def __init__(self, screen, score):
+        super().__init__()
+        self.screen = screen
+        self.score = score
+        self.buttons = []
+        self.new_state = True
+
+    def process_input(self, events, keys_pressed):
+        return super().process_input(events, keys_pressed)
+
+    def update(self):
+        return super().update()
+
+    def render(self, screen):
+        return super().render(screen)
+
+
 class SceneLeaderboard(SceneBase):
     def __init__(self, screen):
         super().__init__()

@@ -136,7 +136,7 @@ class VanGogh:
         Draws the game (board)
         """
         # if not np.any((active != 0) & (landed != 0)):
-        board = active + landed
+        board = np.where(landed != 0, landed, active)
 
         if self.config["animate_line_clear"]:
             # check for removed lines
@@ -161,34 +161,32 @@ class VanGogh:
             self.old_board = board.copy()
 
         if self.config["ghost_piece"]:
-            # 1. calculate the span of the active tetromino
+            # calculate the span of the active tetromino
             tetromino_span_y = []
             for y in range(len(active)):
                 if not np.all(active[y, :] == 0):
                     tetromino_span_y.append(y)
             tetromino_span_y_start = np.min(tetromino_span_y)
             tetromino_span_y_end = np.max(tetromino_span_y) + 1
-            # 2. move the tetromino all the way to the bottom of active_copy
-            active_copy = np.full((20, 10), 0, dtype=int)
-            # 3. place the ghost piece at the bottom (last legal placement)
+
+            ghost = np.full((20, 10), 0, dtype=int)
             offset_y = tetromino_span_y_end - tetromino_span_y_start
             while tetromino_span_y_end + offset_y <= active.shape[0] and not np.any(
-                (active_copy != 0) & (board != 0)
+                (ghost != 0) & (board != 0)
             ):
-                active_copy = np.roll(active, offset_y, axis=0)
+                ghost = np.roll(active, offset_y, axis=0)
                 offset_y += 1
             offset_y -= 1
-            # 4. add the ghost to the board
-            if np.any((active_copy != 0) & (board != 0)):
+            # add the ghost to the board
+            if np.any((ghost != 0) & (board != 0)):
                 offset_y -= 1
-                active_copy = np.full((20, 10), 0, dtype=int)
-                active_copy[
+                ghost = np.full((20, 10), 0, dtype=int)
+                ghost[
                     tetromino_span_y_start + offset_y : tetromino_span_y_end + offset_y,
                     :,
                 ] = active[tetromino_span_y_start:tetromino_span_y_end, :]
 
-            if not np.any((active_copy != 0) & (board != 0)):
-                board += active_copy
+            board = np.where(board != 0, board, ghost)
 
         self.draw_board(board)
 
