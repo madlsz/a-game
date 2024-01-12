@@ -56,14 +56,6 @@ class VanGogh:
             config = json.load(f)
         return config
 
-    # @property
-    # def tile_width(self) -> int:
-    #     return self.game_screen.get_width() // 10
-
-    # @property
-    # def tile_height(self) -> int:
-    #     return self.game_screen.get_height() // 20
-
     def draw_pause(self):
         text = self.font_large.render("GAME PAUSED", True, (255, 255, 255))
         self.game_screen.blit(
@@ -106,20 +98,9 @@ class VanGogh:
         """
         draws the board into self.game_screen
         """
-        # print(board)
         self.game_screen.fill(self.config["background_color"]["game"])
         for (y, x), value in np.ndenumerate(board):
             if value != 0:
-                pygame.draw.rect(
-                    self.game_screen,
-                    self.config["background_color"]["game"],
-                    pygame.Rect(
-                        x * self.tile_width,
-                        y * self.tile_height,
-                        self.tile_width,
-                        self.tile_height,
-                    ),
-                )
                 pygame.draw.rect(
                     self.game_screen,
                     self.color_map[value],
@@ -236,16 +217,6 @@ class VanGogh:
         top_padding = self.tile_height // 2
         for (y, x), value in np.ndenumerate(tetromino.mask):
             if value != 0:
-                pygame.draw.rect(
-                    self.preview_screen,
-                    self.config["background_color"]["preview"],
-                    pygame.Rect(
-                        x * self.tile_width + left_padding,
-                        y * self.tile_height + top_padding,
-                        self.tile_width,
-                        self.tile_height,
-                    ),
-                )
                 pygame.draw.rect(
                     self.preview_screen,
                     self.color_map[value],
