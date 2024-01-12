@@ -39,7 +39,6 @@ class VanGogh:
             )
         )
 
-        # pygame.display.set_caption(self.config["window_caption"])
         self.font_large = pygame.font.Font(
             self.config["font"]["large"]["font"], self.config["font"]["large"]["size"]
         )
@@ -51,10 +50,6 @@ class VanGogh:
         )
 
         self.old_board = None
-
-        # TODO: move to cfg
-        self.animate_rows_speed = 66
-        self.animate_rows = True
 
     def read_cfg(self) -> typing.Dict:
         with open("./cfg/gogh.json") as f:
@@ -159,9 +154,10 @@ class VanGogh:
         """
         Draws the game (board)
         """
-        board = active + landed
+        if not np.any((active != 0) & (landed != 0)):
+            board = active + landed
 
-        if self.animate_rows:
+        if self.config["animate_line_clear"]:
             # check for removed lines
             if self.old_board is not None:
                 # missing lines
@@ -179,9 +175,39 @@ class VanGogh:
                             self.old_board[y, right[x]] = 0
 
                         self.draw_board(self.old_board)
-                        pygame.time.wait(self.animate_rows_speed)
+                        pygame.time.wait(self.config["animate_line_speed"])
 
             self.old_board = board.copy()
+
+        if self.config["ghost_piece"]:
+            # 1. calculate the span of the active tetromino
+            tetromino_span_y = []
+            for y in range(len(active)):
+                if not np.all(active[y, :] == 0):
+                    tetromino_span_y.append(y)
+            tetromino_span_y_start = np.min(tetromino_span_y)
+            tetromino_span_y_end = np.max(tetromino_span_y) + 1
+            # 2. move the tetromino all the way to the bottom of active_copy
+            active_copy = np.full((20, 10), 0, dtype=int)
+            # 3. place the ghost piece at the bottom (last legal placement)
+            offset_y = tetromino_span_y_end - tetromino_span_y_start
+            while tetromino_span_y_end + offset_y <= active.shape[0] and not np.any(
+                (active_copy != 0) & (board != 0)
+            ):
+                active_copy = np.roll(active, offset_y, axis=0)
+                offset_y += 1
+            offset_y -= 1
+            # 4. add the ghost to the board
+            if np.any((active_copy != 0) & (board != 0)):
+                offset_y -= 1
+                active_copy = np.full((20, 10), 0, dtype=int)
+                active_copy[
+                    tetromino_span_y_start + offset_y : tetromino_span_y_end + offset_y,
+                    :,
+                ] = active[tetromino_span_y_start:tetromino_span_y_end, :]
+
+            if not np.any((active_copy != 0) & (board != 0)):
+                board += active_copy
 
         self.draw_board(board)
 
