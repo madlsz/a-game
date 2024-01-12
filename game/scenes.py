@@ -1,9 +1,12 @@
 from abc import ABC, abstractmethod
+import pygame
 
 
 class SceneBase(ABC):
-    def __init__(self):
+    def __init__(self, screen: pygame.Surface) -> None:
         self.next = self
+        self.screen = screen
+        self.new_state = True
 
     @abstractmethod
     # This method will receive all the events that happened since the last frame.
@@ -17,7 +20,7 @@ class SceneBase(ABC):
 
     @abstractmethod
     # Put your render code here. It will receive the main screen Surface as input.
-    def render(self, screen):
+    def render(self):
         pass
 
     def switch_to_scene(self, next_scene):

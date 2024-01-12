@@ -15,8 +15,7 @@ from game.scenes import SceneBase
 
 class SceneMenu(SceneBase):
     def __init__(self, screen):
-        super().__init__()
-        self.screen = screen
+        super().__init__(screen)
         self.buttons = [
             Button(
                 200, 50, "Play", lambda: self.switch_to_scene(SceneGame(self.screen))
@@ -36,7 +35,6 @@ class SceneMenu(SceneBase):
             ),
             Button(200, 50, "Quit", self.terminate),
         ]
-        self.new_state = True
 
     def process_input(self, events, keys_pressed):
         for event in events:
@@ -62,11 +60,9 @@ class SceneMenu(SceneBase):
 
 class SceneEndgame(SceneBase):
     def __init__(self, screen, score):
-        super().__init__()
-        self.screen = screen
+        super().__init__(screen)
         self.score = score
         self.buttons = []
-        self.new_state = True
 
     def process_input(self, events, keys_pressed):
         return super().process_input(events, keys_pressed)
@@ -80,8 +76,7 @@ class SceneEndgame(SceneBase):
 
 class SceneLeaderboard(SceneBase):
     def __init__(self, screen):
-        super().__init__()
-        self.screen = screen
+        super().__init__(screen)
         self.buttons = [
             Button(
                 200,
@@ -91,7 +86,6 @@ class SceneLeaderboard(SceneBase):
                 id="return",
             )
         ]
-        self.new_state = True
         self.leaderboard = self.read_leaderboard()
         self.leaderboard = collections.OrderedDict(
             sorted(self.leaderboard.items(), key=lambda x: x[1], reverse=True)
@@ -150,10 +144,9 @@ class SceneLeaderboard(SceneBase):
 
 class SceneGame(SceneBase):
     def __init__(self, screen: pygame.Surface) -> None:
-        super().__init__()
+        super().__init__(screen)
         self.config = self.read_cfg()
         self.prepare_tetrominos()
-        self.screen = screen
         self.game = Game()
         self.gogh = VanGogh(screen)
         self.current_time = pygame.time.get_ticks()
@@ -164,7 +157,6 @@ class SceneGame(SceneBase):
         self.tetromino_counter = 0
         self.keys_pressed = None
         self.paused = False
-        self.new_state = True
         self.new_preview = True
         self.new_level = True
         self.new_score = True
