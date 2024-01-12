@@ -32,10 +32,11 @@ class VanGogh:
         )
         self.score_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
         self.level_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
+        self.lines_screen = pygame.Surface((self.tile_width * 4, self.tile_height * 3))
         self.button_screen = pygame.Surface(
             (
                 self.tile_width * 4,
-                screen.get_height() - self.tile_height * 10,
+                screen.get_height() - self.tile_height * 13,
             )
         )
 
@@ -76,7 +77,7 @@ class VanGogh:
             button.x = self.game_screen.get_width() + (
                 (self.button_screen.get_width() - button.width) // 2
             )
-            button.y = self.tile_height * 10 + button.height * i
+            button.y = self.tile_height * 13 + button.height * i
             self.button_screen.blit(
                 button.surface,
                 (
@@ -85,11 +86,11 @@ class VanGogh:
                 ),
             )
         self.main_screen.blit(
-            self.button_screen, (self.game_screen.get_width(), self.tile_height * 10)
+            self.button_screen, (self.game_screen.get_width(), self.tile_height * 13)
         )
         pygame.display.update(
             self.game_screen.get_width(),
-            self.tile_height * 10,
+            self.tile_height * 13,
             self.button_screen.get_width(),
             self.button_screen.get_height(),
         )
@@ -293,6 +294,36 @@ class VanGogh:
         pygame.display.update(
             self.game_screen.get_width(),
             self.preview_screen.get_height() + self.level_screen.get_height(),
+            self.level_screen.get_width(),
+            self.level_screen.get_height(),
+        )
+
+    def draw_lines(self, lines: int) -> None:
+        text_caption = self.font_normal.render("lines:", True, (255, 255, 255))
+        text_score = self.font_large.render(str(lines), True, (255, 255, 255))
+        self.score_screen.fill(self.config["background_color"]["score"])
+        self.score_screen.blit(text_caption, (7, 0))
+        self.score_screen.blit(
+            text_score,
+            (
+                (self.score_screen.get_width() - text_score.get_width()) // 2,
+                (self.score_screen.get_height() - text_score.get_height()) // 2,
+            ),
+        )
+        self.main_screen.blit(
+            self.score_screen,
+            (
+                self.game_screen.get_width(),
+                self.preview_screen.get_height()
+                + self.level_screen.get_height()
+                + self.score_screen.get_height(),
+            ),
+        )
+        pygame.display.update(
+            self.game_screen.get_width(),
+            self.preview_screen.get_height()
+            + self.level_screen.get_height()
+            + self.score_screen.get_height(),
             self.level_screen.get_width(),
             self.level_screen.get_height(),
         )

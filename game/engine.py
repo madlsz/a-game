@@ -161,6 +161,7 @@ class SceneGame(SceneBase):
         self.new_level = True
         self.new_score = True
         self.new_buttons = True
+        self.new_lines = True
         self.are = 100
         self.game.spawn_tetromino(
             self.draw_tetromino(),
@@ -236,6 +237,7 @@ class SceneGame(SceneBase):
                 self.new_preview = True
                 self.new_level = True
                 self.new_score = True
+                self.new_lines = True
                 pygame.time.wait(self.are)
                 if not self.game.spawn_tetromino(
                     self.draw_tetromino(),
@@ -324,6 +326,9 @@ class SceneGame(SceneBase):
         if self.new_buttons:
             self.new_buttons = False
             self.gogh.draw_buttons(self.buttons)
+        if self.new_lines:
+            self.new_lines = False
+            self.gogh.draw_lines(self.game.cleared_lines)
 
 
 def run():
