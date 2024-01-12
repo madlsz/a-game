@@ -154,8 +154,8 @@ class VanGogh:
         """
         Draws the game (board)
         """
-        if not np.any((active != 0) & (landed != 0)):
-            board = active + landed
+        # if not np.any((active != 0) & (landed != 0)):
+        board = active + landed
 
         if self.config["animate_line_clear"]:
             # check for removed lines
