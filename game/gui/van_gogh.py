@@ -5,7 +5,7 @@ import json
 import typing
 
 from game import tetrominos
-from game.button import Button
+from game.gui.button import Button
 
 
 class VanGogh:

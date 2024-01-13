@@ -7,9 +7,9 @@ import pygame
 import numpy as np
 
 from game.scenes.base import SceneBase
-from game.button import Button
+from game.gui.button import Button
 from game.logic import Game
-from game.van_gogh import VanGogh
+from game.gui.van_gogh import VanGogh
 from game import tetrominos
 
 
