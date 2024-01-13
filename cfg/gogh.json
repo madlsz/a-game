@@ -73,6 +73,7 @@
         "width": 320,
         "height": 640
     },
+    "preview": true,
     "animate_line_clear": true,
     "animate_line_speed": 66,
     "ghost_piece": false,

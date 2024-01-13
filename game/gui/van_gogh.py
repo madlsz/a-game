@@ -207,40 +207,41 @@ class VanGogh:
         Draws the preview of the next tetromino
         """
         self.preview_screen.fill(self.config["background_color"]["preview"])
-        if tetromino.mask.shape[0] == 3:
-            left_padding = self.tile_width // 2
-        elif tetromino.mask.shape[0] == 2:
-            left_padding = self.tile_width
-        else:
-            left_padding = 0
-        top_padding = self.tile_height // 2
-        for (y, x), value in np.ndenumerate(tetromino.mask):
-            if value != 0:
-                pygame.draw.rect(
-                    self.preview_screen,
-                    self.color_map[value],
-                    pygame.Rect(
-                        x * self.tile_width + 2 + left_padding,
-                        y * self.tile_height + 2 + top_padding,
-                        self.tile_width - 4,
-                        self.tile_height - 4,
-                    ),
-                )
-        if self.config["grid"]["preview"]:
-            for x in range(0, self.preview_screen.get_width(), self.tile_width):
-                pygame.draw.line(
-                    self.preview_screen,
-                    self.border_color,
-                    (x, 0),
-                    (x, self.preview_screen.get_height()),
-                )
-            for y in range(0, self.preview_screen.get_height(), self.tile_height):
-                pygame.draw.line(
-                    self.preview_screen,
-                    self.border_color,
-                    (0, y),
-                    (self.preview_screen.get_width(), y),
-                )
+        if self.config["preview"]:
+            if tetromino.mask.shape[0] == 3:
+                left_padding = self.tile_width // 2
+            elif tetromino.mask.shape[0] == 2:
+                left_padding = self.tile_width
+            else:
+                left_padding = 0
+            top_padding = self.tile_height // 2
+            for (y, x), value in np.ndenumerate(tetromino.mask):
+                if value != 0:
+                    pygame.draw.rect(
+                        self.preview_screen,
+                        self.color_map[value],
+                        pygame.Rect(
+                            x * self.tile_width + 2 + left_padding,
+                            y * self.tile_height + 2 + top_padding,
+                            self.tile_width - 4,
+                            self.tile_height - 4,
+                        ),
+                    )
+            if self.config["grid"]["preview"]:
+                for x in range(0, self.preview_screen.get_width(), self.tile_width):
+                    pygame.draw.line(
+                        self.preview_screen,
+                        self.border_color,
+                        (x, 0),
+                        (x, self.preview_screen.get_height()),
+                    )
+                for y in range(0, self.preview_screen.get_height(), self.tile_height):
+                    pygame.draw.line(
+                        self.preview_screen,
+                        self.border_color,
+                        (0, y),
+                        (self.preview_screen.get_width(), y),
+                    )
         self.main_screen.blit(self.preview_screen, (self.game_screen.get_width(), 0))
         pygame.display.update(
             self.game_screen.get_width(),

@@ -48,6 +48,27 @@ class SceneSettings(SceneBase):
                 self.random_pieces_toggle,
                 id="random_pieces_toggle",
             ),
+            Button(
+                350,
+                50,
+                "",
+                self.preview_toggle,
+                id="preview_toggle",
+            ),
+            Button(
+                350,
+                50,
+                "",
+                self.animate_line_clear_toggle,
+                id="animate_line_clear_toggle",
+            ),
+            Button(
+                350,
+                50,
+                "",
+                self.ghost_piece_toggle,
+                id="ghost_piece_toggle",
+            ),
         ]
 
         self.engine_cfg = None
@@ -56,6 +77,15 @@ class SceneSettings(SceneBase):
 
     def random_pieces_toggle(self):
         self.engine_cfg["random_pieces"] = not self.engine_cfg["random_pieces"]
+
+    def preview_toggle(self):
+        self.gogh_cfg["preview"] = not self.gogh_cfg["preview"]
+
+    def animate_line_clear_toggle(self):
+        self.gogh_cfg["animate_line_clear"] = not self.gogh_cfg["animate_line_clear"]
+
+    def ghost_piece_toggle(self):
+        self.gogh_cfg["ghost_piece"] = not self.gogh_cfg["ghost_piece"]
 
     def save_changes(self):
         with open("./cfg/engine.json", "w") as f:
@@ -87,7 +117,6 @@ class SceneSettings(SceneBase):
             self.screen.fill((0, 99, 99))
             i = -1
             for button in self.buttons:
-                i += 1
                 if button.id == "return":
                     button.x = button.width * 0.05
                     button.y = self.screen.get_height() - button.height * 1.2
@@ -100,12 +129,29 @@ class SceneSettings(SceneBase):
                     button.x = (self.screen.get_width() - button.width) // 2
                     button.y = 10 * (i + 1)
                     self.screen.blit(button.surface, (button.x, button.y))
-                elif button.id == "random_pieces_toggle":
-                    if self.engine_cfg["random_pieces"]:
-                        button.edit_caption("Random pieces: True")
-                    else:
-                        button.edit_caption("Random pieces: False")
+                else:
+                    i += 1
+                    if button.id == "random_pieces_toggle":
+                        if self.engine_cfg["random_pieces"]:
+                            button.edit_caption("Random pieces: True")
+                        else:
+                            button.edit_caption("Random pieces: False")
+                    elif button.id == "preview_toggle":
+                        if self.gogh_cfg["preview"]:
+                            button.edit_caption("Next piece preview: True")
+                        else:
+                            button.edit_caption("Next piece preview: False")
+                    elif button.id == "animate_line_clear_toggle":
+                        if self.gogh_cfg["animate_line_clear"]:
+                            button.edit_caption("Animate line clear: True")
+                        else:
+                            button.edit_caption("Animate line clear: False")
+                    elif button.id == "ghost_piece_toggle":
+                        if self.gogh_cfg["ghost_piece"]:
+                            button.edit_caption("Ghost piece: True")
+                        else:
+                            button.edit_caption("Ghost piece: False")
                     button.x = (self.screen.get_width() - button.width) // 2
-                    button.y = 50 * (i + 1)
+                    button.y = 85 * (i + 1)
                     self.screen.blit(button.surface, (button.x, button.y))
             pygame.display.update()
