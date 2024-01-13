@@ -1,10 +1,11 @@
 #!./venv/bin/python
 
 
-from game import engine
+from game.engine import Engine
 
 
 def main():
+    engine = Engine()
     engine.run()
 
 

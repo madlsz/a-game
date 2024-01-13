@@ -7,37 +7,36 @@ from game.scenes.leaderboard import SceneLeaderboard
 from game.scenes.menu import SceneMenu
 
 
-def run():
-    switch_to_menu = lambda scene: scene.switch_to_scene(SceneMenu(scene.screen))
-    switch_to_endgame = lambda scene: scene.switch_to_scene(SceneEndgame(scene.screen))
-    switch_to_game = lambda scene: scene.switch_to_scene(SceneGame(scene.screen))
-    switch_to_lb = lambda scene: scene.switch_to_scene(SceneLeaderboard(scene.screen))
+class Engine:
+    def __init__(self):
+        pygame.init()
+        self.height = np.rint(pygame.display.Info().current_h * 0.8) // 20 * 20
+        self.width = np.rint(7 * self.height // 10)
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.clock = pygame.time.Clock()
+        pygame.display.set_caption("a Game")
+        self.active_scene = SceneMenu(self.screen)
+        self.switch_to_scene = {
+            "menu": lambda scene: scene.switch_to_scene(SceneMenu(scene.screen)),
+            "endgame": lambda scene: scene.switch_to_scene(SceneEndgame(scene.screen)),
+            "game": lambda scene: scene.switch_to_scene(SceneGame(scene.screen)),
+            "leaderboard": lambda scene: scene.switch_to_scene(
+                SceneLeaderboard(scene.screen)
+            ),
+        }
 
-    pygame.init()
-    height = np.rint(pygame.display.Info().current_h * 0.8) // 20 * 20
-    width = np.rint(7 * height // 10)
-    screen = pygame.display.set_mode((width, height))
-    clock = pygame.time.Clock()
-    pygame.display.set_caption("a Game")
-    active_scene = SceneMenu(screen)
+    def run(self):
+        while self.active_scene is not None:
+            events = pygame.event.get()
+            keys_pressed = pygame.key.get_pressed()
+            self.active_scene.process_input(events, keys_pressed)
+            self.active_scene.update()
+            self.active_scene.render()
 
-    while active_scene != None:
-        events = pygame.event.get()
-        keys_pressed = pygame.key.get_pressed()
-        active_scene.process_input(events, keys_pressed)
-        active_scene.update()
-        active_scene.render()
+            if self.active_scene.switch_to is not None:
+                self.switch_to_scene[self.active_scene.switch_to](self.active_scene)
 
-        if active_scene.switch_to == "menu":
-            switch_to_menu(active_scene)
-        elif active_scene.switch_to == "endgame":
-            switch_to_endgame(active_scene)
-        elif active_scene.switch_to == "game":
-            switch_to_game(active_scene)
-        elif active_scene.switch_to == "leaderboard":
-            switch_to_lb(active_scene)
+            self.active_scene = self.active_scene.next
+            self.clock.tick(60)
 
-        active_scene = active_scene.next
-        clock.tick(60)
-
-    pygame.quit()
+        pygame.quit()
