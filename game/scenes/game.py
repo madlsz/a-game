@@ -1,9 +1,7 @@
+import pygame
 import typing
 import json
 import random
-import webbrowser
-import collections
-import pygame
 import numpy as np
 
 from game.scenes.base import SceneBase
@@ -11,135 +9,6 @@ from game.gui.button import Button
 from game.logic import Game
 from game.gui.van_gogh import VanGogh
 from game.models import tetrominos
-
-
-class SceneMenu(SceneBase):
-    def __init__(self, screen):
-        super().__init__(screen)
-        self.buttons = [
-            Button(
-                200, 50, "Play", lambda: self.switch_to_scene(SceneGame(self.screen))
-            ),
-            Button(
-                200,
-                50,
-                "Leaderboard",
-                lambda: self.switch_to_scene(SceneLeaderboard(self.screen)),
-            ),
-            Button(
-                200,
-                50,
-                "Github page",
-                webbrowser.open,
-                "https://github.com/madlsz/a-game",
-            ),
-            Button(200, 50, "Quit", self.terminate),
-        ]
-
-    def process_input(self, events, keys_pressed):
-        for event in events:
-            if event.type == pygame.QUIT:
-                self.terminate()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                for button in self.buttons:
-                    button.click()
-
-    def update(self):
-        pass
-
-    def render(self):
-        if self.new_state:
-            self.new_state = False
-            self.screen.fill((0, 99, 99))
-            for i, button in enumerate(self.buttons):
-                button.x = (self.screen.get_width() - button.width) // 2
-                button.y = 100 * (i + 2)
-                self.screen.blit(button.surface, (button.x, button.y))
-            pygame.display.update()
-
-
-class SceneEndgame(SceneBase):
-    def __init__(self, screen, score):
-        super().__init__(screen)
-        self.score = score
-        self.buttons = []
-
-    def process_input(self, events, keys_pressed):
-        return super().process_input(events, keys_pressed)
-
-    def update(self):
-        return super().update()
-
-    def render(self, screen):
-        return super().render(screen)
-
-
-class SceneLeaderboard(SceneBase):
-    def __init__(self, screen):
-        super().__init__(screen)
-        self.buttons = [
-            Button(
-                200,
-                50,
-                "return",
-                lambda: self.switch_to_scene(SceneMenu(self.screen)),
-                id="return",
-            )
-        ]
-        self.leaderboard = self.read_leaderboard()
-        self.leaderboard = collections.OrderedDict(
-            sorted(self.leaderboard.items(), key=lambda x: x[1], reverse=True)
-        )
-        self.buttons.append(
-            Button(
-                200,
-                50,
-                "Top scores:",
-                None,
-                background_color=(0, 0, 0, 0),
-            )
-        )
-        for i, key in enumerate(self.leaderboard):
-            self.buttons.append(
-                Button(
-                    200,
-                    50,
-                    f"{i+1}.{key} {self.leaderboard[key]}",
-                    None,
-                    background_color=(0, 0, 0, 0),
-                )
-            )
-
-    def read_leaderboard(self) -> typing.Dict:
-        with open("leaderboard.json") as f:
-            leaderboard = json.load(f)
-        return leaderboard
-
-    def process_input(self, events, keys_pressed):
-        for event in events:
-            if event.type == pygame.QUIT:
-                self.terminate()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                for button in self.buttons:
-                    button.click()
-
-    def update(self):
-        pass
-
-    def render(self):
-        if self.new_state:
-            self.new_state = False
-            self.screen.fill((0, 99, 99))
-            for i, button in enumerate(self.buttons):
-                if button.id == "return":
-                    button.x = button.width * 0.05
-                    button.y = self.screen.get_height() - button.height * 1.2
-                    self.screen.blit(button.surface, (button.x, button.y))
-                else:
-                    button.x = (self.screen.get_width() - button.width) // 2
-                    button.y = 100 * (i + 1)
-                    self.screen.blit(button.surface, (button.x, button.y))
-            pygame.display.update()
 
 
 class SceneGame(SceneBase):
@@ -173,7 +42,8 @@ class SceneGame(SceneBase):
                 150,
                 50,
                 "Menu",
-                lambda: self.switch_to_scene(SceneMenu(self.screen)),
+                self.switch_to_setter,
+                "menu",
                 background_color=(50, 50, 50, 255),
             ),
             Button(
@@ -245,7 +115,7 @@ class SceneGame(SceneBase):
                     self.config["spawn"]["y"],
                 ):
                     self.new_state = False
-                    self.switch_to_scene(SceneMenu(self.screen))
+                    self.switch_to_setter("menu")
 
     def horizontal_movement(self) -> None:
         if self.keys_pressed[pygame.K_RIGHT] or self.keys_pressed[pygame.K_LEFT]:

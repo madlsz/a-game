@@ -7,6 +7,10 @@ class SceneBase(ABC):
         self.next = self
         self.screen = screen
         self.new_state = True
+        self.switch_to = None
+
+    def switch_to_setter(self, id: str) -> None:
+        self.switch_to = id
 
     @abstractmethod
     # This method will receive all the events that happened since the last frame.
