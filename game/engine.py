@@ -5,6 +5,7 @@ from game.scenes.endgame import SceneEndgame
 from game.scenes.game import SceneGame
 from game.scenes.leaderboard import SceneLeaderboard
 from game.scenes.menu import SceneMenu
+from game.scenes.settings import SceneSettings
 
 
 class Engine:
@@ -20,6 +21,9 @@ class Engine:
             "menu": lambda scene: scene.switch_to_scene(SceneMenu(scene.screen)),
             "endgame": lambda scene: scene.switch_to_scene(SceneEndgame(scene.screen)),
             "game": lambda scene: scene.switch_to_scene(SceneGame(scene.screen)),
+            "settings": lambda scene: scene.switch_to_scene(
+                SceneSettings(scene.screen)
+            ),
             "leaderboard": lambda scene: scene.switch_to_scene(
                 SceneLeaderboard(scene.screen)
             ),
