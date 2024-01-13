@@ -30,8 +30,7 @@ class SceneSettings(SceneBase):
                 200,
                 50,
                 "save changes",
-                self.switch_to_setter,
-                "menu",
+                self.save_changes,
                 id="save",
             ),
             Button(
@@ -45,11 +44,30 @@ class SceneSettings(SceneBase):
             Button(
                 350,
                 50,
-                "Random pieces: True",
-                None,
+                "",
+                self.random_pieces_toggle,
                 id="random_pieces_toggle",
             ),
         ]
+
+        self.engine_cfg = None
+        self.gogh_cfg = None
+        self.read_cfg()
+
+    def random_pieces_toggle(self):
+        self.engine_cfg["random_pieces"] = not self.engine_cfg["random_pieces"]
+
+    def save_changes(self):
+        with open("./cfg/engine.json", "w") as f:
+            json.dump(self.engine_cfg, f, indent=4)
+        with open("./cfg/gogh.json", "w") as f:
+            json.dump(self.gogh_cfg, f, indent=4)
+
+    def read_cfg(self) -> None:
+        with open("./cfg/engine.json") as f:
+            self.engine_cfg = json.load(f)
+        with open("./cfg/gogh.json") as f:
+            self.gogh_cfg = json.load(f)
 
     def process_input(self, events, keys_pressed):
         for event in events:
@@ -59,11 +77,6 @@ class SceneSettings(SceneBase):
                 for button in self.buttons:
                     if button.click():
                         self.new_state = True
-                        if button.id == "random_pieces_toggle":
-                            if button.caption_str == "Random pieces: True":
-                                button.edit_caption("Random pieces: False")
-                            else:
-                                button.edit_caption("Random pieces: True")
 
     def update(self):
         pass
@@ -72,7 +85,9 @@ class SceneSettings(SceneBase):
         if self.new_state:
             self.new_state = False
             self.screen.fill((0, 99, 99))
-            for i, button in enumerate(self.buttons):
+            i = -1
+            for button in self.buttons:
+                i += 1
                 if button.id == "return":
                     button.x = button.width * 0.05
                     button.y = self.screen.get_height() - button.height * 1.2
@@ -85,8 +100,12 @@ class SceneSettings(SceneBase):
                     button.x = (self.screen.get_width() - button.width) // 2
                     button.y = 10 * (i + 1)
                     self.screen.blit(button.surface, (button.x, button.y))
-                else:
+                elif button.id == "random_pieces_toggle":
+                    if self.engine_cfg["random_pieces"]:
+                        button.edit_caption("Random pieces: True")
+                    else:
+                        button.edit_caption("Random pieces: False")
                     button.x = (self.screen.get_width() - button.width) // 2
-                    button.y = 100 * (i + 1)
+                    button.y = 50 * (i + 1)
                     self.screen.blit(button.surface, (button.x, button.y))
             pygame.display.update()
