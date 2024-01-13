@@ -10,7 +10,7 @@ class SceneMenu(SceneBase):
         super().__init__(screen)
         self.buttons = [
             Button(200, 50, "Play", self.switch_to_setter, "game"),
-            Button(200, 50, "Leaderboard", self.switch_to_setter, "leaderboard"),
+            # Button(200, 50, "Leaderboard", self.switch_to_setter, "leaderboard"),
             Button(200, 50, "Settings", self.switch_to_setter, "settings"),
             Button(
                 200,
