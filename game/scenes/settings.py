@@ -72,7 +72,9 @@ class SceneSettings(SceneBase):
         ]
 
         self.engine_cfg = None
+        self.engine_cfg_back = None
         self.gogh_cfg = None
+        self.gogh_cfg_back = None
         self.read_cfg()
 
     def random_pieces_toggle(self):
@@ -88,16 +90,24 @@ class SceneSettings(SceneBase):
         self.gogh_cfg["ghost_piece"] = not self.gogh_cfg["ghost_piece"]
 
     def save_changes(self):
-        with open("./cfg/engine.json", "w") as f:
-            json.dump(self.engine_cfg, f, indent=4)
-        with open("./cfg/gogh.json", "w") as f:
-            json.dump(self.gogh_cfg, f, indent=4)
+        if self.engine_cfg != self.engine_cfg_back:
+            print("enging")
+            self.engine_cfg_back = self.engine_cfg.copy()
+            with open("./cfg/engine.json", "w") as f:
+                json.dump(self.engine_cfg, f, indent=4)
+        if self.gogh_cfg != self.gogh_cfg_back:
+            print("gogh")
+            self.gogh_cfg_back = self.gogh_cfg.copy()
+            with open("./cfg/gogh.json", "w") as f:
+                json.dump(self.gogh_cfg, f, indent=4)
 
     def read_cfg(self) -> None:
         with open("./cfg/engine.json") as f:
             self.engine_cfg = json.load(f)
+            self.engine_cfg_back = self.engine_cfg.copy()
         with open("./cfg/gogh.json") as f:
             self.gogh_cfg = json.load(f)
+            self.gogh_cfg_back = self.gogh_cfg.copy()
 
     def process_input(self, events, keys_pressed):
         for event in events:
