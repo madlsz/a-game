@@ -22,11 +22,16 @@ class Button:
         self.height = height
         self.surf = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.font = pygame.font.Font(font, font_size)
+        self.caption_str = caption
         self.caption = self.font.render(caption, True, font_color)
         self.on_click = on_click
         self.args = args
         self.background_color = background_color
         self.id = id
+        self.font_name = font
+        self.font_size = font_size
+        self.font_color = font_color
+        self.background_color = background_color
 
     def is_inside_point(self, pos: typing.Tuple[int, int]) -> bool:
         """
@@ -51,7 +56,12 @@ class Button:
         return self.surf
 
     def click(self) -> bool:
-        if self.is_inside_point(pygame.mouse.get_pos()) and callable(self.on_click):
-            self.on_click(*self.args)
+        if self.is_inside_point(pygame.mouse.get_pos()):
+            if callable(self.on_click):
+                self.on_click(*self.args)
             return True
         return False
+
+    def edit_caption(self, new_caption: str) -> None:
+        self.caption_str = new_caption
+        self.caption = self.font.render(self.caption_str, True, self.font_color)
