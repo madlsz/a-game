@@ -4,7 +4,7 @@ from collections import defaultdict
 import json
 import typing
 
-from game import tetrominos
+from game.models import tetrominos
 from game.gui.button import Button
 
 

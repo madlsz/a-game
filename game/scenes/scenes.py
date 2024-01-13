@@ -10,7 +10,7 @@ from game.scenes.base import SceneBase
 from game.gui.button import Button
 from game.logic import Game
 from game.gui.van_gogh import VanGogh
-from game import tetrominos
+from game.models import tetrominos
 
 
 class SceneMenu(SceneBase):
