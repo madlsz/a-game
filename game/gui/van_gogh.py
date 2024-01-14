@@ -223,6 +223,9 @@ class VanGogh:
         )
 
     def draw_level(self, level: int) -> None:
+        """
+        Displays current level
+        """
         text_caption = self.font_normal.render("level:", True, (255, 255, 255))
         text_level = self.font_large.render(str(level), True, (255, 255, 255))
         self.level_screen.fill(self.config["background_color"]["level"])
@@ -246,6 +249,9 @@ class VanGogh:
         )
 
     def draw_score(self, score: int) -> None:
+        """
+        Displays total score
+        """
         text_caption = self.font_normal.render("score:", True, (255, 255, 255))
         text_score = self.font_large.render(str(score), True, (255, 255, 255))
         self.score_screen.fill(self.config["background_color"]["score"])
@@ -272,6 +278,9 @@ class VanGogh:
         )
 
     def draw_lines(self, lines: int) -> None:
+        """
+        Displays cleared lines counter
+        """
         text_caption = self.font_normal.render("lines:", True, (255, 255, 255))
         text_score = self.font_large.render(str(lines), True, (255, 255, 255))
         self.score_screen.fill(self.config["background_color"]["score"])
