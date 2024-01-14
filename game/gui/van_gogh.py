@@ -153,12 +153,10 @@ class VanGogh:
         # Calculate the offset based on the lowest position for the ghost piece
         offset_y = 0
         while tetromino_span_y_end + offset_y < self.board.shape[0] and not np.any(
-            (landed != 0) & (np.roll(active, offset_y, axis=0) != 0)
+            (landed != 0) & (np.roll(active, offset_y + 1, axis=0) != 0)
         ):
             offset_y += 1
 
-        if np.any((landed != 0) & (np.roll(active, offset_y, axis=0) != 0)):
-            offset_y -= 1
         # Create the ghost piece at the correct position
         ghost = np.roll(active, offset_y, axis=0)
 
