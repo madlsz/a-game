@@ -115,7 +115,7 @@ class SceneGame(SceneBase):
                     self.config["spawn"]["y"],
                 ):
                     self.new_state = False
-                    self.switch_to_setter("menu")
+                    self.switch_to_setter("endgame")
 
     def horizontal_movement(self) -> None:
         if self.keys_pressed[pygame.K_RIGHT] or self.keys_pressed[pygame.K_LEFT]:

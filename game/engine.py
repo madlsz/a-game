@@ -18,14 +18,17 @@ class Engine:
         pygame.display.set_caption("a Game")
         self.active_scene = SceneMenu(self.screen)
         self.switch_to_scene = {
-            "menu": lambda scene: scene.switch_to_scene(SceneMenu(scene.screen)),
-            "endgame": lambda scene: scene.switch_to_scene(SceneEndgame(scene.screen)),
-            "game": lambda scene: scene.switch_to_scene(SceneGame(scene.screen)),
-            "settings": lambda scene: scene.switch_to_scene(
-                SceneSettings(scene.screen)
-            ),
-            "leaderboard": lambda scene: scene.switch_to_scene(
-                SceneLeaderboard(scene.screen)
+            "menu": lambda scene: scene.switch_to_scene(SceneMenu(self.screen)),
+            "endgame": lambda scene: scene.switch_to_scene(SceneEndgame(self.screen)),
+            "game": lambda scene: scene.switch_to_scene(SceneGame(self.screen)),
+            "settings": lambda scene: scene.switch_to_scene(SceneSettings(self.screen)),
+            "endgame": lambda scene: scene.switch_to_scene(
+                SceneEndgame(
+                    self.screen,
+                    scene.game.score,
+                    scene.game.level,
+                    scene.game.cleared_lines,
+                )
             ),
         }
 
