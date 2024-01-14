@@ -162,32 +162,24 @@ class VanGogh:
         """
         Adds the ghost piece to the self.board
         """
-        # calculate the span of the active tetromino
-        tetromino_span_y = []
-        for y in range(len(active)):
-            if not np.all(active[y, :] == 0):
-                tetromino_span_y.append(y)
-        tetromino_span_y_start = np.min(tetromino_span_y)
-        tetromino_span_y_end = np.max(tetromino_span_y) + 1
+        # Calculate the span of the active tetromino
+        tetromino_span_y = np.where(active.sum(axis=1) > 0)[0]
+        tetromino_span_y_end = tetromino_span_y.max() + 1
 
-        ghost = np.full((20, 10), 0, dtype=int)
-        offset_y = tetromino_span_y_end - tetromino_span_y_start
-        while tetromino_span_y_end + offset_y <= active.shape[0] and not np.any(
-            (ghost != 0) & (landed != 0)
+        # Calculate the offset based on the lowest position for the ghost piece
+        offset_y = 0
+        while tetromino_span_y_end + offset_y < self.board.shape[0] and not np.any(
+            (landed != 0) & (np.roll(active, offset_y, axis=0) != 0)
         ):
-            ghost = np.roll(active, offset_y, axis=0)
             offset_y += 1
-        offset_y -= 1
-        # add the ghost to the board
-        if np.any((ghost != 0) & (landed != 0)):
-            offset_y -= 1
-            ghost = np.full((20, 10), 0, dtype=int)
-            ghost[
-                tetromino_span_y_start + offset_y : tetromino_span_y_end + offset_y,
-                :,
-            ] = active[tetromino_span_y_start:tetromino_span_y_end, :]
-        ghost = np.where(ghost != 0, 1, 0)
 
+        if np.any((landed != 0) & (np.roll(active, offset_y, axis=0) != 0)):
+            offset_y -= 1
+        # Create the ghost piece at the correct position
+        ghost = np.roll(active, offset_y, axis=0)
+
+        # Add the ghost to the board
+        ghost = np.where(ghost != 0, 1, 0)
         self.board = np.where(self.board != 0, self.board, ghost)
 
     def draw_game(self, active: np.ndarray, landed: np.ndarray) -> None:
