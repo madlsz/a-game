@@ -60,6 +60,13 @@ class SceneSettings(SceneBase):
                 self.ghost_piece_toggle,
                 id="ghost_piece_toggle",
             ),
+            Button(
+                350,
+                50,
+                "",
+                self.ghost_piece_style_toggle,
+                id="ghost_piece_style_toggle",
+            ),
         ]
 
         self.engine_cfg = None
@@ -79,6 +86,11 @@ class SceneSettings(SceneBase):
 
     def ghost_piece_toggle(self):
         self.gogh_cfg["ghost_piece"] = not self.gogh_cfg["ghost_piece"]
+
+    def ghost_piece_style_toggle(self):
+        self.gogh_cfg["ghost_piece_style"] = (
+            "solid" if self.gogh_cfg["ghost_piece_style"] == "outline" else "outline"
+        )
 
     def save_changes(self):
         if self.engine_cfg != self.engine_cfg_back:
@@ -150,6 +162,11 @@ class SceneSettings(SceneBase):
                             button.edit_caption("Ghost piece: True")
                         else:
                             button.edit_caption("Ghost piece: False")
+                    elif button.id == "ghost_piece_style_toggle":
+                        if self.gogh_cfg["ghost_piece_style"] == "solid":
+                            button.edit_caption("Ghost piece style: Solid")
+                        else:
+                            button.edit_caption("Ghost piece style: Outline")
                     button.x = (self.screen.get_width() - button.width) // 2
                     button.y = 85 * (i + 1)
                     self.screen.blit(button.surface, (button.x, button.y))

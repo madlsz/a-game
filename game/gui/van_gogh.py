@@ -102,16 +102,38 @@ class VanGogh:
         self.game_screen.fill(self.config["background_color"]["game"])
         for (y, x), value in np.ndenumerate(board):
             if value != 0:
-                pygame.draw.rect(
-                    self.game_screen,
-                    self.color_map[value],
-                    pygame.Rect(
-                        x * self.tile_width + 2,
-                        y * self.tile_height + 2,
-                        self.tile_width - 4,
-                        self.tile_height - 4,
-                    ),
-                )
+                if value != 1 or self.config["ghost_piece_style"] == "solid":
+                    pygame.draw.rect(
+                        self.game_screen,
+                        self.color_map[value],
+                        pygame.Rect(
+                            x * self.tile_width + 2,
+                            y * self.tile_height + 2,
+                            self.tile_width - 4,
+                            self.tile_height - 4,
+                        ),
+                    )
+                elif value == 1 and self.config["ghost_piece_style"] == "outline":
+                    pygame.draw.rect(
+                        self.game_screen,
+                        (255, 255, 255),
+                        pygame.Rect(
+                            x * self.tile_width + 2,
+                            y * self.tile_height + 2,
+                            self.tile_width - 4,
+                            self.tile_height - 4,
+                        ),
+                    )
+                    pygame.draw.rect(
+                        self.game_screen,
+                        self.config["background_color"]["game"],
+                        pygame.Rect(
+                            x * self.tile_width + 3,
+                            y * self.tile_height + 3,
+                            self.tile_width - 6,
+                            self.tile_height - 6,
+                        ),
+                    )
         self.main_screen.blit(self.game_screen, (0, 0))
         pygame.display.update(
             0, 0, self.game_screen.get_width(), self.game_screen.get_height()
