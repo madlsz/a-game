@@ -34,6 +34,11 @@
             239,
             32,
             41
+        ],
+        "1": [
+            55,
+            55,
+            55
         ]
     },
     "default_tile_color": [
@@ -76,7 +81,7 @@
     "preview": true,
     "animate_line_clear": true,
     "animate_line_speed": 66,
-    "ghost_piece": false,
+    "ghost_piece": true,
     "grid": {
         "game": false,
         "preview": false,

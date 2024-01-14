@@ -173,19 +173,20 @@ class VanGogh:
             ghost = np.full((20, 10), 0, dtype=int)
             offset_y = tetromino_span_y_end - tetromino_span_y_start
             while tetromino_span_y_end + offset_y <= active.shape[0] and not np.any(
-                (ghost != 0) & (board != 0)
+                (ghost != 0) & (landed != 0)
             ):
                 ghost = np.roll(active, offset_y, axis=0)
                 offset_y += 1
             offset_y -= 1
             # add the ghost to the board
-            if np.any((ghost != 0) & (board != 0)):
+            if np.any((ghost != 0) & (landed != 0)):
                 offset_y -= 1
                 ghost = np.full((20, 10), 0, dtype=int)
                 ghost[
                     tetromino_span_y_start + offset_y : tetromino_span_y_end + offset_y,
                     :,
                 ] = active[tetromino_span_y_start:tetromino_span_y_end, :]
+            ghost = np.where(ghost != 0, 1, 0)
 
             board = np.where(board != 0, board, ghost)
 
