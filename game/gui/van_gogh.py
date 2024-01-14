@@ -17,7 +17,6 @@ class VanGogh:
         self.color_map = defaultdict(lambda: self.config["default_tile_color"])
         for tile in self.config["tiles_colors"]:
             self.color_map[int(tile)] = self.config["tiles_colors"][tile]
-        self.border_color = self.config["grid"]["color"]
         self.background_color = self.config["background_color"]["game"]
 
         self.game_screen = pygame.Surface(
@@ -112,21 +111,6 @@ class VanGogh:
                         self.tile_width - 4,
                         self.tile_height - 4,
                     ),
-                )
-        if self.config["grid"]["game"]:
-            for x in range(0, self.game_screen.get_width(), self.tile_width):
-                pygame.draw.line(
-                    self.game_screen,
-                    self.border_color,
-                    (x, 0),
-                    (x, self.game_screen.get_height()),
-                )
-            for y in range(0, self.game_screen.get_height(), self.tile_height):
-                pygame.draw.line(
-                    self.game_screen,
-                    self.border_color,
-                    (0, y),
-                    (self.game_screen.get_width(), y),
                 )
         self.main_screen.blit(self.game_screen, (0, 0))
         pygame.display.update(
@@ -231,21 +215,6 @@ class VanGogh:
                             self.tile_width - 4,
                             self.tile_height - 4,
                         ),
-                    )
-            if self.config["grid"]["preview"]:
-                for x in range(0, self.preview_screen.get_width(), self.tile_width):
-                    pygame.draw.line(
-                        self.preview_screen,
-                        self.border_color,
-                        (x, 0),
-                        (x, self.preview_screen.get_height()),
-                    )
-                for y in range(0, self.preview_screen.get_height(), self.tile_height):
-                    pygame.draw.line(
-                        self.preview_screen,
-                        self.border_color,
-                        (0, y),
-                        (self.preview_screen.get_width(), y),
                     )
         self.main_screen.blit(self.preview_screen, (self.game_screen.get_width(), 0))
         pygame.display.update(

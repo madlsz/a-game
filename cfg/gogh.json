@@ -82,15 +82,6 @@
     "animate_line_clear": true,
     "animate_line_speed": 66,
     "ghost_piece": true,
-    "grid": {
-        "game": false,
-        "preview": false,
-        "color": [
-            128,
-            128,
-            128
-        ]
-    },
     "window_caption": "a Game",
     "font": {
         "small": {
