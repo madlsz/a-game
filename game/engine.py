@@ -3,7 +3,6 @@ import numpy as np
 
 from game.scenes.endgame import SceneEndgame
 from game.scenes.game import SceneGame
-from game.scenes.leaderboard import SceneLeaderboard
 from game.scenes.menu import SceneMenu
 from game.scenes.settings import SceneSettings
 

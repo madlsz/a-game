@@ -1,17 +1,8 @@
-import collections
 import json
-import typing
 import pygame
 
 from game.gui.button import Button
-from game.gui.toggle import Toggle
 from game.scenes.base import SceneBase
-
-
-# what to put in settings?
-# random tetrominos
-# next piece preview
-# language?
 
 
 class SceneSettings(SceneBase):
