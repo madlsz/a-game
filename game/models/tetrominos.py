@@ -103,7 +103,7 @@ class L(Base):
 
 class O(Base):
     def __init__(self, x: int, y: int) -> None:
-        super().__init__([[0, 79, 79], [0, 79, 79]], [x, y])
+        super().__init__([[79, 79], [79, 79]], [x + 1, y])
 
     def rotate(self, clockwise: bool) -> None:
         pass
