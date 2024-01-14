@@ -5,13 +5,11 @@ from game.gui.button import Button
 
 
 class SceneEndgame(SceneBase):
-    def __init__(self, screen, score, level, lines):
+    def __init__(self, screen):
         super().__init__(screen)
-        self.score = score
-        self.level = level
-        self.lines = lines
         self.endgame_screen = pygame.Surface(
-            (self.screen.get_width(), self.screen.get_height() * 0.4)
+            (self.screen.get_width() / 14 * 10, self.screen.get_height() * 0.4),
+            pygame.SRCALPHA,
         )
         self.buttons = [
             Button(
@@ -20,7 +18,7 @@ class SceneEndgame(SceneBase):
                 "Play again",
                 self.switch_to_setter,
                 "game",
-                background_color=(0, 0, 0, 255),
+                background_color=(0, 0, 0, 0),
             ),
             Button(
                 200,
@@ -28,14 +26,14 @@ class SceneEndgame(SceneBase):
                 "Menu",
                 self.switch_to_setter,
                 "menu",
-                background_color=(0, 0, 0, 255),
+                background_color=(0, 0, 0, 0),
             ),
             Button(
                 200,
                 50,
                 "Quit",
                 self.terminate,
-                background_color=(0, 0, 0, 255),
+                background_color=(0, 0, 0, 0),
             ),
         ]
 
@@ -55,7 +53,7 @@ class SceneEndgame(SceneBase):
         if self.new_state:
             self.new_state = False
             # self.screen.fill((0, 99, 99))
-            self.endgame_screen.fill((0, 99, 99))
+            self.endgame_screen.fill((0, 99, 99, 0))
             for i, button in enumerate(self.buttons):
                 button.x = (self.endgame_screen.get_width() - button.width) // 2
                 button.y = button.height * (i + 1)

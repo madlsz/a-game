@@ -25,9 +25,6 @@ class Engine:
             "endgame": lambda scene: scene.switch_to_scene(
                 SceneEndgame(
                     self.screen,
-                    scene.game.score,
-                    scene.game.level,
-                    scene.game.cleared_lines,
                 )
             ),
         }
