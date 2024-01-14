@@ -50,6 +50,7 @@ class VanGogh:
             self.config["font"]["small"]["font"], self.config["font"]["small"]["size"]
         )
 
+        self.board = None
         self.old_board = None
 
     def read_cfg(self) -> typing.Dict:
@@ -97,7 +98,7 @@ class VanGogh:
 
     def draw_board(self, board: np.ndarray):
         """
-        draws the board into self.game_screen
+        Displays the board on the self.game_screen
         """
         self.game_screen.fill(self.config["background_color"]["game"])
         for (y, x), value in np.ndenumerate(board):
@@ -132,65 +133,76 @@ class VanGogh:
             0, 0, self.game_screen.get_width(), self.game_screen.get_height()
         )
 
+    def animate_line_clear(self) -> None:
+        """
+        Displays the line clear animation
+        """
+        # check for removed lines
+        if self.old_board is not None:
+            # missing lines
+            if np.sum(self.board) < np.sum(self.old_board):
+                lines_to_remove = []
+                for y in range(len(self.old_board)):
+                    if np.all(self.old_board[y, :] != 0):
+                        lines_to_remove.append(y)
+
+                left = [i for i in range(4, -1, -1)]
+                right = [i for i in range(5, 10)]
+                for x in range(len(left)):
+                    for y in lines_to_remove:
+                        self.old_board[y, left[x]] = 0
+                        self.old_board[y, right[x]] = 0
+
+                    self.draw_board(self.old_board)
+                    pygame.time.wait(self.config["animate_line_speed"])
+
+        self.old_board = self.board.copy()
+
+    def display_ghost(self, active: np.ndarray, landed: np.ndarray) -> None:
+        """
+        Adds the ghost piece to the self.board
+        """
+        # calculate the span of the active tetromino
+        tetromino_span_y = []
+        for y in range(len(active)):
+            if not np.all(active[y, :] == 0):
+                tetromino_span_y.append(y)
+        tetromino_span_y_start = np.min(tetromino_span_y)
+        tetromino_span_y_end = np.max(tetromino_span_y) + 1
+
+        ghost = np.full((20, 10), 0, dtype=int)
+        offset_y = tetromino_span_y_end - tetromino_span_y_start
+        while tetromino_span_y_end + offset_y <= active.shape[0] and not np.any(
+            (ghost != 0) & (landed != 0)
+        ):
+            ghost = np.roll(active, offset_y, axis=0)
+            offset_y += 1
+        offset_y -= 1
+        # add the ghost to the board
+        if np.any((ghost != 0) & (landed != 0)):
+            offset_y -= 1
+            ghost = np.full((20, 10), 0, dtype=int)
+            ghost[
+                tetromino_span_y_start + offset_y : tetromino_span_y_end + offset_y,
+                :,
+            ] = active[tetromino_span_y_start:tetromino_span_y_end, :]
+        ghost = np.where(ghost != 0, 1, 0)
+
+        self.board = np.where(self.board != 0, self.board, ghost)
+
     def draw_game(self, active: np.ndarray, landed: np.ndarray) -> None:
         """
-        Draws the game (board)
+        Combines active and landed, adds effects and animations, after that calls self.draw_board
         """
-        # if not np.any((active != 0) & (landed != 0)):
-        board = np.where(landed != 0, landed, active)
+        self.board = np.where(landed != 0, landed, active)
 
         if self.config["animate_line_clear"]:
-            # check for removed lines
-            if self.old_board is not None:
-                # missing lines
-                if np.sum(board) < np.sum(self.old_board):
-                    lines_to_remove = []
-                    for y in range(len(self.old_board)):
-                        if np.all(self.old_board[y, :] != 0):
-                            lines_to_remove.append(y)
-
-                    left = [i for i in range(4, -1, -1)]
-                    right = [i for i in range(5, 10)]
-                    for x in range(len(left)):
-                        for y in lines_to_remove:
-                            self.old_board[y, left[x]] = 0
-                            self.old_board[y, right[x]] = 0
-
-                        self.draw_board(self.old_board)
-                        pygame.time.wait(self.config["animate_line_speed"])
-
-            self.old_board = board.copy()
+            self.animate_line_clear()
 
         if self.config["ghost_piece"]:
-            # calculate the span of the active tetromino
-            tetromino_span_y = []
-            for y in range(len(active)):
-                if not np.all(active[y, :] == 0):
-                    tetromino_span_y.append(y)
-            tetromino_span_y_start = np.min(tetromino_span_y)
-            tetromino_span_y_end = np.max(tetromino_span_y) + 1
+            self.display_ghost(active, landed)
 
-            ghost = np.full((20, 10), 0, dtype=int)
-            offset_y = tetromino_span_y_end - tetromino_span_y_start
-            while tetromino_span_y_end + offset_y <= active.shape[0] and not np.any(
-                (ghost != 0) & (landed != 0)
-            ):
-                ghost = np.roll(active, offset_y, axis=0)
-                offset_y += 1
-            offset_y -= 1
-            # add the ghost to the board
-            if np.any((ghost != 0) & (landed != 0)):
-                offset_y -= 1
-                ghost = np.full((20, 10), 0, dtype=int)
-                ghost[
-                    tetromino_span_y_start + offset_y : tetromino_span_y_end + offset_y,
-                    :,
-                ] = active[tetromino_span_y_start:tetromino_span_y_end, :]
-            ghost = np.where(ghost != 0, 1, 0)
-
-            board = np.where(board != 0, board, ghost)
-
-        self.draw_board(board)
+        self.draw_board(self.board)
 
     def draw_preview(
         self,
