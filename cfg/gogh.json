@@ -81,7 +81,7 @@
     "preview": true,
     "animate_line_clear": true,
     "animate_line_speed": 66,
-    "ghost_piece": false,
+    "ghost_piece": true,
     "ghost_piece_style": "outline",
     "window_caption": "a Game",
     "font": {

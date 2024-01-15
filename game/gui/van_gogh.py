@@ -107,10 +107,10 @@ class VanGogh:
                         self.game_screen,
                         self.color_map[value],
                         pygame.Rect(
-                            x * self.tile_width + 2,
-                            y * self.tile_height + 2,
-                            self.tile_width - 4,
-                            self.tile_height - 4,
+                            x * self.tile_width + self.tile_width * 0.065,
+                            y * self.tile_height + self.tile_height * 0.065,
+                            self.tile_width - 2 * self.tile_width * 0.065,
+                            self.tile_height - 2 * self.tile_height * 0.065,
                         ),
                     )
                 elif value == 1 and self.config["ghost_piece_style"] == "outline":
@@ -118,20 +118,20 @@ class VanGogh:
                         self.game_screen,
                         (255, 255, 255),
                         pygame.Rect(
-                            x * self.tile_width + 2,
-                            y * self.tile_height + 2,
-                            self.tile_width - 4,
-                            self.tile_height - 4,
+                            x * self.tile_width + self.tile_width * 0.065,
+                            y * self.tile_height + self.tile_height * 0.065,
+                            self.tile_width - 2 * self.tile_width * 0.065,
+                            self.tile_height - 2 * self.tile_height * 0.065,
                         ),
                     )
                     pygame.draw.rect(
                         self.game_screen,
                         self.config["background_color"]["game"],
                         pygame.Rect(
-                            x * self.tile_width + 3,
-                            y * self.tile_height + 3,
-                            self.tile_width - 6,
-                            self.tile_height - 6,
+                            x * self.tile_width + self.tile_width * 0.075,
+                            y * self.tile_height + self.tile_height * 0.075,
+                            self.tile_width - 2 * self.tile_width * 0.09,
+                            self.tile_height - 2 * self.tile_height * 0.09,
                         ),
                     )
         self.main_screen.blit(self.game_screen, (0, 0))
@@ -230,10 +230,14 @@ class VanGogh:
                         self.preview_screen,
                         self.color_map[value],
                         pygame.Rect(
-                            x * self.tile_width + 2 + left_padding,
-                            y * self.tile_height + 2 + top_padding,
-                            self.tile_width - 4,
-                            self.tile_height - 4,
+                            x * self.tile_width
+                            + self.tile_width * 0.065
+                            + left_padding,
+                            y * self.tile_height
+                            + self.tile_height * 0.065
+                            + top_padding,
+                            self.tile_width - 2 * self.tile_width * 0.065,
+                            self.tile_height - 2 * self.tile_height * 0.065,
                         ),
                     )
         self.main_screen.blit(self.preview_screen, (self.game_screen.get_width(), 0))
