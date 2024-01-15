@@ -134,7 +134,7 @@ class SceneSettings(SceneBase):
         if self.new_state:
             self.new_state = False
             self.screen.fill((0, 0, 0))
-            i = -1
+            i = 1.2
             for button in self.buttons:
                 if button.id == "return":
                     button.x = button.width * 0.05
@@ -144,12 +144,7 @@ class SceneSettings(SceneBase):
                     button.x = self.screen.get_width() - button.width * 1.05
                     button.y = self.screen.get_height() - button.height * 1.2
                     self.screen.blit(button.surface, (button.x, button.y))
-                elif button.id == "settings":
-                    button.x = (self.screen.get_width() - button.width) // 2
-                    button.y = 10 * (i + 1)
-                    self.screen.blit(button.surface, (button.x, button.y))
                 else:
-                    i += 1
                     if button.id == "random_pieces_toggle":
                         if self.engine_cfg["random_pieces"]:
                             button.edit_caption("Random pieces: True")
@@ -176,6 +171,7 @@ class SceneSettings(SceneBase):
                         else:
                             button.edit_caption("Ghost piece style: Outline")
                     button.x = (self.screen.get_width() - button.width) // 2
-                    button.y = 85 * (i + 1)
+                    button.y = button.height * (i + 1) * 1.8
                     self.screen.blit(button.surface, (button.x, button.y))
+                    i += 1
             pygame.display.update()

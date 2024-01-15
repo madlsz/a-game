@@ -12,6 +12,13 @@ class SceneMenu(SceneBase):
             Button(
                 self.button_width,
                 self.button_height,
+                "Menu",
+                None,
+                background_color=(0, 0, 0, 0),
+            ),
+            Button(
+                self.button_width,
+                self.button_height,
                 "Play",
                 self.switch_to_setter,
                 "game",
@@ -57,8 +64,10 @@ class SceneMenu(SceneBase):
         if self.new_state:
             self.new_state = False
             self.screen.fill((0, 0, 0))
-            for i, button in enumerate(self.buttons):
+            i = 1.5
+            for button in self.buttons:
                 button.x = (self.screen.get_width() - button.width) // 2
                 button.y = button.height * (i + 1) * 1.8
                 self.screen.blit(button.surface, (button.x, button.y))
+                i += 1
             pygame.display.update()
