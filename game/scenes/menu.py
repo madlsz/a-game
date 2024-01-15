@@ -9,17 +9,17 @@ class SceneMenu(SceneBase):
     def __init__(self, screen):
         super().__init__(screen)
         self.buttons = [
-            Button(200, 50, "Play", self.switch_to_setter, "game"),
-            # Button(200, 50, "Leaderboard", self.switch_to_setter, "leaderboard"),
-            Button(200, 50, "Settings", self.switch_to_setter, "settings"),
+            Button(200, 50, "Play", self.switch_to_setter, "game", background_color=self.button_background_color),
+            Button(200, 50, "Settings", self.switch_to_setter, "settings", background_color=self.button_background_color),
             Button(
                 200,
                 50,
                 "Github page",
                 webbrowser.open,
                 "https://github.com/madlsz/a-game",
+                background_color=self.button_background_color,
             ),
-            Button(200, 50, "Quit", self.terminate),
+            Button(200, 50, "Quit", self.terminate, background_color=self.button_background_color),
         ]
 
     def process_input(self, events, keys_pressed):
@@ -36,9 +36,9 @@ class SceneMenu(SceneBase):
     def render(self):
         if self.new_state:
             self.new_state = False
-            self.screen.fill((0, 99, 99))
+            self.screen.fill((0, 0, 0))
             for i, button in enumerate(self.buttons):
                 button.x = (self.screen.get_width() - button.width) // 2
-                button.y = 100 * (i + 2)
+                button.y = button.height * (i + 1) * 1.8
                 self.screen.blit(button.surface, (button.x, button.y))
             pygame.display.update()

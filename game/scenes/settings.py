@@ -8,21 +8,25 @@ from game.scenes.base import SceneBase
 class SceneSettings(SceneBase):
     def __init__(self, screen):
         super().__init__(screen)
+        self.button_footer_width = self.screen.get_width() // 2.8
+        self.button_settings_width = self.screen.get_width() * 0.75
         self.buttons = [
             Button(
-                200,
+                self.button_footer_width,
                 50,
                 "return",
                 self.switch_to_setter,
                 "menu",
                 id="return",
+                background_color = self.button_background_color,
             ),
             Button(
-                200,
+                self.button_footer_width,
                 50,
                 "save changes",
                 self.save_changes,
                 id="save",
+                background_color = self.button_background_color,
             ),
             Button(
                 200,
@@ -33,39 +37,44 @@ class SceneSettings(SceneBase):
                 id="settings",
             ),
             Button(
-                350,
+                self.button_settings_width,
                 50,
                 "",
                 self.random_pieces_toggle,
                 id="random_pieces_toggle",
+                background_color = self.button_background_color,
             ),
             Button(
-                350,
+                self.button_settings_width,
                 50,
                 "",
                 self.preview_toggle,
                 id="preview_toggle",
+                background_color = self.button_background_color,
             ),
             Button(
-                350,
+                self.button_settings_width,
                 50,
                 "",
                 self.animate_line_clear_toggle,
                 id="animate_line_clear_toggle",
+                background_color = self.button_background_color,
             ),
             Button(
-                350,
+                self.button_settings_width,
                 50,
                 "",
                 self.ghost_piece_toggle,
                 id="ghost_piece_toggle",
+                background_color = self.button_background_color,
             ),
             Button(
-                350,
+                self.button_settings_width,
                 50,
                 "",
                 self.ghost_piece_style_toggle,
                 id="ghost_piece_style_toggle",
+                background_color = self.button_background_color,
             ),
         ]
 
@@ -125,7 +134,7 @@ class SceneSettings(SceneBase):
     def render(self):
         if self.new_state:
             self.new_state = False
-            self.screen.fill((0, 99, 99))
+            self.screen.fill((0, 0, 0))
             i = -1
             for button in self.buttons:
                 if button.id == "return":

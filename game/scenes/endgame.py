@@ -7,6 +7,7 @@ from game.gui.button import Button
 class SceneEndgame(SceneBase):
     def __init__(self, screen):
         super().__init__(screen)
+        self.button_background_color = (64, 64, 64, 150)
         self.endgame_screen = pygame.Surface(
             (self.screen.get_width() / 14 * 10, self.screen.get_height() * 0.4),
             pygame.SRCALPHA,
@@ -18,7 +19,7 @@ class SceneEndgame(SceneBase):
                 "Play again",
                 self.switch_to_setter,
                 "game",
-                background_color=(0, 0, 0, 0),
+                background_color=self.button_background_color,
             ),
             Button(
                 200,
@@ -26,14 +27,14 @@ class SceneEndgame(SceneBase):
                 "Menu",
                 self.switch_to_setter,
                 "menu",
-                background_color=(0, 0, 0, 0),
+                background_color=self.button_background_color,
             ),
             Button(
                 200,
                 50,
                 "Quit",
                 self.terminate,
-                background_color=(0, 0, 0, 0),
+                background_color=self.button_background_color,
             ),
         ]
 
