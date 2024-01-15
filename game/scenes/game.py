@@ -37,17 +37,22 @@ class SceneGame(SceneBase):
             self.config["spawn"]["x"],
             self.config["spawn"]["y"],
         )
+        self.button_width *= 0.65
         self.buttons = [
             Button(
-                150,
-                50,
+                self.button_width,
+                self.button_height,
                 "Menu",
                 self.switch_to_setter,
                 "menu",
                 background_color=(50, 50, 50, 255),
             ),
             Button(
-                150, 50, "Pause", self.toggle_pause, background_color=(50, 50, 50, 255)
+                self.button_width,
+                self.button_height,
+                "Pause",
+                self.toggle_pause,
+                background_color=(50, 50, 50, 255),
             ),
         ]
 

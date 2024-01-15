@@ -14,24 +14,24 @@ class SceneEndgame(SceneBase):
         )
         self.buttons = [
             Button(
-                200,
-                50,
+                self.button_width,
+                self.button_height,
                 "Play again",
                 self.switch_to_setter,
                 "game",
                 background_color=self.button_background_color,
             ),
             Button(
-                200,
-                50,
+                self.button_width,
+                self.button_height,
                 "Menu",
                 self.switch_to_setter,
                 "menu",
                 background_color=self.button_background_color,
             ),
             Button(
-                200,
-                50,
+                self.button_width,
+                self.button_height,
                 "Quit",
                 self.terminate,
                 background_color=self.button_background_color,
@@ -53,11 +53,10 @@ class SceneEndgame(SceneBase):
     def render(self):
         if self.new_state:
             self.new_state = False
-            # self.screen.fill((0, 99, 99))
             self.endgame_screen.fill((0, 99, 99, 0))
             for i, button in enumerate(self.buttons):
                 button.x = (self.endgame_screen.get_width() - button.width) // 2
-                button.y = button.height * (i + 1)
+                button.y = button.height * (i + 1) * 1.3
                 self.endgame_screen.blit(button.surface, (button.x, button.y))
             self.screen.blit(self.endgame_screen, (0, 0))
             pygame.display.update()

@@ -9,6 +9,8 @@ class SceneBase(ABC):
         self.new_state = True
         self.switch_to = None
         self.button_background_color = (64, 64, 64, 255)
+        self.button_width = self.screen.get_width() // 2.8
+        self.button_height = self.button_width * 0.2
 
     def switch_to_setter(self, id: str) -> None:
         self.switch_to = id

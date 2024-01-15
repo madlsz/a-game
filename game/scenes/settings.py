@@ -8,29 +8,28 @@ from game.scenes.base import SceneBase
 class SceneSettings(SceneBase):
     def __init__(self, screen):
         super().__init__(screen)
-        self.button_footer_width = self.screen.get_width() // 2.8
-        self.button_settings_width = self.screen.get_width() * 0.75
+        self.button_settings_width = self.button_width * 1.5
         self.buttons = [
             Button(
-                self.button_footer_width,
-                50,
+                self.button_width,
+                self.button_height,
                 "return",
                 self.switch_to_setter,
                 "menu",
                 id="return",
-                background_color = self.button_background_color,
+                background_color=self.button_background_color,
             ),
             Button(
-                self.button_footer_width,
-                50,
+                self.button_width,
+                self.button_height,
                 "save changes",
                 self.save_changes,
                 id="save",
-                background_color = self.button_background_color,
+                background_color=self.button_background_color,
             ),
             Button(
-                200,
-                50,
+                self.button_settings_width,
+                self.button_height,
                 "Settings",
                 None,
                 background_color=(0, 0, 0, 0),
@@ -38,43 +37,43 @@ class SceneSettings(SceneBase):
             ),
             Button(
                 self.button_settings_width,
-                50,
+                self.button_height,
                 "",
                 self.random_pieces_toggle,
                 id="random_pieces_toggle",
-                background_color = self.button_background_color,
+                background_color=self.button_background_color,
             ),
             Button(
                 self.button_settings_width,
-                50,
+                self.button_height,
                 "",
                 self.preview_toggle,
                 id="preview_toggle",
-                background_color = self.button_background_color,
+                background_color=self.button_background_color,
             ),
             Button(
                 self.button_settings_width,
-                50,
+                self.button_height,
                 "",
                 self.animate_line_clear_toggle,
                 id="animate_line_clear_toggle",
-                background_color = self.button_background_color,
+                background_color=self.button_background_color,
             ),
             Button(
                 self.button_settings_width,
-                50,
+                self.button_height,
                 "",
                 self.ghost_piece_toggle,
                 id="ghost_piece_toggle",
-                background_color = self.button_background_color,
+                background_color=self.button_background_color,
             ),
             Button(
                 self.button_settings_width,
-                50,
+                self.button_height,
                 "",
                 self.ghost_piece_style_toggle,
                 id="ghost_piece_style_toggle",
-                background_color = self.button_background_color,
+                background_color=self.button_background_color,
             ),
         ]
 

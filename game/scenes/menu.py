@@ -9,17 +9,37 @@ class SceneMenu(SceneBase):
     def __init__(self, screen):
         super().__init__(screen)
         self.buttons = [
-            Button(200, 50, "Play", self.switch_to_setter, "game", background_color=self.button_background_color),
-            Button(200, 50, "Settings", self.switch_to_setter, "settings", background_color=self.button_background_color),
             Button(
-                200,
-                50,
+                self.button_width,
+                self.button_height,
+                "Play",
+                self.switch_to_setter,
+                "game",
+                background_color=self.button_background_color,
+            ),
+            Button(
+                self.button_width,
+                self.button_height,
+                "Settings",
+                self.switch_to_setter,
+                "settings",
+                background_color=self.button_background_color,
+            ),
+            Button(
+                self.button_width,
+                self.button_height,
                 "Github page",
                 webbrowser.open,
                 "https://github.com/madlsz/a-game",
                 background_color=self.button_background_color,
             ),
-            Button(200, 50, "Quit", self.terminate, background_color=self.button_background_color),
+            Button(
+                self.button_width,
+                self.button_height,
+                "Quit",
+                self.terminate,
+                background_color=self.button_background_color,
+            ),
         ]
 
     def process_input(self, events, keys_pressed):

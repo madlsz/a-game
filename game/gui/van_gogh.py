@@ -82,7 +82,7 @@ class VanGogh:
                 button.surface,
                 (
                     (self.button_screen.get_width() - button.width) // 2,
-                    button.height * i,
+                    button.height * i * 1.3,
                 ),
             )
         self.main_screen.blit(
