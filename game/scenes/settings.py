@@ -8,7 +8,7 @@ from game.scenes.base import SceneBase
 class SceneSettings(SceneBase):
     def __init__(self, screen):
         super().__init__(screen)
-        self.button_settings_width = self.button_width * 1.5
+        self.button_settings_width = self.button_width * 1.8
         self.buttons = [
             Button(
                 self.button_width,
