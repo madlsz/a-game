@@ -16,22 +16,34 @@ class SceneBase(ABC):
         self.switch_to = id
 
     @abstractmethod
-    # This method will receive all the events that happened since the last frame.
     def process_input(self, events, keys_pressed):
+        """
+        This method is meant to receive all the events that happened since the last frame.
+        """
         pass
 
     @abstractmethod
-    # Put your game logic in here for the scene
     def update(self):
+        """
+        This method is meant to contain the logic of a scene
+        """
         pass
 
     @abstractmethod
-    # Put your render code here. It will receive the main screen Surface as input.
     def render(self):
+        """
+        This method is meant to be responsible for rendering each scene to self.screen object
+        """
         pass
 
     def switch_to_scene(self, next_scene):
+        """
+        This method switches the self.next attribute to the given scene
+        """
         self.next = next_scene
 
     def terminate(self):
+        """
+        Sets self.next to None
+        """
         self.switch_to_scene(None)

@@ -17,15 +17,24 @@ class Game:
         return min(self.cleared_lines // 10, 29)
 
     def clear_active(self) -> None:
+        """
+        Clears the self.active layer
+        """
         self.active = np.full((self.height, self.width), 0, dtype=int)
 
     def clear_landed(self) -> None:
+        """
+        Clears the self.landed layer
+        """
         self.landed = np.full((self.height, self.width), 0, dtype=int)
 
     def __str__(self) -> str:
         return np.array_str(self.active + self.landed)
 
     def spawn_tetromino(self, type: str, x: int = 0, y: int = 0) -> bool:
+        """
+        Generates the new tetromino object and sets it as self.current_tetromino
+        """
         if np.any(self.landed[0, :] != 0):
             return False
         self.current_tetromino = tetrominos.create_instance(type, x, y)
@@ -33,6 +42,9 @@ class Game:
         return True
 
     def place_tetromino(self) -> bool:
+        """
+        Clears the active layer and places self.current_tetromino on the active layer
+        """
         tetromino_mask = self.current_tetromino.mask
         x, y = self.current_tetromino.cords
 
@@ -62,6 +74,9 @@ class Game:
             return False
 
     def is_valid_placement(self, x: int, y: int) -> bool:
+        """
+        Checks if the self.current_tetromino object placement under x and y coords is within the game grid
+        """
         if (
             x - self.current_tetromino.left_distance >= 0
             and x + self.current_tetromino.right_distance < self.width
@@ -74,9 +89,11 @@ class Game:
         return False
 
     def check_for_overlaps(self) -> bool:
+        """
+        Checks if the current self.active layer is valid by validating that there are no overlaps with self.landed layer
+        """
         return not np.any((self.active != 0) & (self.landed != 0))
 
-    # after a successfull movement return True to reset the movement timeout
     def move_tetromino_left(self) -> bool:
         if self.is_valid_placement(
             self.current_tetromino.x - 1, self.current_tetromino.y
