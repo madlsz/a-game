@@ -5,7 +5,7 @@
     "pause_timeout": 200,
     "spawn": {
         "x": 4,
-        "y": 1
+        "y": 3
     },
     "tetromino_types": [
         "j",

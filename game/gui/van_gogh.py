@@ -100,7 +100,7 @@ class VanGogh:
         Displays the board on the self.game_screen
         """
         self.game_screen.fill(self.config["background_color"]["game"])
-        for (y, x), value in np.ndenumerate(board):
+        for (y, x), value in np.ndenumerate(board[2:, :]):
             if value != 0:
                 if value != 1 or self.config["ghost_piece_style"] == "solid":
                     pygame.draw.rect(

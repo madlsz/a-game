@@ -6,7 +6,7 @@ import game.models.tetrominos as tetrominos
 class Game:
     def __init__(self) -> None:
         self.width = 10
-        self.height = 20
+        self.height = 22
         self.active = np.full((self.height, self.width), 0, dtype=int)
         self.landed = np.full((self.height, self.width), 0, dtype=int)
         self.score = 0
@@ -35,11 +35,17 @@ class Game:
         """
         Generates the new tetromino object and sets it as self.current_tetromino
         """
-        if np.any(self.landed[0, :] != 0):
-            return False
         self.current_tetromino = tetrominos.create_instance(type, x, y)
         self.place_tetromino()
-        return True
+        # when there is no place for the new tetromino it attempts to move it one row higher
+        if self.check_for_overlaps():
+            return True
+        else:
+            self.current_tetromino.move_up()
+            self.place_tetromino()
+            if self.check_for_overlaps():
+                return True
+        return False
 
     def place_tetromino(self) -> bool:
         """
@@ -77,16 +83,16 @@ class Game:
         """
         Checks if the self.current_tetromino object placement under x and y coords is within the game grid
         """
-        if (
-            x - self.current_tetromino.left_distance >= 0
-            and x + self.current_tetromino.right_distance < self.width
-        ):
+        return (
+            True
             if (
-                y - self.current_tetromino.top_distance >= 0
+                x - self.current_tetromino.left_distance >= 0
+                and x + self.current_tetromino.right_distance < self.width
                 and y + self.current_tetromino.bottom_distance < self.height
-            ):
-                return True
-        return False
+                # and y - self.current_tetromino.top_distance >= 0
+            )
+            else False
+        )
 
     def check_for_overlaps(self) -> bool:
         """
