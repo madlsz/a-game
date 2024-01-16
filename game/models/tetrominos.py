@@ -6,11 +6,12 @@ class Base:
     def __init__(
         self,
         mask: typing.List[typing.List[int]],
-        cords: typing.Tuple[int, int],
+        coords: typing.Tuple[int, int],
         pivot: typing.Tuple[int, int] = (1, 1),
     ) -> None:
+        self.x, self.y = coords
         self.mask = np.array(mask, dtype=int)
-        self.cords = cords
+        self.coords = coords
         self.static = False
         self.left = 0
         self.right = 0
@@ -27,25 +28,9 @@ class Base:
         self.mask = np.rot90(self.mask, k)
         self.calculate_boundaries()
 
-    def move_left(self) -> None:
-        self.cords[0] -= 1
-
-    def move_right(self) -> None:
-        self.cords[0] += 1
-
-    def move_down(self) -> None:
-        self.cords[1] += 1
-
-    def move_up(self) -> None:
-        self.cords[1] -= 1
-
-    @property
-    def x(self) -> int:
-        return self.cords[0]
-
-    @property
-    def y(self) -> int:
-        return self.cords[1]
+    def move(self, x: int, y: int) -> None:
+        self.x += x
+        self.y += y
 
     @property
     def width(self) -> int:

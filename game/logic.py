@@ -51,31 +51,27 @@ class Game:
         """
         Clears the active layer and places self.current_tetromino on the active layer
         """
-        tetromino_mask = self.current_tetromino.mask
-        x, y = self.current_tetromino.cords
-
         # Check if the Tetromino can be placed on the grid
-        if self.is_valid_placement(x, y):
+        if self.is_valid_placement(self.current_tetromino.x, self.current_tetromino.y):
             self.clear_active()
             # Adjust the tetromino_mask slice dimensions based on top, left, height, and width
-            tetromino_slice = tetromino_mask[
+            tetromino_slice = self.current_tetromino.mask[
                 self.current_tetromino.top : self.current_tetromino.bottom + 1,
                 self.current_tetromino.left : self.current_tetromino.right + 1,
             ]
 
             # Update the valid region with the adjusted tetromino_mask slice
             self.active[
-                y
-                - self.current_tetromino.top_distance : y
+                self.current_tetromino.y
+                - self.current_tetromino.top_distance : self.current_tetromino.y
                 + self.current_tetromino.bottom_distance
                 + 1,
-                x
-                - self.current_tetromino.left_distance : x
+                self.current_tetromino.x
+                - self.current_tetromino.left_distance : self.current_tetromino.x
                 + self.current_tetromino.right_distance
                 + 1,
             ] = tetromino_slice
             return True
-
         else:
             return False
 
@@ -100,31 +96,24 @@ class Game:
         """
         return not np.any((self.active != 0) & (self.landed != 0))
 
-    def move_tetromino_left(self) -> bool:
+    def move_tetromino(self, x: int = 0, y: int = 0) -> bool:
         if self.is_valid_placement(
-            self.current_tetromino.x - 1, self.current_tetromino.y
+            self.current_tetromino.x + x, self.current_tetromino.y + y
         ):
-            self.current_tetromino.move_left()
+            self.current_tetromino.move(x, y)
             self.place_tetromino()
             if self.check_for_overlaps():
                 return True
             else:
-                self.current_tetromino.move_right()
+                self.current_tetromino.move(x * -1, y * -1)
                 self.place_tetromino()
         return False
 
+    def move_tetromino_left(self) -> bool:
+        return self.move_tetromino(-1)
+
     def move_tetromino_right(self) -> bool:
-        if self.is_valid_placement(
-            self.current_tetromino.x + 1, self.current_tetromino.y
-        ):
-            self.current_tetromino.move_right()
-            self.place_tetromino()
-            if self.check_for_overlaps():
-                return True
-            else:
-                self.current_tetromino.move_left()
-                self.place_tetromino()
-        return False
+        return self.move_tetromino(1)
 
     def rotate_tetromino(self, clockwise: bool) -> bool:
         self.current_tetromino.rotate(clockwise)
@@ -141,17 +130,7 @@ class Game:
             return False
 
     def move_tetromino_down(self) -> bool:
-        if self.is_valid_placement(
-            self.current_tetromino.x, self.current_tetromino.y + 1
-        ):
-            self.current_tetromino.move_down()
-            self.place_tetromino()
-            if self.check_for_overlaps():
-                return True
-            else:
-                self.current_tetromino.move_up()
-                self.place_tetromino()
-        return False
+        return self.move_tetromino(0, 1)
 
     def push_to_landed(self) -> None:
         self.landed += self.active
