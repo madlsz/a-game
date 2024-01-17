@@ -41,7 +41,7 @@ class Game:
         if self.check_for_overlaps():
             return True
         else:
-            self.current_tetromino.move_up()
+            self.move_tetromino_up()
             self.place_tetromino()
             if self.check_for_overlaps():
                 return True
@@ -97,6 +97,9 @@ class Game:
         return not np.any((self.active != 0) & (self.landed != 0))
 
     def move_tetromino(self, x: int = 0, y: int = 0) -> bool:
+        """
+        Shifts the tetromino
+        """
         if self.is_valid_placement(
             self.current_tetromino.x + x, self.current_tetromino.y + y
         ):
@@ -132,14 +135,22 @@ class Game:
     def move_tetromino_down(self) -> bool:
         return self.move_tetromino(0, 1)
 
+    def move_tetromino_up(self) -> bool:
+        return self.move_tetromino(0, -1)
+
     def push_to_landed(self) -> None:
+        """
+        Adds current_tetromino to the landed layer and prepares the board for the next tetromino
+        """
         self.landed += self.active
         self.clear_active()
         self.current_tetromino = None
-
         self.clear_lines()
 
     def clear_lines(self) -> None:
+        """
+        Whan a line has only non 0 values it means that it has to be removed
+        """
         cleared_at_once = 0
         for y in range(len(self.landed)):
             if np.all(self.landed[y, :] != 0):

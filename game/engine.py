@@ -29,6 +29,9 @@ class Engine:
         }
 
     def run(self):
+        """
+        main loop of the entire program
+        """
         while self.active_scene is not None:
             events = pygame.event.get()
             keys_pressed = pygame.key.get_pressed()

@@ -31,9 +31,9 @@ class SceneGame(SceneBase):
         self.new_score = True
         self.new_buttons = True
         self.new_lines = True
-        self.are = 100
+        self.are = 100 # new tetromino spawn delay
         self.game.spawn_tetromino(
-            self.draw_tetromino(),
+            self.get_next_tetromino_type(),
             self.config["spawn"]["x"],
             self.config["spawn"]["y"],
         )
@@ -90,7 +90,7 @@ class SceneGame(SceneBase):
                 for _ in range(len(self.config["tetromino_types"]))
             ]
 
-    def draw_tetromino(self) -> str:
+    def get_next_tetromino_type(self) -> str:
         tetromino_type = self.tetromino_types[self.tetromino_counter]
         self.tetromino_counter += 1
         if self.tetromino_counter == len(self.tetromino_types):
@@ -115,7 +115,7 @@ class SceneGame(SceneBase):
                 self.new_lines = True
                 pygame.time.wait(self.are)
                 if not self.game.spawn_tetromino(
-                    self.draw_tetromino(),
+                    self.get_next_tetromino_type(),
                     self.config["spawn"]["x"],
                     self.config["spawn"]["y"],
                 ):
