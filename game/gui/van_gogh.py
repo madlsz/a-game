@@ -71,20 +71,21 @@ class VanGogh:
             0, 0, self.game_screen.get_width(), self.game_screen.get_height()
         )
 
-    def draw_buttons(self, buttons: typing.List[Button]) -> None:
+    def draw_buttons(self, buttons: typing.List[Button], display_buttons: bool) -> None:
         self.button_screen.fill(self.config["background_color"]["buttons"])
-        for i, button in enumerate(buttons):
-            button.x = self.game_screen.get_width() + (
-                (self.button_screen.get_width() - button.width) // 2
-            )
-            button.y = self.tile_height * 13 + button.height * i
-            self.button_screen.blit(
-                button.surface,
-                (
-                    (self.button_screen.get_width() - button.width) // 2,
-                    button.height * i * 1.3,
-                ),
-            )
+        if display_buttons:
+            for i, button in enumerate(buttons):
+                button.x = self.game_screen.get_width() + (
+                    (self.button_screen.get_width() - button.width) // 2
+                )
+                button.y = self.tile_height * 13 + button.height * i
+                self.button_screen.blit(
+                    button.surface,
+                    (
+                        (self.button_screen.get_width() - button.width) // 2,
+                        button.height * i * 1.3,
+                    ),
+                )
         self.main_screen.blit(
             self.button_screen, (self.game_screen.get_width(), self.tile_height * 13)
         )

@@ -11,6 +11,9 @@ class SceneBase(ABC):
         self.button_background_color = (64, 64, 64, 255)
         self.button_width = self.screen.get_width() // 2.8
         self.button_height = self.button_width * 0.2
+        self.font_large = pygame.font.Font("freesansbold.ttf", 32)
+        self.font_normal = pygame.font.Font("freesansbold.ttf", 16)
+        self.font_small = pygame.font.Font("freesansbold.ttf", 8)
 
     def switch_to_setter(self, id: str) -> None:
         self.switch_to = id

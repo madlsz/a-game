@@ -31,7 +31,7 @@ class SceneGame(SceneBase):
         self.new_score = True
         self.new_buttons = True
         self.new_lines = True
-        self.are = 100 # new tetromino spawn delay
+        self.are = 100  # new tetromino spawn delay
         self.game.spawn_tetromino(
             self.get_next_tetromino_type(),
             self.config["spawn"]["x"],
@@ -198,9 +198,11 @@ class SceneGame(SceneBase):
         if self.new_score:
             self.new_score = False
             self.gogh.draw_score(self.game.score)
-        if self.new_buttons:
+        if self.new_buttons or self.switch_to is not None:
+            # dont display the buttons if the scene is going to be changed
+            display_buttons = False if self.switch_to is not None else True
             self.new_buttons = False
-            self.gogh.draw_buttons(self.buttons)
+            self.gogh.draw_buttons(self.buttons, display_buttons)
         if self.new_lines:
             self.new_lines = False
             self.gogh.draw_lines(self.game.cleared_lines)

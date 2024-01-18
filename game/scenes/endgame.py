@@ -54,9 +54,30 @@ class SceneEndgame(SceneBase):
         if self.new_state:
             self.new_state = False
             self.endgame_screen.fill((0, 99, 99, 0))
+            text = self.font_large.render("GAME OVER", True, (255, 255, 255))
+            self.endgame_screen.blit(
+                text, ((self.endgame_screen.get_width() - text.get_width()) // 2, 0)
+            )
             for i, button in enumerate(self.buttons):
                 button.x = (self.endgame_screen.get_width() - button.width) // 2
-                button.y = button.height * (i + 1) * 1.3
-                self.endgame_screen.blit(button.surface, (button.x, button.y))
-            self.screen.blit(self.endgame_screen, (0, 0))
+                button.y = (
+                    button.height * (i + 1) * 1.3
+                    + (self.screen.get_height() - self.endgame_screen.get_height()) // 2
+                )
+                self.endgame_screen.blit(
+                    button.surface,
+                    (
+                        button.x,
+                        button.y
+                        - (self.screen.get_height() - self.endgame_screen.get_height())
+                        // 2,
+                    ),
+                )
+            self.screen.blit(
+                self.endgame_screen,
+                (
+                    0,
+                    (self.screen.get_height() - self.endgame_screen.get_height()) // 2,
+                ),
+            )
             pygame.display.update()

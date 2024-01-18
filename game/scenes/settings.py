@@ -101,6 +101,9 @@ class SceneSettings(SceneBase):
         )
 
     def save_changes(self):
+        """
+        compares the cfg with the cfg_back and save only if the dicts differ
+        """
         if self.engine_cfg != self.engine_cfg_back:
             self.engine_cfg_back = self.engine_cfg.copy()
             with open("./cfg/engine.json", "w") as f:
