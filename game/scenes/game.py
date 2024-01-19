@@ -99,6 +99,9 @@ class SceneGame(SceneBase):
         return tetromino_type
 
     def gravity(self) -> None:
+        """
+        responsible for Handling the top to bottom movement, spawning the next tetromino and ending the game
+        """
         elapsed_time = self.current_time - self.gravity_time
         if elapsed_time >= (
             self.gravity_time_timeout_fast
@@ -139,15 +142,15 @@ class SceneGame(SceneBase):
         if self.keys_pressed[pygame.K_z] or self.keys_pressed[pygame.K_x]:
             elapsed_time = self.current_time - self.rotation_time
             if elapsed_time >= self.config["rotation_timeout"]:
-                if self.keys_pressed[pygame.K_z]:
-                    clockwise = False
-                elif self.keys_pressed[pygame.K_x]:
-                    clockwise = True
+                clockwise = True if self.keys_pressed[pygame.K_x] else False
                 if self.game.rotate_tetromino(clockwise):
                     self.new_state = True
                     self.rotation_time = self.current_time
 
     def pause(self) -> bool:
+        """
+        Used to call self.toggle_pause using a keypress
+        """
         if self.keys_pressed[pygame.K_p]:
             elapsed_time = self.current_time - self.pause_time
             if elapsed_time >= self.config["pause_timeout"]:
@@ -200,7 +203,7 @@ class SceneGame(SceneBase):
             self.gogh.draw_score(self.game.score)
         if self.new_buttons or self.switch_to is not None:
             # dont display the buttons if the scene is going to be changed
-            display_buttons = False if self.switch_to is not None else True
+            display_buttons = True if self.switch_to is None else False
             self.new_buttons = False
             self.gogh.draw_buttons(self.buttons, display_buttons)
         if self.new_lines:

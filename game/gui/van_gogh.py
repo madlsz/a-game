@@ -9,6 +9,10 @@ from game.gui.button import Button
 
 
 class VanGogh:
+    """
+    Responsible for rendering the game scene
+    """
+
     def __init__(self, screen: pygame.Surface) -> None:
         self.main_screen = screen
         self.config = self.read_cfg()

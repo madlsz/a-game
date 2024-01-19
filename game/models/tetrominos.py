@@ -40,6 +40,7 @@ class Base:
     def height(self) -> int:
         return self.bottom - self.top + 1
 
+    # needs to be called after each rotation to provide data needed to calculate distances from the pivot
     def calculate_boundaries(self) -> None:
         y_nonzero, x_nonzero = np.where(self.mask != 0)
         self.top, self.bottom = np.min(y_nonzero), np.max(y_nonzero)

@@ -113,10 +113,10 @@ class Game:
         return False
 
     def move_tetromino_left(self) -> bool:
-        return self.move_tetromino(-1)
+        return self.move_tetromino(-1, 0)
 
     def move_tetromino_right(self) -> bool:
-        return self.move_tetromino(1)
+        return self.move_tetromino(1, 0)
 
     def rotate_tetromino(self, clockwise: bool) -> bool:
         self.current_tetromino.rotate(clockwise)
